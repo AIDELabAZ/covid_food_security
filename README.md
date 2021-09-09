@@ -23,10 +23,10 @@ As described in more detail below, scripts various go through each step, from cl
 ## Data 
 
 The publicly-available data for each survey round is coupled with a basic information document, interview manual, and questionnaire for that round, which can be accessed through:
- - Burkina Faso: 
- - Ethiopia: http://bit.ly/ethiopia-phonesurvey 
- - Malawi: http://bit.ly/malawi-phonesurvey 
- - Nigeria: http://bit.ly/nigeria-phonesurvey
+ - Burkina Faso: https://microdata.worldbank.org/index.php/catalog/3768
+ - Ethiopia: https://microdata.worldbank.org/index.php/catalog/3716
+ - Malawi: https://microdata.worldbank.org/index.php/catalog/3766
+ - Nigeria: https://microdata.worldbank.org/index.php/catalog/3712
  
 The approach to the phone survey questionnaire design and sampling is comparable across countries. It is informed by the template questionnaire and the phone survey sampling guidelines that have been publicly made available by the World Bank. These can be accessed through: 
  - Template Questionnaire: http://bit.ly/templateqx 
