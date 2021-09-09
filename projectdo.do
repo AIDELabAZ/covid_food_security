@@ -37,25 +37,25 @@
     if `"`c(username)'"' == "jdmichler" {
         global 		code  	"C:/Users/jdmichler/git/AIDELabAZ/covid_food_security"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output_f "G:/My Drive/wb_covid/output"
+		global 		output_f "G:/My Drive/wb_covid/output/food_security"
     }
 
     if `"`c(username)'"' == "aljosephson" {
         global 		code  	"C:/Users/aljosephson/git/wb_covid"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output_f "G:/My Drive/wb_covid/output"
+		global 		output_f "G:/My Drive/wb_covid/output/food_security"
     }
 
 	if `"`c(username)'"' == "annfu" {
 		global 		code  	"C:/Users/annfu/git/wb_covid"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output_f "G:/My Drive/wb_covid/output"
+		global 		output_f "G:/My Drive/wb_covid/output/food_security"
 	}
 	
 	if `"`c(username)'"' == "Lorin Rudin-Rush" {
 		global 		code  	"C:/Users/Lorin Rudin-Rush/Documents/GitHub/wb_covid"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output_f "G:/My Drive/wb_covid/output"
+		global 		output_f "G:/My Drive/wb_covid/output/food_security"
 	}
 	
 	
@@ -106,7 +106,7 @@ if $pack == 1 {
 **# 1 - run household data cleaning .do file
 ************************************************************************
 
-	do 			"$code/analysis/pnl_cleaning.do" 	//runs all cleaning files 
+	do 			"$code/analysis/cleaning/pnl_cleaning.do" 	//runs all cleaning files 
 	
 	
 ************************************************************************
