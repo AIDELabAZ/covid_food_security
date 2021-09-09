@@ -34,22 +34,6 @@
 	global	export	=	"$data/uganda/refined"
 	global	logout	=	"$data/uganda/logs"
 
-* Define root folder globals
-    if `"`c(username)'"' == "jdmichler" {
-        global 		code  	"C:/Users/jdmichler/git/wb_covid"
-		global 		data	"G:/My Drive/wb_covid/data"
-    }
-
-    if `"`c(username)'"' == "aljosephson" {
-        global 		code  	"C:/Users/aljosephson/git/wb_covid"
-		global 		data	"G:/My Drive/wb_covid/data"
-    }
-
-	if `"`c(username)'"' == "annfu" {
-		global 		code  	"C:/Users/annfu/git/wb_covid"
-		global 		data	"G:/My Drive/wb_covid/data"
-	}	
-	
 * open log
 	cap log 		close
 	log using		"$logout/uga_build", append

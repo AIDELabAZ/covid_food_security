@@ -53,7 +53,7 @@
 	}
 	
 	if `"`c(username)'"' == "Lorin Rudin-Rush" {
-		global 		code  	"C:/Users/Lorin Rudin-Rush/Documents/GitHub/wb_covid"
+		global 		code  	"C:/Users/Lorin Rudin-Rush/Documents/GitHub/covid_food_security"
 		global 		data	"G:/My Drive/wb_covid/data"
 		global 		output_f "G:/My Drive/wb_covid/output/food_security"
 	}

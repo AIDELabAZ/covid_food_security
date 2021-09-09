@@ -49,7 +49,7 @@
 	
 	
 * rename variables
-	rename 			s8q01 	fies_4
+	rename 			 s8q01 	fies_4
 	rename 			s8q02a 	fies_5
 	rename			s8q02b 	fies_6
 	rename 			s8q02c 	fies_8

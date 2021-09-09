@@ -115,14 +115,13 @@ restore
 **# 2 - end matter, clean up to save
 ************************************************************************
 	
-	compress
-	
-* close the log
-	log	close
-	
+	compress	
 	
 * save 
 	save			"$export/wave_00/r0_fies", replace	
+
+* close the log
+	log	close
 	
 	
 /* END */	

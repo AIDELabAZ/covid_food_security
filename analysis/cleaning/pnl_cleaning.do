@@ -1057,7 +1057,7 @@
 * close the log
 	log	close
 
-/*
+
 ************************************************************************
 **# 13 - generate variable-country-wave crosswalk
 ************************************************************************
@@ -1102,7 +1102,7 @@
 		append 			using `temp`var''
 	}
 
-	export 				excel "$export/variable_country_wave_crosswalk.xlsx", ///
+	export 				excel "$output_f/variable_country_wave_crosswalk.xlsx", ///
 							sheetreplace sheet(Vars_waves) first(var)
 	restore
 
