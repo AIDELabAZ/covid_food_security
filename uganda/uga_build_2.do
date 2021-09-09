@@ -1,4 +1,4 @@
-* Project: WB COVID
+* Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
 * Edited by : amf

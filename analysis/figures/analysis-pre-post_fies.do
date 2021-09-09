@@ -1,9 +1,9 @@
-* Project: WB COVID
+* Project: COVID Food Security
 * Created on: November 2020
 * Created by: alj
-* Edited by: alj
-* Last edit: 17 November 2020
-* Stata v.16.1
+* Edited by: jdm
+* Last edit: 9 September 2021
+* Stata v.17.0
 
 * does
 	* fies pre / post comparison for Nigeria only
@@ -17,7 +17,7 @@
 	* colrspace
 
 * TO DO:
-	* done
+	* NOTE THIS MIGHT NOT WORK IN CURRENT REPO WITHOUT UPDATES TO GLOBAL DIRECTORY
 
 * **********************************************************************
 * 0 - setup

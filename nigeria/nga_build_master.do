@@ -1,4 +1,4 @@
-* Project: WB COVID
+* Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
 * Edited by: amf
@@ -12,13 +12,7 @@
 	* raw Nigeria data
 
 * TO DO:
-	* add round 6
-	* figure out log close error
-	* when new waves available:
-		* create build for new wave based on previous ones
-		* update global list of waves below
-		* check variable crosswalk for differences/new variables & update code if needed
-		* check QC flags for issues/discrepancies
+	* complete
 
 		
 * **********************************************************************
