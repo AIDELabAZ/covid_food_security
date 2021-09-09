@@ -35,7 +35,7 @@ The approach to the phone survey questionnaire design and sampling is comparable
 
 ## Data cleaning
 
-The code in this repository cleans the raw phone surveys and replicates material (both in text and supplementary material) related to "Socioeconomic impact of COVID-19 in four African countries". 
+The code in this repository cleans the raw phone surveys and replicates material (both in text and supplementary material) related to "Impacts of COVID-19 on Food Security in Rural and Urban Sub-Saharan Africa". 
 
 ### Pre-requisites
 
@@ -65,7 +65,7 @@ wb_covid
 ├────country             /* one dir for each country */
 │    ├──household_data
 │    │  └──wave          /* one dir for each wave */
-│    ├──household_cleaning_code 
+│    └──household_cleaning_code 
 │
 │────Analysis            /* overall analysis */
 │    ├──code
