@@ -1,4 +1,4 @@
-# Impacts of COVID-19 on Food Security in Rural and Urban Sub-Saharan Africa
+# Impacts of COVID-19 on food security in rural and urban Sub-Saharan Africa
 This README describes the directory structure & should enable users to replicate all tables and figures for work related to food security and rural/urban heterogeneity during teh COVID-19 pandemic. The relevant survey data are available under under the High-Frequency Phone Survey collection: http://bit.ly/microdata-hfps.   
 
  ## Index
