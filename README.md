@@ -57,21 +57,18 @@ The data processing and analysis requires a number of user-written Stata program
 The general repo structure looks as follows:<br>
 
 ```stata
-wb_covid
+covid_food_security
 ├────README.md
 ├────projectdo.do
 ├────LICENSE
 │    
 ├────country             /* one dir for each country */
-│    ├──household_data
-│    │  └──wave          /* one dir for each wave */
 │    └──household_cleaning_code 
 │
 │────Analysis            /* overall analysis */
-│    ├──code
-│    └──output
-│       ├──tables
-│       └──figures
+│    ├──cleaning
+│    ├──tables
+│    └──figures
 │   
 └────config
 ```
