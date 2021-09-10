@@ -2,7 +2,7 @@
 * Created on: 2 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 7 September 2021
+* Last edited: 9 September 2021
 * Stata v.17
 
 * does
@@ -13,7 +13,8 @@
 	* raw ethiopia data 
 
 * TO DO:
-	* complete
+	* merge household data
+	* merge panel weight
 
 
 ************************************************************************
@@ -62,8 +63,63 @@
 * keep relevant
 	keep 			ea_ household_ fies_* 
 
+	
+*************************************************************************
+**# 2 - merge in hh data
+*************************************************************************	
+
+preserve
+
+* load data
+	use				"$root/wave_00/HH/sect1_hh_w4", clear
+
+* identify head of household
+	keep			if s1q01 == 1
+
+* keep relevant variable
+	keep			ea_ household_ saq01 saq14 s1q02
+
+
+* save temp file
+	tempfile		temp1
+	save			`temp1'
+
+restore
+
+* merge with fies data
+	merge 			1:1 household_id using "`temp1'", assert(3) nogen
+	rename			saq14 sector
+	rename			saq01 region
+	rename			s1q02 sexhh
+	
+
+*************************************************************************
+**# 3 - merge in panel weight data
+*************************************************************************	
+
+preserve
+
+* load data
+	use				"$root/wave_00/HH/sect_cover_hh_w4", clear
+	
+* get panel weights
+	rename			pw_w4 phw
+	keep			household_id ea_id phw
+
+* save temp file
+	tempfile		temp2
+	save			`temp2'
+
+restore
+
+* merge with fies data
+	merge			1:1 household_id using "`temp2'", assert(3) nogen
+	order			household_id ea_id phw region sector sexhh ///
+					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
+					fies_7 fies_8 fies_9
+
 ************************************************************************
-**# 2 - end matter, clean up to save
+**# 4 - end matter, clean up to save
 ************************************************************************
 	
 	compress

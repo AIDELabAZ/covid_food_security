@@ -1057,7 +1057,7 @@
 * close the log
 	log	close
 
-
+/*
 ************************************************************************
 **# 13 - generate variable-country-wave crosswalk
 ************************************************************************
@@ -1106,5 +1106,5 @@
 							sheetreplace sheet(Vars_waves) first(var)
 	restore
 
-
+	
 /* END */
