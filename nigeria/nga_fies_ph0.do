@@ -2,7 +2,7 @@
 * Created on: 7 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 13 Sep 2021
+* Last edited: 14 Sep 2021
 * Stata v.17
 
 * does
@@ -13,8 +13,7 @@
 	* raw nigeria data 
 
 * TO DO:
-	* merge in HoH data
-	* check if other vars need relabel
+	* complete
 
 
 ************************************************************************
@@ -44,10 +43,7 @@
 		replace 		s12q8`x' = 0 if s12q8`x' == 2
 		lab val 		s12q8`x' yesno
 	}
-* generates fies_2 variable	
-	gen 			fies_2 = 1 if s12q8g == 1 | s12q8i == 1
-	replace			fies_2 = 0 if fies_2 > 1
-	lab val 		fies_2 yesno
+	
 	
 * rename variables
 	rename 			s12q8a fies_4
@@ -55,6 +51,7 @@
 	rename 			s12q8e fies_8
 	rename 			s12q8d fies_7
 	rename 			s12q8f fies_1
+	rename			s12q8g fies_2
 	rename 			s12q8j fies_9
 	rename 			s12q8h fies_3
 	rename 			s12q8c fies_6
