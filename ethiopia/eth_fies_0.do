@@ -13,8 +13,7 @@
 	* raw ethiopia data 
 
 * TO DO:
-	* merge household data
-	* merge panel weight
+	* create var wave and assign value of zero
 
 
 ************************************************************************
@@ -114,10 +113,16 @@ restore
 
 * merge with fies data
 	merge			1:1 household_id using "`temp2'", assert(3) nogen
-	order			household_id ea_id phw region sector sexhh ///
+	
+* create wave indicator	
+	gen				wave = 0
+	lab var			wave "wave number"
+
+	order			household_id ea_id wave phw region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9
 
+					
 ************************************************************************
 **# 4 - end matter, clean up to save
 ************************************************************************
