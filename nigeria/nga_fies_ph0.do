@@ -8,7 +8,7 @@
 * does
 	* reads in baseline nigeria post-harvest data
 	* pulls FIES data questions
-	* outputs nigeria fies and household data
+	* outputs nigeria post-harvest fies and household data
 
 * assumes
 	* raw nigeria post-harvest data 

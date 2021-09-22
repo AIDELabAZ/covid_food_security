@@ -30,38 +30,33 @@
 	cap log 		close
 	log using		"$logout/bf_fies", append
 
-/*	
+
 *************************************************************************
 **#  1 - FIES data
 *************************************************************************
 		
 * load data
-	use 			"$root/menage/s08a_me_BFA2018", clear
+	use 			"$root/wave_00/menage/s08a_me_BFA2018", clear
 
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
-	foreach 		x in a b c d e f g h{
-		replace 		s8q02`x' = 1 if s8q02`x' > 1 & s8q02`x' < .
-		lab val 		s8q02`x' yesno
+	foreach 		x in 1 2 3 4 5 6 7 8{
+		replace 		s08aq0`x' = 0 if s08aq0`x' > 1 & s08aq0`x' < .
+		lab val 		s08aq0`x' yesno
 	}
 	
-	replace 		s8q01 = 0 if s8q01 == 2
-	lab val 		s8q01 yesno
-	
-	
 * rename variables
-	rename 			s8q01 	fies_4
-	rename 			s8q02a 	fies_5
-	rename			s8q02b 	fies_6
-	rename 			s8q02c 	fies_8
-	rename 			s8q02d 	fies_7
-	rename 			s8q02e 	fies_2
-	rename 			s8q02f  fies_9
-	rename			s8q02g	fies_1
-	rename			s8q02h	fies_3
+	rename 			s08aq01 	fies_4
+	rename 			s08aq02 	fies_5
+	rename			s08aq03 	fies_6
+	rename 			s08aq04 	fies_7
+	rename 			s08aq05 	fies_8
+	rename 			s08aq06 	fies_1
+	rename 			s08aq07  	fies_2
+	rename			s08aq08 	fies_3
 
 * keep relevant
-	keep 			ea_ household_ fies_* 
+	keep 			vague grappe menage fies_* 
 
 	
 *************************************************************************
@@ -71,13 +66,13 @@
 preserve
 
 * load data
-	use				"$root/menage/ehcvm_welfare_BFA2018", clear
+	use				"$root/wave_00/menage/ehcvm_welfare_BFA2018", clear
 
 /* identify head of household
 	keep			if s1q01 == 1
 */
 * keep relevant variable
-	keep			hhid grappe region milieu hgender hhweight
+	keep			hhid zae menage grappe region milieu hgender hhweight
 
 
 * save temp file
@@ -87,44 +82,24 @@ preserve
 restore
 
 * merge with fies data
-	merge 			1:1 hhid using "`temp1'", assert(3) nogen
+	merge 			1:1 grappe menage using "`temp1'", nogen
 	rename			milieu   sector
 	rename			region   region
 	rename			hgender  sexhh
 	rename			hhweight phw
+	rename			zae 	 region_broad
 	
 * create wave indicator	
 	gen				wave = 0
 	lab var			wave "wave number"
 
-	order			household_id ea_id wave phw region sector sexhh ///
-					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
-					fies_7 fies_8 fies_9
+	order			hhid vague grappe menage wave phw region sector ///
+					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
+					fies_7 fies_8
 	
 
-*************************************************************************
-**# 3 - merge in panel weight data
-*************************************************************************	
-
-preserve
-
-* load data
-	use				"$root/wave_00/HH/sect_cover_hh_w4", clear
-	
-* get panel weights
-	rename			pw_w4 phw
-	keep			household_id ea_id phw
-
-* save temp file
-	tempfile		temp2
-	save			`temp2'
-
-restore
-
-
-					
 ************************************************************************
-**# 4 - end matter, clean up to save
+**# 3 - end matter, clean up to save
 ************************************************************************
 	
 	compress
