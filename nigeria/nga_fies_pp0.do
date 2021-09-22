@@ -2,15 +2,16 @@
 * Created on: 13 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 14 Sep 2021
+* Last edited: 22 Sep 2021
 * Stata v.17
 
 * does
-	* reads in baseline Nigeria data
+	* reads in baseline nigeria post-planting data
 	* pulls FIES data questions
+	* outputs nigeria fies and household data
 
 * assumes
-	* raw nigeria data 
+	* raw nigeria post-planting data 
 
 * TO DO:
 	* complete
@@ -109,7 +110,11 @@ restore
 
 * merge with fies data
 	merge			1:1 hhid using "`temp2'", nogen
-	order			hhid ea phw region sector sexhh ///
+* generate wave variable
+	gen				wave = -1
+	lab var			wave "wave number"
+	
+	order			hhid ea wave phw region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9		
 		
