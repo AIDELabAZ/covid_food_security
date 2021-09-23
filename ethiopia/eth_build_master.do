@@ -23,9 +23,9 @@
 		* check QC flags for issues/discrepancies
 		
 
-* **********************************************************************
-* 0 - setup
-* **********************************************************************
+*************************************************************************
+**# 0 - setup
+*************************************************************************
 
 * define list of waves
 	global 			waves "1" "2" "3" "4" "5" "6" "7" "8" "9"
@@ -41,20 +41,19 @@
 	log using		"$logout/eth_build", append
 
 
-* ***********************************************************************
-* 1 - run do files for each round & generate variable comparison excel
-* ***********************************************************************
+*************************************************************************
+**# 1 - run do files for each round & generate variable comparison excel
+*************************************************************************
 
 * run do files for all rounds and create crosswalk of variables by wave
 	foreach 		r in "$waves" {
 		do 			"$code/ethiopia/eth_build_`r'"
 	}
-	do 				"$code/ethiopia/eth_build_0"
+		do			"$code/ethiopia/eth_fies_0"
 	
-	
-* ***********************************************************************
-* 2 - create ethiopia panel 
-* ***********************************************************************
+*************************************************************************
+**# 2 - create ethiopia panel 
+*************************************************************************
 
 * append round datasets to build master panel
 	foreach 		r in "$waves" {
@@ -86,9 +85,9 @@
 	} 
 	
 
-* ***********************************************************************
+*************************************************************************
 * 3 - clean ethiopia panel
-* ***********************************************************************
+*************************************************************************
 
 * rationalize variables across waves
 	gen 			phw_cs = .
@@ -789,8 +788,7 @@
 	rename			fi3_fewkinds fies_6
 	rename			fi4_skipmeal fies_7
 	rename			fi5_ateless fies_8
-	lab def 		yn 1 "Yes" 2 "No"
-	lab val			fies* yn	
+	lab val			fies* yesno
 	
 * drop unnecessary variables
 	drop			kn3_gov kn3_gov_0 kn3_gov__98 kn3_gov__99 kn3_gov__96 ///
@@ -834,6 +832,14 @@
 						ph8_crops_harvest_covid_how ag_live_affect_other em20a_farm other_access ///
 						submissiondate
 						
+
+************************************************************************
+**# 4 - append baseline fies
+************************************************************************
+	
+* append baseline 
+	append 			using "$export/wave_00/r0_fies"
+	
 * rename regions
 	replace 		region = 1001 if region == 1
 	replace 		region = 1002 if region == 2
@@ -852,11 +858,17 @@
 						"SNNPR" 1008 "Gambela" 1009 "Harar" 1010 ///
 						"Addis Ababa" 1011 "Dire Dawa"
 	lab val			region region
-	 
+	
+* assign value labels
+	lab val			sexhh cs7a_hhh_gender
+	forval 			x = 1/9 {
+	    lab val			fies_`x' yesno
+	}
+	
 /*
-* **********************************************************************
-* 4 - QC check 
-* **********************************************************************
+************************************************************************
+**# 5 - QC check 
+************************************************************************
 
 * compare numerical variables to other rounds & flag if 25+ percentage points different
 	tostring 		wave, replace
@@ -912,17 +924,14 @@
 	destring 		wave, replace
 
 */
-* **********************************************************************
-* 5 - end matter, clean up to save
-* **********************************************************************
+************************************************************************
+**# 6 - end matter, clean up to save
+************************************************************************
 
 * final clean 
 	compress	
 	rename 			household_id hhid_eth 
 	label 			var hhid_eth "household id unique - ethiopia"
-	
-* append baseline 
-	append 			using "$export/wave_00/r0"
 	
 * save file
 	customsave, 	idvar(hhid_eth) filename("eth_panel.dta") ///

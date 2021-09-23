@@ -62,7 +62,7 @@
 	rename			s8q02h	fies_3
 
 * keep relevant
-	keep 			ea_ household_ fies_* 
+	keep 			household_ fies_* 
 
 	
 *************************************************************************
@@ -78,7 +78,7 @@ preserve
 	keep			if s1q01 == 1
 
 * keep relevant variable
-	keep			ea_ household_ saq01 saq14 s1q02
+	keep			household_ saq01 saq14 s1q02
 
 * save temp file
 	tempfile		temp1
@@ -118,7 +118,7 @@ preserve
 	
 * get panel weights
 	rename			pw_w4 phw
-	keep			household_id ea_id phw
+	keep			household_id phw
 
 * save temp file
 	tempfile		temp2
@@ -141,11 +141,14 @@ restore
 	drop if			_merge != 3
 	drop			_merge
 	
+* rename panel weights
+	rename			phw phw_cs
+	
 * create wave indicator	
 	gen				wave = 0
 	lab var			wave "wave number"
 
-	order			household_id ea_id wave phw region sector sexhh ///
+	order			household_id wave phw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9
 
