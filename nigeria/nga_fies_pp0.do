@@ -169,7 +169,7 @@ restore
 	
 	
 * save 
-	save			"$export/wave_00/r0_fies", replace	
+	save			"$export/wave_00/r-1_fies", replace	
 	
 	
 /* END */	

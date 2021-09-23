@@ -74,6 +74,9 @@ preserve
 * load data
 	use				"$root/wave_00/HH/sect1_hh_w4", clear
 
+* check for unique identifier
+	isid			household_id individual_id
+	
 * identify head of household
 	keep			if s1q01 == 1
 
@@ -116,6 +119,9 @@ preserve
 * load data
 	use				"$root/wave_00/HH/sect_cover_hh_w4", clear
 	
+* check for unique identifier
+	isid			household_id
+	
 * get panel weights
 	rename			pw_w4 phw
 	keep			household_id phw
@@ -152,9 +158,34 @@ restore
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9
 
+************************************************************************
+**# 4 - clean to match lsms_panel
+************************************************************************
+
+* rename regions
+	replace 		region = 1001 if region == 1
+	replace 		region = 1002 if region == 2
+	replace 		region = 1003 if region == 3
+	replace 		region = 1004 if region == 4
+	replace 		region = 1005 if region == 5
+	replace 		region = 1006 if region == 6
+	replace 		region = 1007 if region == 7
+	replace 		region = 1008 if region == 12
+	replace			region = 1009 if region == 13
+	replace			region = 1010 if region == 14
+	replace			region = 1011 if region == 15
+	
+	lab def			region 1001 "Tigray" 1002 "Afar" 1003 "Amhara" 1004 ///
+						"Oromia" 1005 "Somali" 1006 "Benishangul-Gumuz" 1007 ///
+						"SNNPR" 1008 "Gambela" 1009 "Harar" 1010 ///
+						"Addis Ababa" 1011 "Dire Dawa"
+	lab val			region region
+	
+	
+					
 					
 ************************************************************************
-**# 4 - end matter, clean up to save
+**# 5 - end matter, clean up to save
 ************************************************************************
 	
 * identify unique identifier and describe data
