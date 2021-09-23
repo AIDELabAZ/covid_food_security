@@ -929,13 +929,16 @@
 ************************************************************************
 
 * final clean 
-	compress	
 	rename 			household_id hhid_eth 
 	label 			var hhid_eth "household id unique - ethiopia"
 	
+* identify unique identifier and describe data
+	isid			hhid_eth wave
+	sort			hhid_eth wave
+	compress
+	
 * save file
-	customsave, 	idvar(hhid_eth) filename("eth_panel.dta") ///
-					path("$export") dofile(eth_build_master) user($user)
+	save 			"$export/eth_panel_fies.dta", replace
 
 * close the log
 	log	close
