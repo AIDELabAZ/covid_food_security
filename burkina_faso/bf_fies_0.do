@@ -1,9 +1,9 @@
 * Project: COVID Food Security
 * Created on: 22 September 2021
 * Created by: lirr
-* Edited by: lirr
-* Last edited: 22 September 2021
-* Stata v.17
+* Edited by: jdm
+* Last edited: 23 September 2021
+* Stata v.17.0
 
 * does
 	* reads in baseline burkina faso data
@@ -13,8 +13,7 @@
 	* raw burkina faso data 
 
 * TO DO:
-	* create fies variables
-	* find unique identifier for fies data
+	* complete
 
 
 ************************************************************************
@@ -37,6 +36,9 @@
 		
 * load data
 	use 			"$root/wave_00/menage/s08a_me_BFA2018", clear
+	
+* check for unique identifier
+	isid			grappe menage
 
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
@@ -68,12 +70,11 @@ preserve
 * load data
 	use				"$root/wave_00/menage/ehcvm_welfare_BFA2018", clear
 
-/* identify head of household
-	keep			if s1q01 == 1
-*/
+* check for unique identifier
+	isid			grappe menage
+	
 * keep relevant variable
 	keep			hhid zae menage grappe region milieu hgender hhweight
-
 
 * save temp file
 	tempfile		temp1
@@ -82,7 +83,21 @@ preserve
 restore
 
 * merge with fies data
-	merge 			1:1 grappe menage using "`temp1'", nogen
+	merge 			1:1 grappe menage using "`temp1'"
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 7010 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
+	
+* rename variables
 	rename			milieu   sector
 	rename			region   region
 	rename			hgender  sexhh
@@ -102,7 +117,12 @@ restore
 **# 3 - end matter, clean up to save
 ************************************************************************
 	
+* identify unique identifier and describe data
+	isid			grappe menage
+	sort			grappe menage
 	compress
+	summarize
+	describe
 	
 * save 
 	save			"$export/wave_00/r0_fies", replace

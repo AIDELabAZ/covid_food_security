@@ -1,9 +1,9 @@
 * Project: COVID Food Security
 * Created on: 2 September 2021
 * Created by: lirr
-* Edited by: lirr
-* Last edited: 9 September 2021
-* Stata v.17
+* Edited by: jdm
+* Last edited: 23 September 2021
+* Stata v.17.0
 
 * does
 	* reads in baseline ethiopia data
@@ -13,7 +13,7 @@
 	* raw ethiopia data 
 
 * TO DO:
-	* create var wave and assign value of zero
+	* complete
 
 
 ************************************************************************
@@ -37,6 +37,9 @@
 * load data
 	use 			"$root/wave_00/HH/sect8_hh_w4", clear
 
+* check for unique identifier
+	isid			household_id
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
 	foreach 		x in a b c d e f g h{
@@ -46,7 +49,6 @@
 	
 	replace 		s8q01 = 0 if s8q01 == 2
 	lab val 		s8q01 yesno
-	
 	
 * rename variables
 	rename 			s8q01 	fies_4
@@ -78,7 +80,6 @@ preserve
 * keep relevant variable
 	keep			ea_ household_ saq01 saq14 s1q02
 
-
 * save temp file
 	tempfile		temp1
 	save			`temp1'
@@ -86,7 +87,21 @@ preserve
 restore
 
 * merge with fies data
-	merge 			1:1 household_id using "`temp1'", assert(3) nogen
+	merge 			1:1 household_id using "`temp1'", assert(3)
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 6770 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
+	
+* rename variables
 	rename			saq14 sector
 	rename			saq01 region
 	rename			s1q02 sexhh
@@ -112,7 +127,19 @@ preserve
 restore
 
 * merge with fies data
-	merge			1:1 household_id using "`temp2'", assert(3) nogen
+	merge			1:1 household_id using "`temp2'", assert(3)
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 6770 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
 	
 * create wave indicator	
 	gen				wave = 0
@@ -127,7 +154,12 @@ restore
 **# 4 - end matter, clean up to save
 ************************************************************************
 	
+* identify unique identifier and describe data
+	isid			household_id
+	sort			household_id
 	compress
+	summarize
+	describe
 	
 * save 
 	save			"$export/wave_00/r0_fies", replace

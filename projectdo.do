@@ -106,7 +106,7 @@ if $pack == 1 {
 **# 1 - run household data cleaning .do file
 ************************************************************************
 
-	do 			"$code/analysis/cleaning/pnl_cleaning.do" 	//runs all cleaning files 
+*	do 			"$code/analysis/cleaning/pnl_cleaning.do" 	//runs all cleaning files 
 	
 	
 ************************************************************************

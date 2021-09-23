@@ -1,9 +1,9 @@
 * Project: COVID Food Security
 * Created on: 13 September 2021
 * Created by: lirr
-* Edited by: lirr
-* Last edited: 22 Sep 2021
-* Stata v.17
+* Edited by: jdm
+* Last edited: 23 Sep 2021
+* Stata v.17.0
 
 * does
 	* reads in baseline nigeria post-planting data
@@ -38,6 +38,9 @@
 * load data
 	use 			"$root/wave_00/sect9_plantingw4", clear
 
+* check for unique identifier
+	isid			hhid
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
 	foreach 		x in a b c d e f g h i j {
@@ -63,6 +66,7 @@
 	keep 			ea hhid fies_* region_broad region /// 
 					postal_id sector
 
+					
 ************************************************************************
 **# 2 - merge in hh data and HOH gender
 ************************************************************************
@@ -72,6 +76,9 @@ preserve
 * load data
 	use				"$root/wave_00/sect1_plantingw4", clear
 
+* check for unique identifier
+	isid			hhid indiv
+	
 * identify head of household and gender
 	rename			s1q2 sexhh
 	keep			if s1q3 == 1
@@ -86,7 +93,19 @@ preserve
 restore
 
 * merge with fies data
-	merge 			1:1 hhid using "`temp1'", nogen
+	merge 			1:1 hhid using "`temp1'"
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 5046 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
 
 	
 ************************************************************************
@@ -97,6 +116,9 @@ preserve
 
 * load data
 	use				"$root/wave_00/secta_plantingw4", clear
+	
+* check for unique identifier
+	isid			hhid
 	
 * get panel weights
 	rename			wt_wave4 phw
@@ -109,7 +131,20 @@ preserve
 restore
 
 * merge with fies data
-	merge			1:1 hhid using "`temp2'", nogen
+	merge			1:1 hhid using "`temp2'"
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 5046 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
+	
 * generate wave variable
 	gen				wave = -1
 	lab var			wave "wave number"
@@ -121,9 +156,14 @@ restore
 ************************************************************************
 **# 4 - end matter, clean up to save
 ************************************************************************
-	
+
+* identify unique identifier and describe data
+	isid			hhid
+	sort			hhid
 	compress
-	
+	summarize
+	describe
+		
 * close the log
 	log	close
 	
