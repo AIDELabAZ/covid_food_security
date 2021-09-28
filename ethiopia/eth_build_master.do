@@ -78,6 +78,10 @@
 * create country variable
 	gen				country = 1
 	
+	lab def				country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val				country country
+	lab var				country "Country"
+	
 * replace all missing values as . (not .a, .b, etc.)
 	quietly: ds, has(type numeric)
 	foreach var in `r(varlist)' {

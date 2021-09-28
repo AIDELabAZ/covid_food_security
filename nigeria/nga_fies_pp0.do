@@ -14,7 +14,7 @@
 	* raw nigeria post-planting data 
 
 * TO DO:
-	* match fies variables to lsms panel variables
+	* complete
 
 
 ************************************************************************
@@ -152,12 +152,19 @@ restore
 	gen				wave = -1
 	lab var			wave "wave number"
 
-/* generate country variable
+* generate country variable
 	gen				country = 3
-	lab var			country "Country"
-	lab def			"Country" 3 "Nigeria"
-*/	
-	order			hhid ea wave phw_cs region sector sexhh ///
+
+	lab def			country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val			country country
+	lab var			country "Country"	
+
+* keep necessary variables and order
+	keep			country hhid ea wave phw_cs region sector sexhh ///
+					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
+					fies_7 fies_8 fies_9		
+
+	order			country hhid ea wave phw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9		
 
@@ -229,18 +236,22 @@ restore
 	lab val			sector sector
 
 * relabel sexhh
-	lab def			sexhh 1 "MALE" 2 "FEMALE"
+	lab def			sexhh 1 "Male" 2 "Female"
 	
 	lab val			sexhh sexhh
-	
+
+* rename hhid
+	rename 			hhid hhid_nga
+	replace 		hhid_nga = "n" + hhid_nga if hhid_nga != "."
+	replace			hhid_nga = "" if hhid_nga == "."
 	
 ************************************************************************
 **# 5 - end matter, clean up to save
 ************************************************************************
 
 * identify unique identifier and describe data
-	isid			hhid
-	sort			hhid
+	isid			hhid_nga
+	sort			hhid_nga
 	compress
 	summarize
 	describe
