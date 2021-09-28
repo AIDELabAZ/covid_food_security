@@ -241,11 +241,8 @@ restore
 	
 	lab val			sexhh sexhh
 
-/* rename hhid
+* rename hhid
 	rename 			hhid hhid_nga
-	replace 		hhid_nga = "n" + hhid_nga if hhid_nga != "."
-	replace			hhid_nga = "" if hhid_nga == "."
-
 					
 		
 ************************************************************************

@@ -242,8 +242,7 @@ restore
 
 * rename hhid
 	rename 			hhid hhid_nga
-	replace 		hhid_nga = "n" + hhid_nga if hhid_nga != "."
-	replace			hhid_nga = "" if hhid_nga == "."
+
 	
 ************************************************************************
 **# 5 - end matter, clean up to save
