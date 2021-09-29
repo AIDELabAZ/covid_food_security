@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: Aug 2021
 * Created by: amf
-* Edited by: jdm
-* Last edited: 23 Sep 2021
+* Edited by: lirr
+* Last edited: 29 Sep 2021
 * Stata v.17.0
 
 * does
@@ -17,7 +17,7 @@
 
 
 ************************************************************************
-**# setup
+**# 0 - setup
 ************************************************************************
 
 * define
@@ -31,7 +31,7 @@
 
 	
 *************************************************************************
-**# FIES data
+**# 1 - FIES data
 *************************************************************************
 		
 * load data
@@ -62,7 +62,7 @@
 
 	
 *************************************************************************
-**# merge in hh data
+**# 2 - merge in hh data
 *************************************************************************	
 
 preserve 
@@ -101,10 +101,12 @@ restore
 	rename 			reside sector
 	rename 			panelweight_2019 phw
 	rename 			hh_wgt hhw
-
+	rename			region region_broad
+	rename			district region
+	
 	
 *************************************************************************
-**# merge in HOH gender 
+**# 3 - merge in HOH gender 
 *************************************************************************
 
 preserve 
@@ -140,14 +142,91 @@ restore
 	
 	drop if			_merge != 3
 	drop			_merge
+
+* generate country variable
+	gen				country = 2
+
+	lab def			country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val			country country
+	lab var			country "Country"	
 	
 	
-	order 			y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
+	order 			country y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
-	
+
 
 ************************************************************************
-**# 2 - end matter, clean up to save
+**# 4 - clean to match lsms_panel
+************************************************************************
+
+* rename regions
+	replace 		region = 2101 if region == 101
+	replace 		region = 2102 if region == 102
+	replace 		region = 2103 if region == 103
+	replace 		region = 2104 if region == 104
+	replace 		region = 2105 if region == 105
+	replace 		region = 2107 if region == 107
+	replace 		region = 2201 if region == 201
+	replace 		region = 2202 if region == 202
+	replace			region = 2203 if region == 203
+	replace			region = 2204 if region == 204
+	replace			region = 2205 if region == 205
+	replace			region = 2206 if region == 206
+	replace			region = 2207 if region == 207
+	replace			region = 2208 if region == 208
+	replace			region = 2209 if region == 209
+	replace			region = 2210 if region == 210
+	replace			region = 2301 if region == 301
+	replace			region = 2302 if region == 302
+	replace			region = 2303 if region == 303
+	replace			region = 2304 if region == 304
+	replace			region = 2305 if region == 305
+	replace			region = 2306 if region == 306
+	replace			region = 2307 if region == 307
+	replace			region = 2308 if region == 308
+	replace			region = 2309 if region == 309
+	replace			region = 2310 if region == 310
+	replace			region = 2311 if region == 311
+	replace			region = 2312 if region == 312
+	replace			region = 2313 if region == 313
+	replace			region = 2314 if region == 314
+	replace			region = 2315 if region == 315
+	
+	
+	lab def			region 2101 "Chitipa" 2102 "Karonga" 2103 "Nkhata Bay" ///
+						2104 "Rumphi" 2105 "Mzimba" 2107 "Mzuzu City" ///
+						2201 "Kasungu" 2202 "Nkhotakota" 2203 "Ntchisi" ///
+						2204 "Dowa" 2205 "Salima" 2206 "Lilongwe" ///
+						2207 "Mchinji" 2208 "Dedza" 2209 "Ntcheu" ///
+						2210 "Lilongwe City" 2301 "Mangochi" 2302 "Machinga" ///
+						2303 "Zomba" 2304 "Chiradzulu" 2305 "Blantyre" ///
+						2306 "Mwanza" 2307 "Thyolo" 2308 "Mulanje" ///
+						2309 "Phalombe" 2310 "Chikwawa" 2311 "Nsanje" ///
+						2312 "Balaka" 2313 "Neno" 2314 "Zomba City" ///
+						2315 "Blantyre City"
+	
+	lab val			region region
+	
+* relabel sector
+	replace			sector = 0 if sector == 1
+	replace			sector = 1 if sector == 2
+	replace			sector = 2 if sector == 0
+
+	lab def			sector 1 "Rural" 2 "Urban"
+	
+	lab val			sector sector
+
+* relabel sexhh
+	lab def			sexhh 1 "Male" 2 "Female"
+	
+	lab val			sexhh sexhh
+
+* rename hhid
+	rename 			household_id hhid_mwi
+					
+						
+************************************************************************
+**# 5 - end matter, clean up to save
 ************************************************************************
 	
 * identify unique identifier and describe data

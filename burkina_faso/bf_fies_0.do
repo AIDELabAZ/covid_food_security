@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: 22 September 2021
 * Created by: lirr
-* Edited by: jdm
-* Last edited: 23 September 2021
+* Edited by: lirr
+* Last edited: 29 September 2021
 * Stata v.17.0
 
 * does
@@ -101,20 +101,78 @@ restore
 	rename			milieu   sector
 	rename			region   region
 	rename			hgender  sexhh
-	rename			hhweight phw
+	rename			hhweight phw_cs
 	rename			zae 	 region_broad
 	
 * create wave indicator	
 	gen				wave = 0
 	lab var			wave "wave number"
 
-	order			hhid vague grappe menage wave phw region sector ///
+* generate country variable
+	gen				country = 5
+
+	lab def			country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val			country country
+	lab var			country "Country"	
+	
+* select target variables and reorder
+	keep			country hhid vague grappe menage wave phw region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8
 	
+	order			country hhid vague grappe menage wave phw region sector ///
+					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
+					fies_7 fies_8
+	
+					
+************************************************************************
+**# 4 - clean to match lsms panel
+************************************************************************
+
+* rename regions
+	replace			region = 5001 if region == 1
+	replace			region = 5002 if region == 2
+	replace			region = 5003 if region == 3
+	replace			region = 5004 if region == 4
+	replace			region = 5005 if region == 5
+	replace			region = 5006 if region == 6
+	replace			region = 5007 if region == 7
+	replace			region = 5008 if region == 8
+	replace			region = 5009 if region == 9
+	replace			region = 5010 if region == 10
+	replace			region = 5011 if region == 11
+	replace			region = 5012 if region == 12
+	replace			region = 5013 if region == 13
+	
+	lab def			region 5001 "Boucle du Mouhoun" 5002 "Cascades" ///
+						5003 "Centre" 5004 "Centre-Est" 5005 "Centre-Nord" ///
+						5006 "Centre-Ouste" 5007 "Centre-Sur" 5008 "Est" ///
+						5009 "Hauts Bassins" 5010 "Nord" 5011 "Plateu-Central" ///
+						5012 "Sahel" 5013 "Sud-Ouest"
+	
+	lab val			region region
+
+*  rename sector
+	replace			sector = 0 if sector == 1
+	replace			sector = 1 if sector == 2
+	replace			sector = 2 if sector == 0
+
+	lab def			sector 1 "Rural" 2 "Urban"
+	
+	lab val			sector sector
+
+* relabel sexhh
+	lab def			sexhh 1 "Male" 2 "Female"
+	
+	lab val			sexhh sexhh
+
+* rename hhid
+	rename 			hhid hhid_bf
+	
+	
 
 ************************************************************************
-**# 3 - end matter, clean up to save
+**# 4 - end matter, clean up to save
 ************************************************************************
 	
 * identify unique identifier and describe data

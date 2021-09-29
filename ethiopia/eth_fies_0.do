@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: 2 September 2021
 * Created by: lirr
-* Edited by: jdm
-* Last edited: 23 September 2021
+* Edited by: lirr
+* Last edited: 29 September 2021
 * Stata v.17.0
 
 * does
@@ -154,7 +154,14 @@ restore
 	gen				wave = 0
 	lab var			wave "wave number"
 
-	order			household_id wave phw_cs region sector sexhh ///
+* generate country variable
+	gen				country = 1
+
+	lab def			country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val			country country
+	lab var			country "Country"	
+
+	order			country household_id wave phw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9
 
@@ -181,16 +188,28 @@ restore
 						"Addis Ababa" 1011 "Dire Dawa"
 	lab val			region region
 	
+* relabel sector
+	lab def			sector 1 "Rural" 2 "Urban"
 	
-					
-					
+	lab val			sector sector
+
+* relabel sexhh
+	lab def			sexhh 1 "Male" 2 "Female"
+	
+	lab val			sexhh sexhh
+
+* rename hhid
+	rename 			household_id hhid_eth
+
+	
+	
 ************************************************************************
 **# 5 - end matter, clean up to save
 ************************************************************************
 	
 * identify unique identifier and describe data
-	isid			household_id
-	sort			household_id
+	isid			hhid_eth
+	sort			hhid_eth
 	compress
 	summarize
 	describe
