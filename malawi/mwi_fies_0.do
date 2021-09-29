@@ -209,6 +209,8 @@ restore
 	
 	lab val			region region
 	
+	lab var			region "CS1: Region"
+	
 * relabel sector
 	replace			sector = 0 if sector == 1
 	replace			sector = 1 if sector == 2
@@ -217,11 +219,15 @@ restore
 	lab def			sector 1 "Rural" 2 "Urban"
 	
 	lab val			sector sector
+	
+	lab var			sector "CS4: Sector"
 
 * relabel sexhh
 	lab def			sexhh 1 "Male" 2 "Female"
 	
 	lab val			sexhh sexhh
+	
+	lab var			sexhh "(max) sexhh"
 
 /* rename hhid
 	rename 			household_id hhid_mwi
