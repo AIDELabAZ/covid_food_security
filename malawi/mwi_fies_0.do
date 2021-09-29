@@ -150,6 +150,8 @@ restore
 	lab val			country country
 	lab var			country "Country"	
 	
+	keep			country y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
+						fies_4 fies_5 fies_7 fies_8 fies_9
 	
 	order 			country y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
@@ -221,9 +223,9 @@ restore
 	
 	lab val			sexhh sexhh
 
-* rename hhid
+/* rename hhid
 	rename 			household_id hhid_mwi
-					
+*/					
 						
 ************************************************************************
 **# 5 - end matter, clean up to save
