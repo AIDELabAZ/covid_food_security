@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: 7 September 2021
 * Created by: lirr
-* Edited by: jdm
-* Last edited: 28 Sep 2021
+* Edited by: lirr
+* Last edited: 30 Sep 2021
 * Stata v.17.0
 
 * does
@@ -243,6 +243,13 @@ restore
 
 * rename hhid
 	rename 			hhid hhid_nga
+	
+* relabel variables	
+	lab var			sexhh		"(max) sexhh"
+	lab var			region 		"CS1: Region"
+	lab var			sector		"CS4: Sector"
+	lab var			phw_cs		"Population weight- cs"
+	lab var			hhid_nga	"Household ID"
 					
 		
 ************************************************************************
@@ -250,8 +257,8 @@ restore
 ************************************************************************
 	
 * identify unique identifier and describe data
-	isid			hhid
-	sort			hhid
+	isid			hhid_nga
+	sort			hhid_nga
 	compress
 	summarize
 	describe

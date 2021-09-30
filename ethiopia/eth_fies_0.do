@@ -152,7 +152,7 @@ restore
 	
 * create wave indicator	
 	gen				wave = 0
-	lab var			wave "wave number"
+	lab var			wave "Wave number"
 
 * generate country variable
 	gen				country = 1
@@ -188,18 +188,25 @@ restore
 						"Addis Ababa" 1011 "Dire Dawa"
 	lab val			region region
 	
-* relabel sector
+* redefine sector
 	lab def			sector 1 "Rural" 2 "Urban"
 	
 	lab val			sector sector
 
-* relabel sexhh
+* redefine sexhh
 	lab def			sexhh 1 "Male" 2 "Female"
 	
 	lab val			sexhh sexhh
 
 * rename hhid
 	rename 			household_id hhid_eth
+
+* relabel variables	
+	lab var			sexhh		"(max) sexhh"
+	lab var			region 		"CS1: Region"
+	lab var			sector		"CS4: Sector"
+	lab var			phw_cs		"Population weight- cs"
+	lab var			hhid_eth	"household id unique - ethiopia"
 
 	
 	

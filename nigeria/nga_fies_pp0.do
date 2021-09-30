@@ -2,7 +2,7 @@
 * Created on: 13 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 28 Sep 2021
+* Last edited: 30 Sep 2021
 * Stata v.17.0
 
 * does
@@ -242,6 +242,13 @@ restore
 
 * rename hhid
 	rename 			hhid hhid_nga
+
+* relabel variables	
+	lab var			sexhh		"(max) sexhh"
+	lab var			region 		"CS1: Region"
+	lab var			sector		"CS4: Sector"
+	lab var			phw_cs		"Population weight- cs"
+	lab var			hhid_nga	"Household ID"
 
 	
 ************************************************************************

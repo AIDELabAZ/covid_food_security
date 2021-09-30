@@ -229,6 +229,10 @@ restore
 	
 	lab var			sexhh "(max) sexhh"
 
+* relabel phw_cs
+	lab var			phw_cs		"Population weight- cs"
+
+
 /* rename hhid
 	rename 			household_id hhid_mwi
 */					

@@ -98,15 +98,15 @@ restore
 	drop			_merge
 	
 * rename variables
-	rename			milieu   sector
-	rename			region   region
-	rename			hgender  sexhh
-	rename			hhweight phw_cs
-	rename			zae 	 region_broad
+	rename			milieu		sector
+	rename			region		region
+	rename			hgender		sexhh
+	rename			hhweight	phw_cs
+	rename			zae			region_broad
 	
 * create wave indicator	
 	gen				wave = 0
-	lab var			wave "wave number"
+	lab var			wave "Wave number"
 
 * generate country variable
 	gen				country = 5
@@ -116,17 +116,17 @@ restore
 	lab var			country "Country"	
 	
 * select target variables and reorder
-	keep			country hhid vague grappe menage wave phw region sector ///
+	keep			country hhid vague grappe menage wave phw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8
 	
-	order			country hhid vague grappe menage wave phw region sector ///
+	order			country hhid vague grappe menage wave phw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8
 	
 					
 ************************************************************************
-**# 4 - clean to match lsms panel
+**# 3 - clean to match lsms panel
 ************************************************************************
 
 * rename regions
@@ -169,6 +169,13 @@ restore
 * rename hhid
 	rename 			hhid hhid_bf
 	
+	lab var			hhid_bf "household id unique - Burkina Faso"
+	
+* relabel variables	
+	lab var			sexhh		"(max) sexhh"
+	lab var			region 		"CS1: Region"
+	lab var			sector		"CS4: Sector"
+	lab var			phw_cs		"Population weight- cs"
 	
 
 ************************************************************************
