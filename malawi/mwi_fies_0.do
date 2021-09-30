@@ -2,7 +2,7 @@
 * Created on: Aug 2021
 * Created by: amf
 * Edited by: lirr
-* Last edited: 29 Sep 2021
+* Last edited: 30 Sep 2021
 * Stata v.17.0
 
 * does
@@ -99,7 +99,7 @@ restore
 	
 * rename variables
 	rename 			reside sector
-	rename 			panelweight_2019 phw
+	rename 			panelweight_2019 phw_cs
 	rename 			hh_wgt hhw
 	rename			region region_broad
 	rename			district region
@@ -143,6 +143,10 @@ restore
 	drop if			_merge != 3
 	drop			_merge
 
+* create wave indicator	
+	gen				wave = 0
+	lab var			wave "Wave number"
+
 * generate country variable
 	gen				country = 2
 
@@ -150,10 +154,10 @@ restore
 	lab val			country country
 	lab var			country "Country"	
 	
-	keep			country y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
+	keep			country y4_hhid wave phw_cs region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
 	
-	order 			country y4_hhid y3_hhid phw hhw region sector sexhh fies_2 ///
+	order 			country y4_hhid wave phw_cs region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
 
 
@@ -230,20 +234,20 @@ restore
 	lab var			sexhh "(max) sexhh"
 
 * relabel phw_cs
-	lab var			phw_cs		"Population weight- cs"
+	lab var			phw_cs "Population weight- cs"
 
-
-/* rename hhid
-	rename 			household_id hhid_mwi
-*/					
+* rename hhid
+	rename 			y4_hhid hhid_mwi
+	lab var			hhid_mwi "household ID malawi"					
+						
 						
 ************************************************************************
 **# 5 - end matter, clean up to save
 ************************************************************************
 	
 * identify unique identifier and describe data
-	isid			y4_hhid
-	sort			y4_hhid
+	isid			hhid_mwi
+	sort			hhid_mwi
 	compress
 	summarize
 	describe

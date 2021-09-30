@@ -2,7 +2,7 @@
 * Created on: 22 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 29 September 2021
+* Last edited: 30 September 2021
 * Stata v.17.0
 
 * does
@@ -13,7 +13,7 @@
 	* raw burkina faso data 
 
 * TO DO:
-	* complete
+	* head of household identifier
 
 
 ************************************************************************
@@ -71,7 +71,7 @@ preserve
 	use				"$root/wave_00/menage/ehcvm_welfare_BFA2018", clear
 
 * check for unique identifier
-	isid			grappe menage
+	isid			hhid
 	
 * keep relevant variable
 	keep			hhid zae menage grappe region milieu hgender hhweight
@@ -116,11 +116,11 @@ restore
 	lab var			country "Country"	
 	
 * select target variables and reorder
-	keep			country hhid vague grappe menage wave phw_cs region sector ///
+	keep			country hhid wave phw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8
 	
-	order			country hhid vague grappe menage wave phw_cs region sector ///
+	order			country hhid wave phw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8
 	
@@ -183,8 +183,8 @@ restore
 ************************************************************************
 	
 * identify unique identifier and describe data
-	isid			grappe menage
-	sort			grappe menage
+	isid			hhid_bf
+	sort			hhid_bf
 	compress
 	summarize
 	describe
