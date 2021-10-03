@@ -139,7 +139,7 @@ foreach v of numlist 1/8 {
 
 			gen fs_index = (fs1 + fs2 + fs3 + fs4 + fs5 + fs6 + fs7 + fs8)
 			
-			*gen fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace + fs4_noreplace + fs5_noreplace + fs6_noreplace + fs7_noreplace + fs8_noreplace) 
+			gen fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace + fs4_noreplace + fs5_noreplace + fs6_noreplace + fs7_noreplace + fs8_noreplace) 
 
 			*Binary food security indicators (Smith et al. 2017)
 			gen mild_fs = (fs_index>0)
@@ -150,7 +150,7 @@ foreach v of numlist 1/8 {
 			gen moderate2_fs = (fs_index_2>3) 	if fs_index_2!=.
 			gen severe2_fs = (fs_index_2>7)		if fs_index_2!=.		
 			
-			/* Additional binary food security base don FIES domains
+			* Additional binary food security base don FIES domains
 			gen anxiety 		= (fs1_noreplace + fs2_noreplace)
 			replace anxiety = 1 if anxiety > 0 & anxiety !=.
 			
@@ -159,7 +159,7 @@ foreach v of numlist 1/8 {
 			
 			gen hunger 			= (fs6_noreplace + fs7_noreplace + fs8_noreplace) 
 			replace hunger = 1 if hunger > 0 & hunger !=.			
-			*/
+			
 
 			*Standardized outcomes
 			egen std_fs_index = std(fs_index) if post==0
