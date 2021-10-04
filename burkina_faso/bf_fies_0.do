@@ -2,7 +2,7 @@
 * Created on: 22 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 30 September 2021
+* Last edited: 4 October 2021
 * Stata v.17.0
 
 * does
@@ -39,7 +39,7 @@
 	
 * check for unique identifier
 	isid			grappe menage
-
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
 	foreach 		x in 1 2 3 4 5 6 7 8{
@@ -56,11 +56,11 @@
 	rename 			s08aq06 	fies_1
 	rename 			s08aq07  	fies_2
 	rename			s08aq08 	fies_3
-
-* keep relevant
-	keep 			vague grappe menage fies_* 
-
 	
+* keep relevant
+	keep 			vague grappe menage fies_*
+
+
 *************************************************************************
 **# 2 - merge in hh data and panel weight data
 *************************************************************************	
@@ -117,13 +117,11 @@ restore
 	
 * select target variables and reorder
 	keep			country hhid wave phw_cs region sector ///
-					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
-					fies_7 fies_8
+					sexhh fies_*
 	
 	order			country hhid wave phw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
-					fies_7 fies_8
-	
+					fies_7 fies_8 
 					
 ************************************************************************
 **# 3 - clean to match lsms panel

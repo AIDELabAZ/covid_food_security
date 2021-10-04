@@ -40,8 +40,8 @@
 * check for unique identifier
 	isid			y4_hhid
 	
-* replace counts with binary indicators	
-	lab def 		yesno 1 "Yes" 0 "No" 
+* replace counts with binary indicators	 	
+	lab def 		yesno 1 "Yes" 0 "No"
 	foreach 		x in a b c d e {
 		replace 		hh_h02`x' = 1 if hh_h02`x' > 1 & hh_h02`x' < .
 		lab val 		hh_h02`x' yesno

@@ -2,7 +2,7 @@
 * Created on: July 2020
 * Created by: jdm
 * Edited by: lirr
-* Last edit: 3 October 2021
+* Last edit: 4 October 2021
 * Stata v.17.0
 
 * does
@@ -106,9 +106,19 @@ foreach v of numlist 1/8 {
 	lab val				post post
 	lab var				post "pandemic indicator"
 
+* generate no loss variables
+	foreach 		i of numlist 1/9 {
+					gen 	fies_`i'_noreplace = fies_`i'
+					replace fies_`i'_noreplace = 0 if fies_`i'_noreplace == 2
+					replace fies_`i'_noreplace = . if fies_`i'_noreplace > 2 ///
+							| fies_`i'_noreplace < 0
+					lab val fies_`i'_noreplace yesno
+	}
+
 * ensure fies variables are binary
 	foreach 		x of numlist 1/9 {
 		replace 		fies_`x' = 0 if fies_`x' == 2 | fies_`x' < 0
+		replace			fies_`x' = 0 if fies_`x' > 2 | fies_`x' == .
 		lab val 		fies_`x' yesno
 	}
 	
@@ -127,6 +137,18 @@ foreach v of numlist 1/8 {
 	rename				fies_6 fs3
 	rename				fies_7 fs4
 	rename				fies_8 fs5
+	
+	rename 				fies_1_noreplace fs6_noreplace
+	rename 				fies_2_noreplace fs7_noreplace
+	rename 				fies_3_noreplace fs8_noreplace
+	rename 				fies_4_noreplace fs1_noreplace
+	rename 				fies_5_noreplace fs2_noreplace
+	rename				fies_6_noreplace fs3_noreplace
+	rename				fies_7_noreplace fs4_noreplace
+	rename				fies_8_noreplace fs5_noreplace
+	
+	
+	
 			
 			label var fs1 "(FS1) ... have been woried that you will not have enough to eat?"
 			label var fs2 "(FS2) ... have been woried that you could not eat nutritious foods?"
