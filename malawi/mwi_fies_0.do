@@ -40,12 +40,18 @@
 * check for unique identifier
 	isid			y4_hhid
 	
+* tabulate fies responses
+	foreach 		x in a b c d e {
+		tab 			hh_h02`x', mi
+	}
+	
 * replace counts with binary indicators	 	
 	lab def 		yesno 1 "Yes" 0 "No"
 	foreach 		x in a b c d e {
-		replace 		hh_h02`x' = 1 if hh_h02`x' > 1 & hh_h02`x' < .
+		replace 		hh_h02`x' = 1 if hh_h02`x' > 0& hh_h02`x' != .
 		lab val 		hh_h02`x' yesno
 	}
+	
 	replace 		hh_h01 = 0 if hh_h01 == 2
 	lab val 		hh_h01 yesno
 	

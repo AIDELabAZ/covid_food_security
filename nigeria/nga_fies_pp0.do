@@ -41,6 +41,11 @@
 * check for unique identifier
 	isid			hhid
 	
+* tabulate fies responses
+	foreach 		x in a b c d e f g h i j {
+		tab 			s9q8`x', mi
+	}
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
 	foreach 		x in a b c d e f g h i j {

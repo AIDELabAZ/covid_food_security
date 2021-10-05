@@ -13,7 +13,7 @@
 	* raw burkina faso data 
 
 * TO DO:
-	* head of household identifier
+	* complete
 
 
 ************************************************************************
@@ -40,10 +40,16 @@
 * check for unique identifier
 	isid			grappe menage
 	
+* tabulate fies responses
+	foreach 		x of numlist 1/8 {
+		tab 			s08aq0`x', mi
+	}
+
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
-	foreach 		x in 1 2 3 4 5 6 7 8{
-		replace 		s08aq0`x' = 0 if s08aq0`x' > 1 & s08aq0`x' < .
+	foreach 		x of numlist 1/8 {
+		replace 		s08aq0`x' = . if s08aq0`x' > 2
+		replace 		s08aq0`x' = 0 if s08aq0`x' == 2
 		lab val 		s08aq0`x' yesno
 	}
 	

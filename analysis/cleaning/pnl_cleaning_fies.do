@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 4 October 2021
+* Edited by: jdm
+* Last edit: 5 October 2021
 * Stata v.17.0
 
 * does
@@ -11,7 +11,8 @@
 	* output cleaned panel data
 
 * assumes
-	* cleaned country data
+	* cleaned baseline country data
+	* cleaned lsms_panel from wb_covid repo
 
 * TO DO:
 	* add new rounds
@@ -49,9 +50,17 @@
 * read in data
 	use				"$root/lsms_panel", replace
 
-foreach v of numlist 1/8 {
-	tab fies_`v'
-}
+* tabulate fies responses
+	foreach v of numlist 1/8 {
+		tab 			fies_`v', mi
+	}
+
+* recode all -99 and -98 as missing and yes = 1, no = 0
+	foreach v of numlist 1/8 {
+		replace 		fies_`v' = . if fies_`v' < 0
+		replace 		fies_`v' = 0 if fies_`v' == 2
+		lab val			fies_`v' yesno
+	}
 
 	
 ************************************************************************
@@ -102,66 +111,100 @@ foreach v of numlist 1/8 {
 * generate pre/post covid indicator
 	gen 				post = 0 if wave < 1
 	replace 			post = 1 if post == .
-	lab def				post 0 "pre-covid" 1 "covid"
+	lab def				post 0 "Pre-Covid" 1 "Covid", replace
 	lab val				post post
 	lab var				post "pandemic indicator"
 
-* generate no loss variables
-	foreach 		i of numlist 1/9 {
-					gen 	fies_`i'_noreplace = fies_`i'
-					replace fies_`i'_noreplace = 0 if fies_`i'_noreplace == 2
-					replace fies_`i'_noreplace = . if fies_`i'_noreplace > 2 ///
-							| fies_`i'_noreplace < 0
-					lab val fies_`i'_noreplace yesno
-	}
-
-* ensure fies variables are binary
-	foreach 		x of numlist 1/9 {
-		replace 		fies_`x' = 0 if fies_`x' == 2 | fies_`x' < 0
-		replace			fies_`x' = 0 if fies_`x' > 2 | fies_`x' == .
-		lab val 		fies_`x' yesno
-	}
+* keep only necessary variables
+	keep				country wave hhid hhsize hhsize_adult hhsize_child ///
+							hhsize_schchild sexhh sector region fies_1 fies_2 ///
+							fies_3 fies_4 fies_5 fies_6 fies_7 fies_8 fies_9 ///
+							post phw_cs
 	
+	order				country hhid wave post region sector phw_cs sexhh hhsize ///
+							hhsize_adult hhsize_child hhsize_schchild
+	
+	sort				country hhid wave
+	
+* drop waves where no fies data exists
+	drop if				country == 1 & wave == 7 
+	drop if				country == 1 & wave == 8
+	drop if				country == 1 & wave == 9
+	drop if				country == 2 & wave == 4
+	drop if				country == 2 & wave == 10
+	drop if				country == 3 & wave == 3
+	drop if				country == 3 & wave == 3
+	drop if				country == 3 & wave == 5
+	drop if				country == 3 & wave == 6
+	drop if				country == 3 & wave == 8
+	drop if				country == 3 & wave == 9
+	drop if				country == 3 & wave == 10
+	drop if				country == 3 & wave == 11
+	drop if				country == 5 & wave == 1
+	drop if				country == 5 & wave == 8
+	drop if				country == 5 & wave == 11
 	
 	
 ************************************************************************
 **# 3 - build fies variables
 ************************************************************************
 
-* rename variables to match Bloem variables
-	rename 				fies_1 fs6
-	rename 				fies_2 fs7
-	rename 				fies_3 fs8
-	rename 				fies_4 fs1
-	rename 				fies_5 fs2
-	rename				fies_6 fs3
-	rename				fies_7 fs4
-	rename				fies_8 fs5
-	
-	rename 				fies_1_noreplace fs6_noreplace
-	rename 				fies_2_noreplace fs7_noreplace
-	rename 				fies_3_noreplace fs8_noreplace
-	rename 				fies_4_noreplace fs1_noreplace
-	rename 				fies_5_noreplace fs2_noreplace
-	rename				fies_6_noreplace fs3_noreplace
-	rename				fies_7_noreplace fs4_noreplace
-	rename				fies_8_noreplace fs5_noreplace
-	
-	
-	
-			
-			label var fs1 "(FS1) ... have been woried that you will not have enough to eat?"
-			label var fs2 "(FS2) ... have been woried that you could not eat nutritious foods?"
-			label var fs3 "(FS3) ... had to eat always the same thing?"
-			label var fs4 "(FS4) ... had to skip a meal?"
-			label var fs5 "(FS5) ... had to eat less than they should?"
-			label var fs6 "(FS6) ... found nothing to eat at home?"
-			label var fs7 "(FS7) ... been hungy but did not eat?"
-			label var fs8 "(FS8) ... not eaten all day?"
+* generate no loss variables
+	foreach 		i of numlist 1/9 {
+					gen 	fies_`i'_noreplace = fies_`i'
+					lab val fies_`i'_noreplace yesno
+	}
 
-			gen fs_index = (fs1 + fs2 + fs3 + fs4 + fs5 + fs6 + fs7 + fs8)
+* generate missing flags
+	sort			country wave
+	foreach 		x of numlist 1/9 {
+		egen 			fs_`x'_missing = count(fies_`x'), by(country wave)
+		replace			fs_`x'_missing = 1 if fs_`x'_missing != 0
+	}
+	
+* ensure fies variables are binary
+	foreach 		x of numlist 1/9 {
+		replace			fies_`x' = 0 if fies_`x' == . & fs_`x'_missing != 0
+		lab val 		fies_`x' yesno
+	}
+	
+* tabulate fies responses
+	foreach v of numlist 1/9 {
+		tab 			fies_`v'_noreplace, mi
+	}
+	
+* rename variables to match Bloem variables
+	rename 			fies_1 fs6
+	rename 			fies_2 fs7
+	rename 			fies_3 fs8
+	rename 			fies_4 fs1
+	rename 			fies_5 fs2
+	rename			fies_6 fs3
+	rename			fies_7 fs4
+	rename			fies_8 fs5
+	
+	rename 			fies_1_noreplace fs6_noreplace
+	rename 			fies_2_noreplace fs7_noreplace
+	rename 			fies_3_noreplace fs8_noreplace
+	rename 			fies_4_noreplace fs1_noreplace
+	rename 			fies_5_noreplace fs2_noreplace
+	rename			fies_6_noreplace fs3_noreplace
+	rename			fies_7_noreplace fs4_noreplace
+	rename			fies_8_noreplace fs5_noreplace
+	
+		
+	label var 		fs1 "(FS1) ... have been woried that you will not have enough to eat?"
+	label var 		fs2 "(FS2) ... have been woried that you could not eat nutritious foods?"
+	label var 		fs3 "(FS3) ... had to eat always the same thing?"
+	label var 		fs4 "(FS4) ... had to skip a meal?"
+	label var 		fs5 "(FS5) ... had to eat less than they should?"
+	label var 		fs6 "(FS6) ... found nothing to eat at home?"
+	label var 		fs7 "(FS7) ... been hungy but did not eat?"
+	label var 		fs8 "(FS8) ... not eaten all day?"
+
+	gen 			fs_index = (fs1 + fs2 + fs3 + fs4 + fs5 + fs6 + fs7 + fs8)
 			
-			gen fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace + fs4_noreplace + fs5_noreplace + fs6_noreplace + fs7_noreplace + fs8_noreplace) 
+	gen 			fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace + fs4_noreplace + fs5_noreplace + fs6_noreplace + fs7_noreplace + fs8_noreplace) 
 
 			*Binary food security indicators (Smith et al. 2017)
 			gen mild_fs = (fs_index>0)

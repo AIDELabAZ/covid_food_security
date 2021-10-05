@@ -40,10 +40,15 @@
 * check for unique identifier
 	isid			household_id
 	
+* tabulate fies responses
+	foreach 		x in a b c d e f g h {
+		tab 			s8q02`x', mi
+	}
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
-	foreach 		x in a b c d e f g h{
-		replace 		s8q02`x' = 1 if s8q02`x' > 1 & s8q02`x' < .
+	foreach 		x in a b c d e f g h {
+		replace 		s8q02`x' = 1 if s8q02`x' > 0 & s8q02`x' != .
 		lab val 		s8q02`x' yesno
 	}
 	
