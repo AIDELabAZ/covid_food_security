@@ -160,6 +160,7 @@
 	foreach 		x of numlist 1/9 {
 		egen 			fs_`x'_missing = count(fies_`x'), by(country wave)
 		replace			fs_`x'_missing = 1 if fs_`x'_missing != 0
+		*** =1 if NOT missing, =0 if missing
 	}
 	
 * ensure fies variables are binary
@@ -204,7 +205,9 @@
 
 	gen 			fs_index = (fs1 + fs2 + fs3 + fs4 + fs5 + fs6 + fs7 + fs8)
 			
-	gen 			fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace + fs4_noreplace + fs5_noreplace + fs6_noreplace + fs7_noreplace + fs8_noreplace) 
+	gen 			fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace ///
+						+ fs4_noreplace + fs5_noreplace + fs6_noreplace ///
+						+ fs7_noreplace + fs8_noreplace) 
 
 			*Binary food security indicators (Smith et al. 2017)
 			gen mild_fs = (fs_index>0)

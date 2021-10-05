@@ -107,7 +107,7 @@ restore
 	rename			milieu		sector
 	rename			region		region
 	rename			hgender		sexhh
-	rename			hhweight	phw_cs
+	rename			hhweight	hhw_cs
 	rename			zae			region_broad
 	
 * create wave indicator	
