@@ -143,7 +143,14 @@
 	drop if				country == 5 & wave == 1
 	drop if				country == 5 & wave == 8
 	drop if				country == 5 & wave == 11
-	
+
+* deal with missing sexhh
+	egen 			max_sex = max(sexhh), by(hhid)
+	egen 			min_sex = min(sexhh), by(hhid)
+	gen 			dif_sex = max_sex - min_sex
+	tab 			dif_sex
+	sort 			dif_sex hhid wave
+		
 	
 ************************************************************************
 **# 3 - build fies variables
