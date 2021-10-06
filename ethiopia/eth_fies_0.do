@@ -2,7 +2,7 @@
 * Created on: 2 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 30 September 2021
+* Last edited: 5 October 2021
 * Stata v.17.0
 
 * does
@@ -128,8 +128,8 @@ preserve
 	isid			household_id
 	
 * get panel weights
-	rename			pw_w4 phw
-	keep			household_id phw
+	rename			pw_w4 hhw
+	keep			household_id hhw
 
 * save temp file
 	tempfile		temp2
@@ -153,7 +153,7 @@ restore
 	drop			_merge
 	
 * rename panel weights
-	rename			phw phw_cs
+	rename			hhw hhw_cs
 	
 * create wave indicator	
 	gen				wave = 0
@@ -166,7 +166,7 @@ restore
 	lab val			country country
 	lab var			country "Country"	
 
-	order			country household_id wave phw_cs region sector sexhh ///
+	order			country household_id wave hhw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9
 
@@ -210,7 +210,7 @@ restore
 	lab var			sexhh		"(max) sexhh"
 	lab var			region 		"CS1: Region"
 	lab var			sector		"CS4: Sector"
-	lab var			phw_cs		"Population weight- cs"
+	lab var			hhw_cs		"Population weight- cs"
 	lab var			hhid_eth	"household id unique - ethiopia"
 
 	

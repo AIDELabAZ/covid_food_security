@@ -2,7 +2,7 @@
 * Created on: Aug 2021
 * Created by: amf
 * Edited by: lirr
-* Last edited: 30 Sep 2021
+* Last edited: 5 October 2021
 * Stata v.17.0
 
 * does
@@ -106,7 +106,7 @@ restore
 * rename variables
 	rename 			reside sector
 	rename 			panelweight_2019 phw_cs
-	rename 			hh_wgt hhw
+	rename 			hh_wgt hhw_cs
 	rename			region region_broad
 	rename			district region
 	
@@ -160,10 +160,10 @@ restore
 	lab val			country country
 	lab var			country "Country"	
 	
-	keep			country y4_hhid wave phw_cs region sector sexhh fies_2 ///
+	keep			country y4_hhid wave hhw_cs region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
 	
-	order 			country y4_hhid wave phw_cs region sector sexhh fies_2 ///
+	order 			country y4_hhid wave hhw_cs region sector sexhh fies_2 ///
 						fies_4 fies_5 fies_7 fies_8 fies_9
 
 
@@ -239,8 +239,8 @@ restore
 	
 	lab var			sexhh "(max) sexhh"
 
-* relabel phw_cs
-	lab var			phw_cs "Population weight- cs"
+* relabel hhw_cs
+	lab var			hhw_cs "Household weight- cs"
 
 * rename hhid
 	rename 			y4_hhid hhid_mwi

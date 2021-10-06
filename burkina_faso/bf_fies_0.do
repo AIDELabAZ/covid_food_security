@@ -2,7 +2,7 @@
 * Created on: 22 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 4 October 2021
+* Last edited: 5 October 2021
 * Stata v.17.0
 
 * does
@@ -122,12 +122,13 @@ restore
 	lab var			country "Country"	
 	
 * select target variables and reorder
-	keep			country hhid wave phw_cs region sector ///
+	keep			country hhid wave hhw_cs region sector ///
 					sexhh fies_*
 	
-	order			country hhid wave phw_cs region sector ///
+	order			country hhid wave hhw_cs region sector ///
 					sexhh fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 
+
 					
 ************************************************************************
 **# 3 - clean to match lsms panel

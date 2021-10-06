@@ -2,7 +2,7 @@
 * Created on: 7 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 30 Sep 2021
+* Last edited: 5 Oct 2021
 * Stata v.17.0
 
 * does
@@ -127,8 +127,8 @@ preserve
 	isid			hhid
 	
 * get panel weights
-	rename			wt_wave4 phw
-	keep			hhid ea phw
+	rename			wt_wave4 hhw
+	keep			hhid ea hhw
 
 * save temp file
 	tempfile		temp2
@@ -152,7 +152,7 @@ restore
 	drop			_merge
 
 * rename panelweights
-	rename phw		phw_cs
+	rename hhw		hhw_cs
 	
 * generate wave variable and reorder 	
 	gen				wave = 0
@@ -166,11 +166,11 @@ restore
 	lab var			country "Country"	
 
 * keep variables and order
-	keep			country hhid ea wave phw_cs region sector sexhh ///
+	keep			country hhid ea wave hhw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9		
 
-	order			country hhid ea wave phw_cs region sector sexhh ///
+	order			country hhid ea wave hhw_cs region sector sexhh ///
 					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
 					fies_7 fies_8 fies_9		
 
@@ -253,7 +253,7 @@ restore
 	lab var			sexhh		"(max) sexhh"
 	lab var			region 		"CS1: Region"
 	lab var			sector		"CS4: Sector"
-	lab var			phw_cs		"Population weight- cs"
+	lab var			hhw_cs		"Household weight- cs"
 	lab var			hhid_nga	"Household ID"
 					
 		
