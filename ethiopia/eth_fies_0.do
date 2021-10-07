@@ -2,8 +2,8 @@
 * Created on: 2 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 7 September 2021
-* Stata v.17
+* Last edited: 5 October 2021
+* Stata v.17.0
 
 * does
 	* reads in baseline ethiopia data
@@ -37,19 +37,26 @@
 * load data
 	use 			"$root/wave_00/HH/sect8_hh_w4", clear
 
+* check for unique identifier
+	isid			household_id
+	
+* tabulate fies responses
+	foreach 		x in a b c d e f g h {
+		tab 			s8q02`x', mi
+	}
+	
 * replace counts with binary indicators	
 	lab def 		yesno 1 "Yes" 0 "No" 
-	foreach 		x in a b c d e f g h{
-		replace 		s8q02`x' = 1 if s8q02`x' > 1 & s8q02`x' < .
+	foreach 		x in a b c d e f g h {
+		replace 		s8q02`x' = 1 if s8q02`x' > 0 & s8q02`x' != .
 		lab val 		s8q02`x' yesno
 	}
 	
 	replace 		s8q01 = 0 if s8q01 == 2
 	lab val 		s8q01 yesno
 	
-	
 * rename variables
-	rename 			 s8q01 	fies_4
+	rename 			s8q01 	fies_4
 	rename 			s8q02a 	fies_5
 	rename			s8q02b 	fies_6
 	rename 			s8q02c 	fies_8
@@ -60,13 +67,164 @@
 	rename			s8q02h	fies_3
 
 * keep relevant
-	keep 			ea_ household_ fies_* 
+	keep 			household_ fies_* 
+
+	
+*************************************************************************
+**# 2 - merge in hh data
+*************************************************************************	
+
+preserve
+
+* load data
+	use				"$root/wave_00/HH/sect1_hh_w4", clear
+
+* check for unique identifier
+	isid			household_id individual_id
+	
+* identify head of household
+	keep			if s1q01 == 1
+
+* keep relevant variable
+	keep			household_ saq01 saq14 s1q02
+
+* save temp file
+	tempfile		temp1
+	save			`temp1'
+
+restore
+
+* merge with fies data
+	merge 			1:1 household_id using "`temp1'", assert(3)
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 6770 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
+	
+* rename variables
+	rename			saq14 sector
+	rename			saq01 region
+	rename			s1q02 sexhh
+	
+
+*************************************************************************
+**# 3 - merge in panel weight data
+*************************************************************************	
+
+preserve
+
+* load data
+	use				"$root/wave_00/HH/sect_cover_hh_w4", clear
+	
+* check for unique identifier
+	isid			household_id
+	
+* get panel weights
+	rename			pw_w4 hhw
+	keep			household_id hhw
+
+* save temp file
+	tempfile		temp2
+	save			`temp2'
+
+restore
+
+* merge with fies data
+	merge			1:1 household_id using "`temp2'", assert(3)
+	
+* check to ensure merge is stable and drop unmatched
+	count if		_merge == 3
+	
+	if 				r(N) != 6770 {
+		display			"number of unmatched observations changed!"
+						this isn't a command - it will throw an error to get ///
+							your attention!!!
+	}
+	
+	drop if			_merge != 3
+	drop			_merge
+	
+* rename panel weights
+	rename			hhw hhw_cs
+	
+* create wave indicator	
+	gen				wave = 0
+	lab var			wave "Wave number"
+
+* generate country variable
+	gen				country = 1
+
+	lab def			country 1 "Ethiopia" 2 "Malawi" 3 "Nigeria" 4 "Uganda" 5 "Burkina Faso", replace
+	lab val			country country
+	lab var			country "Country"	
+
+	order			country household_id wave hhw_cs region sector sexhh ///
+					fies_1 fies_2 fies_3 fies_4 fies_5 fies_6 ///
+					fies_7 fies_8 fies_9
 
 ************************************************************************
-**# 2 - end matter, clean up to save
+**# 4 - clean to match lsms_panel
+************************************************************************
+
+* rename regions
+	replace 		region = 1001 if region == 1
+	replace 		region = 1002 if region == 2
+	replace 		region = 1003 if region == 3
+	replace 		region = 1004 if region == 4
+	replace 		region = 1005 if region == 5
+	replace 		region = 1006 if region == 6
+	replace 		region = 1007 if region == 7
+	replace 		region = 1008 if region == 12
+	replace			region = 1009 if region == 13
+	replace			region = 1010 if region == 14
+	replace			region = 1011 if region == 15
+	
+	lab def			region 1001 "Tigray" 1002 "Afar" 1003 "Amhara" 1004 ///
+						"Oromia" 1005 "Somali" 1006 "Benishangul-Gumuz" 1007 ///
+						"SNNPR" 1008 "Gambela" 1009 "Harar" 1010 ///
+						"Addis Ababa" 1011 "Dire Dawa"
+	lab val			region region
+	
+* redefine sector
+	lab def			sector 1 "Rural" 2 "Urban"
+	
+	lab val			sector sector
+
+* redefine sexhh
+	lab def			sexhh 1 "Male" 2 "Female"
+	
+	lab val			sexhh sexhh
+
+* rename hhid
+	rename 			household_id hhid_eth
+
+* relabel variables	
+	lab var			sexhh		"(max) sexhh"
+	lab var			region 		"CS1: Region"
+	lab var			sector		"CS4: Sector"
+	lab var			hhw_cs		"Population weight- cs"
+	lab var			hhid_eth	"household id unique - ethiopia"
+
+	
+	
+************************************************************************
+**# 5 - end matter, clean up to save
 ************************************************************************
 	
+* identify unique identifier and describe data
+	isid			hhid_eth
+	sort			hhid_eth
 	compress
+	summarize
+	describe
 	
 * save 
 	save			"$export/wave_00/r0_fies", replace
