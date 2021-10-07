@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 6 October 2021
+* Edited by: jdm
+* Last edit: 7 October 2021
 * Stata v.17.0
 
 * does
@@ -13,21 +13,16 @@
 * assumes
 	* cleaned baseline country data
 	* cleaned lsms_panel from wb_covid repo
+	* xfill
+	* carryforward
 
 * TO DO:
-	* add new rounds
+	* complete
 
 
 ************************************************************************
 **# 0 - setup
 ************************************************************************
-
-* run do files for each country (takes a little while to run)
-	run				"$code/ethiopia/eth_fies_0"
-	run 			"$code/malawi/mwi_fies_0"
-	run				"$code/nigeria/nga_fies_pp0"
-	run				"$code/nigeria/nga_fies_ph0"
-	run 			"$code/burkina_faso/bf_fies_0"
 
 * define
 	global  root    =	"$data/analysis"
@@ -35,7 +30,6 @@
 	global	mwi		=	"$data/malawi/refined/wave_00"
 	global	nga		=	"$data/nigeria/refined/wave_00"
 	global	bf		=	"$data/burkina_faso/refined/wave_00"
-	global	export	=	"$data/analysis/food_security"
 	global	logout	=	"$data/analysis/food_security/logs"
 
 * open log
@@ -62,6 +56,15 @@
 		lab val			fies_`v' yesno
 	}
 
+* fill in missing sexhh values
+	tsset				hhid wave
+	bys hhid (wave): 	carryforward sexhh, replace
+	
+	gen					nwave = -wave
+	tsset				hhid nwave
+	bys hhid (nwave): 	carryforward sexhh, replace	
+	drop				nwave
+	drop if 			sexhh == .
 	
 ************************************************************************
 **# 2 - build data set
@@ -113,18 +116,21 @@
 	replace 			post = 1 if post == .
 	lab def				post 0 "Pre-Covid" 1 "Covid", replace
 	lab val				post post
-	lab var				post "pandemic indicator"
+	lab var				post "Pandemic indicator"
 
 * keep only necessary variables
 	keep				country wave hhid hhsize hhsize_adult hhsize_child ///
 							hhsize_schchild sexhh sector region fies_1 fies_2 ///
 							fies_3 fies_4 fies_5 fies_6 fies_7 fies_8 fies_9 ///
 							post hhw_cs
-	
+							
 	order				country hhid wave post region sector hhw_cs sexhh hhsize ///
 							hhsize_adult hhsize_child hhsize_schchild
 	
 	sort				country hhid wave
+	lab var				sexhh "Sex of household head"
+	lab var				region "Region"
+	lab var				sector "Urban or rural household"
 	
 * drop waves where no fies data exists
 	drop if				country == 1 & wave == 7 
@@ -144,17 +150,13 @@
 	drop if				country == 5 & wave == 8
 	drop if				country == 5 & wave == 11
 
-* deal with missing sexhh
-	egen 			max_sex = max(sexhh), by(hhid)
-	egen 			min_sex = min(sexhh), by(hhid)
-	gen 			dif_sex = max_sex - min_sex
-	tab 			dif_sex
-	sort 			dif_sex hhid wave
-
 * create new weights
 	egen			hhw_covid = mean(hhw_cs) if wave > 0, by(hhid)
 	xtset			hhid
 	xfill			hhw_covid, i(hhid)
+	lab var			hhw_covid "Household sampling weight"
+	order			hhw_covid, after(hhw_cs)
+	drop			hhw_cs
 	
 ************************************************************************
 **# 3 - build fies variables
@@ -179,6 +181,7 @@
 		replace			fies_`x' = 0 if fies_`x' == . & fs_`x'_missing != 0
 		lab val 		fies_`x' yesno
 	}
+	drop			fs_*_m*
 	
 * tabulate fies responses
 	foreach v of numlist 1/9 {
@@ -194,75 +197,119 @@
 	rename			fies_6 fs3
 	rename			fies_7 fs4
 	rename			fies_8 fs5
+	rename			fies_9 fs9
 	
-	rename 			fies_1_noreplace fs6_noreplace
-	rename 			fies_2_noreplace fs7_noreplace
-	rename 			fies_3_noreplace fs8_noreplace
-	rename 			fies_4_noreplace fs1_noreplace
-	rename 			fies_5_noreplace fs2_noreplace
-	rename			fies_6_noreplace fs3_noreplace
-	rename			fies_7_noreplace fs4_noreplace
-	rename			fies_8_noreplace fs5_noreplace
+	rename 			fies_1_noreplace fs6_nr
+	rename 			fies_2_noreplace fs7_nr
+	rename 			fies_3_noreplace fs8_nr
+	rename 			fies_4_noreplace fs1_nr
+	rename 			fies_5_noreplace fs2_nr
+	rename			fies_6_noreplace fs3_nr
+	rename			fies_7_noreplace fs4_nr
+	rename			fies_8_noreplace fs5_nr
+	rename			fies_9_noreplace fs9_nr
+		
+	label var 		fs1 "FIES 1: Worried will not have enough to eat"
+	label var 		fs2 "FIES 2: Worried will not eat nutritious food"
+	label var 		fs3 "FIES 3: Always eat the same thing"
+	label var 		fs4 "FIES 4: Had to skip a meal"
+	label var 		fs5 "FIES 5: Had to eat less than they should"
+	label var 		fs6 "FIES 6: Found nothing to eat at home"
+	label var 		fs7 "FIES 7: Hungry but did not eat"
+	label var 		fs8 "FIES 8: Have not eaten all day"
+	label var 		fs9 "FIES 9: Borrowed food or relied on help"
 	
 		
-	label var 		fs1 "(FS1) ... have been woried that you will not have enough to eat?"
-	label var 		fs2 "(FS2) ... have been woried that you could not eat nutritious foods?"
-	label var 		fs3 "(FS3) ... had to eat always the same thing?"
-	label var 		fs4 "(FS4) ... had to skip a meal?"
-	label var 		fs5 "(FS5) ... had to eat less than they should?"
-	label var 		fs6 "(FS6) ... found nothing to eat at home?"
-	label var 		fs7 "(FS7) ... been hungy but did not eat?"
-	label var 		fs8 "(FS8) ... not eaten all day?"
+	label var 		fs1_nr "FIES 1: Worried will not have enough to eat - without replacement"
+	label var 		fs2_nr "FIES 2: Worried will not eat nutritious food - without replacement"
+	label var 		fs3_nr "FIES 3: Always eat the same thing - without replacement"
+	label var 		fs4_nr "FIES 4: Had to skip a meal - without replacement"
+	label var 		fs5_nr "FIES 5: Had to eat less than they should - without replacement"
+	label var 		fs6_nr "FIES 6: Found nothing to eat at home - without replacement"
+	label var 		fs7_nr "FIES 7: Hungry but did not eat - without replacement"
+	label var 		fs8_nr "FIES 8: Have not eaten all day"
+	label var 		fs9_nr "FIES 9: Borrowed food or relied on help - without replacement"
+	
+* generate food security index
+	egen 			fsi = rowtotal(fs1 fs2 fs3 fs4 fs5 fs6 fs7 fs8), missing
+	lab var			fsi "Sum of 8 FIES questions"
+	
+	egen 			fsi2 = rowtotal(fs1_nr fs2_nr fs3_nr fs4_nr fs5_nr ///
+						fs6_nr fs7_nr fs8_nr), missing
+	lab var			fsi2 "Sum of 8 FIES questions without replacement"
 
-	gen 			fs_index = (fs1 + fs2 + fs3 + fs4 + fs5 + fs6 + fs7 + fs8)
+* binary food security indicators (Smith et al. 2017)
+	gen				mild_fs = (fsi > 0)
+	lab var			mild_fs "Mild food insecurity"
+	
+	gen				mod_fs = (fsi > 3)
+	lab var			mod_fs "Moderate food insecurity"
+	
+	gen				sev_fs = (fsi > 7)
+	lab var			sev_fs "severe food insecurity"
+	
 			
-	gen 			fs_index_2 = (fs1_noreplace + fs2_noreplace + fs3_noreplace ///
-						+ fs4_noreplace + fs5_noreplace + fs6_noreplace ///
-						+ fs7_noreplace + fs8_noreplace) 
+	gen 			mild2_fs = (fsi2 > 0) if fsi2 != .
+	lab var			mild_fs "Mild food insecurity - without replacement"
+	
+	gen 			mod2_fs = (fsi2 > 3) if fsi2 != .
+	lab var			mod_fs "Moderate food insecurity - without replacement"
+	
+	gen 			sev2_fs = (fsi2 > 7) if fsi2 != .	
+	lab var			sev_fs "severe food insecurity - without replacement"
+			
+* additional binary food security based on FIES domains
+	egen 			anx = rowtotal(fs1_nr fs2_nr), missing
+	replace 		anx = 1 if anx > 0 & anx != .
+	lab var			anx "Anxious about food security"
+			
+	egen 			meal_reduct = rowtotal(fs3_nr fs4_nr fs5_nr), missing
+	replace 		meal_reduct = 1 if meal_reduct > 0 & meal_red !=.
+	lab var			meal_reduct "Reduced meals eaten"
+			
+	egen 			hunger = rowtotal(fs6_nr fs7_nr fs8_nr), missing
+	replace 		hunger = 1 if hunger > 0 & hunger !=.
+	lab var			hunger "Went hungry"
+			
 
-			*Binary food security indicators (Smith et al. 2017)
-			gen mild_fs = (fs_index>0)
-			gen moderate_fs = (fs_index>3)
-			gen severe_fs = (fs_index>7)
+* standardized outcomes
+	egen 			std_fsi = std(fsi) if post == 0
+	lab var			std_fsi "Standardized sum of 8 FIES questions"
+	
+	egen 			std_fsi_post = std(fsi) if post == 1
+	replace 		std_fsi = std_fsi_post if post == 1
+	drop			std_fsi_post	
 			
-			gen mild2_fs = (fs_index_2>0) 		if fs_index_2!=.
-			gen moderate2_fs = (fs_index_2>3) 	if fs_index_2!=.
-			gen severe2_fs = (fs_index_2>7)		if fs_index_2!=.		
+* standardized outcomes (taking into account the sampling weight)
+	sum				fsi [aweight = hhw_covid] if post==0
+	gen 			fsi_mean0 = r(mean)
+	gen 			fsi_sd0 = r(sd)
+	lab var			fsi_mean0 "FSI mean pre-covid"
+	lab var			fsi_sd0 "FSI s.d. pre-covid"
+		
+	sum				fsi [aweight = hhw_covid] if post==1
+	gen 			fsi_mean1 = r(mean)
+	gen 			fsi_sd1 = r(sd)
+	lab var			fsi_mean1 "FSI mean post-covid"
+	lab var			fsi_sd1 "FSI s.d. post-covid"
 			
-			* Additional binary food security base don FIES domains
-			gen anxiety 		= (fs1_noreplace + fs2_noreplace)
-			replace anxiety = 1 if anxiety > 0 & anxiety !=.
-			
-			gen meal_reduction 	= (fs3_noreplace + fs4_noreplace + fs5_noreplace ) 
-			replace meal_reduction = 1 if meal_reduction > 0 & meal_reduction !=.
-			
-			gen hunger 			= (fs6_noreplace + fs7_noreplace + fs8_noreplace) 
-			replace hunger = 1 if hunger > 0 & hunger !=.			
-			
+	gen 			std_fsi_wt = (fsi - fsi_mean0)/fsi_sd0 if post==0
+	replace 		std_fsi_wt = (fsi - fsi_mean1)/fsi_sd1 if post==1
+	lab var			std_fsi_wt "Standardized sum of 8 FIES questions (weighted)"
+	
+************************************************************************
+**# 3 - end matter, clean up to save
+************************************************************************
+	
+* identify unique identifier and describe data
+	isid			hhid wave
+	sort			hhid wave
+	compress
+	
+* save 
+	save			"$output/fies_reg_data", replace
 
-			*Standardized outcomes
-			egen std_fs_index = std(fs_index) if post==0
-			
-			egen std_fs_index_post1 = std(fs_index) if post==1
-			replace std_fs_index = std_fs_index_post1 if post==1
-			
-			egen std_fs_index_post2 = std(fs_index) if post==2
-			replace std_fs_index = std_fs_index_post2 if post==2
-			
-			* Standardized outcomes (taking into account the sampling weight)
-			summarize fs_index [aweight=hhweight_covid] if post==0
-			gen fs_index_mean0 = r(mean)
-			gen fs_index_sd0 = r(sd)
-			
-			summarize fs_index [aweight=hhweight_covid] if post==1
-			gen fs_index_mean1 = r(mean)
-			gen fs_index_sd1 = r(sd)
-			
-			gen std_fs_index_wt = (fs_index - fs_index_mean0)/fs_index_sd0 if post==0
-			replace std_fs_index_wt = (fs_index - fs_index_mean1)/fs_index_sd1 if post==1
-						
-* test regressions
-bys country: reg fies_2 i.post##i.sector, vce(cluster hhid)
-
+* close the log
+	log	close
 	
 /* END */
