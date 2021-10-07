@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: jdm
-* Last edit: 5 October 2021
+* Edited by: lirr
+* Last edit: 6 October 2021
 * Stata v.17.0
 
 * does
@@ -119,9 +119,9 @@
 	keep				country wave hhid hhsize hhsize_adult hhsize_child ///
 							hhsize_schchild sexhh sector region fies_1 fies_2 ///
 							fies_3 fies_4 fies_5 fies_6 fies_7 fies_8 fies_9 ///
-							post phw_cs
+							post hhw_cs
 	
-	order				country hhid wave post region sector phw_cs sexhh hhsize ///
+	order				country hhid wave post region sector hhw_cs sexhh hhsize ///
 							hhsize_adult hhsize_child hhsize_schchild
 	
 	sort				country hhid wave
@@ -150,7 +150,11 @@
 	gen 			dif_sex = max_sex - min_sex
 	tab 			dif_sex
 	sort 			dif_sex hhid wave
-		
+
+* create new weights
+	egen			hhw_covid = mean(hhw_cs) if wave > 0, by(hhid)
+	xtset			hhid
+	xfill			hhw_covid, i(hhid)
 	
 ************************************************************************
 **# 3 - build fies variables
