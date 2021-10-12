@@ -79,7 +79,7 @@
 					summ std_fsi_wt if post == 0 [aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
 					
-* did post  * urban
+* did sector
 	bys country:	reg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
@@ -100,7 +100,7 @@
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
 
-* did sex head of household
+* did sexhh
 	bys country:	reg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
@@ -123,9 +123,8 @@
 				
 					
 * mild food insecurity
-	eststo clear
 
-* First-Difference	
+* first difference
 	bys country:	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
 		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
 		eststo mild_fs_1
@@ -134,23 +133,204 @@
 				sum mild_fs if post == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
 
-	bys country:	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+	bys country:	areg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
 		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
 		absorb(hhid) cluster(hhid)
-		eststo mild_fs_1
+		eststo mild_fs_2
 		estadd loc FE		"Yes"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
 
-*
+* did sector
+	bys country:	reg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo mild_fs_3
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum mild_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo mild_fs_4
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum mild_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+*did sexhh
+	bys country:	reg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo mild_fs_5
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum mild_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo mild_fs_6
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum mild_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+* moderate food insecurity
+
+* first difference
+	bys country:	reg mod_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
+		eststo mod_fs_1
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg mod_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo mod_fs_2
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+* did sector
+	bys country:	reg mod_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo mod_fs_3
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg mod_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo mod_fs_4
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+*did sexhh
+	bys country:	reg mod_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo mod_fs_5
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg mod_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo mod_fs_6
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum mod_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+* severe food insecurity
+
+* first difference
+	bys country:	reg sev_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
+		eststo sev_fs_1
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg sev_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo sev_fs_2
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+* did sector
+	bys country:	reg sev_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo sev_fs_3
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg sev_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo sev_fs_4
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+*did sexhh
+	bys country:	reg sev_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		[pweight = hhw_covid], cluster(hhid)
+		eststo sev_fs_5
+		estadd loc FE		"No"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+	bys country:	areg sev_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
+		absorb(hhid) cluster(hhid)
+		eststo sev_fs_6
+		estadd loc FE		"Yes"
+		estadd loc Missing	"Yes"
+				sum sev_fs if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+* without controlling for missing variables
+
+* first difference
+	bys country: reg std_fsi_wt i.post [pweight = hhw_covid], cluster(hhid)
+	eststo std_fsi_1
+	estadd loc FE 		"Yes"
+				sum std_fsi_wt if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+	
+	bys country: areg std_fsi_wt i.post [pweight = hhw_covid], cluster(hhid)
+	eststo std_fsi_2
+	estadd loc FE 		"Yes"
+				sum std_fsi_wt if post == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+
+*did sector
+	bys country: reg std_fsi_wt i.post##i.urban [pweight = hhw_covid], cluster(hhid)
+	eststo std_fsi_1
+	estadd loc FE 		"Yes"
+				sum std_fsi_wt if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+	
+	bys country: areg std_fsi_wt i.post [pweight = hhw_covid], cluster(hhid)
+	eststo std_fsi_2
+	estadd loc FE 		"Yes"
+				sum std_fsi_wt if post == 0 & sector == 0 [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
 
 
+				
 ************************************************************************
 **# 3 - descriptive analysis
 ************************************************************************
 
-* first table
+/* first table
 
 bys country: iebaltab ///
 				fs1_nr fs2_nr fs3_nr fs4_nr fs5_nr fs6_nr fs7_nr fs8_nr ///
