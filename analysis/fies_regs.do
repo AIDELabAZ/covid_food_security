@@ -33,8 +33,10 @@
 	log using			"$logout/fies_regs", append
 
 * install ietoolkit
-	*ssc install ietoolkit
+	ssc install ietoolkit
 
+	
+	
 ************************************************************************
 **# 1 - initial did analysis
 ************************************************************************
@@ -42,17 +44,16 @@
 * read in data
 	use				"$output/fies_reg_data", replace
 	
-	
+/*	
 * test regressions
 	bys country: 	reg std_fsi_wt i.post##i.sector [aweight = hhw_covid], vce(cluster hhid)
 
 * test regressions
 	bys country: 	reg std_fsi_wt i.post##i.sexhh [aweight = hhw_covid], vce(cluster hhid)
-
-
+	
 
 ************************************************************************
-**# 2 - econometric analysis
+**# 2 - raw fies index regression
 ************************************************************************
 	
 * clear svyset and eststo
@@ -90,7 +91,7 @@
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
 					
-	bys country:	reg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+	bys country:	areg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
 			eststo  std_fsi_4
@@ -111,7 +112,7 @@
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
 					
-	bys country:	reg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+	bys country:	areg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
 			eststo  std_fsi_4
@@ -122,7 +123,9 @@
 					estadd scalar C_mean = r(mean)
 				
 					
-* mild food insecurity
+************************************************************************
+**# 3 - mild fies index regression
+************************************************************************
 
 * first difference
 	bys country:	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
@@ -180,7 +183,10 @@
 				sum mild_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
 
-* moderate food insecurity
+									
+************************************************************************
+**# 4 - moderate fies index regression
+************************************************************************
 
 * first difference
 	bys country:	reg mod_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
@@ -238,7 +244,10 @@
 				sum mod_fs if post == 0 & sector == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
 
-* severe food insecurity
+				
+************************************************************************
+**# 5 - severe fies index regression
+************************************************************************
 
 * first difference
 	bys country:	reg sev_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
@@ -327,10 +336,10 @@
 
 				
 ************************************************************************
-**# 3 - descriptive analysis
+**# 6 - descriptive analysis
 ************************************************************************
 
-/* first table
+* first table
 
 bys country: iebaltab ///
 				fs1_nr fs2_nr fs3_nr fs4_nr fs5_nr fs6_nr fs7_nr fs8_nr ///
@@ -339,14 +348,32 @@ bys country: iebaltab ///
 				vce(cluster hhid) ///
 				
 	 
-	 
+	*/			
+************************************************************************
+**# 7 - lorin's code testing section
+************************************************************************ 
 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
+	levelsof country, local(levels)
+	
+/*	bys country: reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
+			foreach l in local levels {
+				eststo  std_fsi_1`l'
+			}
+				estadd loc FE  		"No"
+				estadd loc Missing      "Yes"
+					summ std_fsi_wt if post==0 [aweight = hhw_covid]
+					estadd scalar C_mean = r(mean)	 
+*/	 
+
+	egen group = group(country)
+	su group, meanonly
+	
+	foreach i of num 1/`r(max)' {
+	reg std_fsi_wt i.post [pweight = hhw_covid] if country == `i' , cluster(hhid)  
+	eststo std_fsi_1`i'
+	estadd loc FE 		"Yes"
+				sum std_fsi_wt if post == 0 & country == `i' [aweight = hhw_covid]
+				estadd scalar C_mean = r(mean)
+	}
 	 
