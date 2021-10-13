@@ -367,9 +367,9 @@ bys country: iebaltab ///
 */	 
 
 	egen group = group(country)
-	su group, meanonly
 	
-	foreach i of num 1/`r(max)' {
+	levelsof 		country, local(levels)
+	foreach 		i of local levels {
 	reg std_fsi_wt i.post [pweight = hhw_covid] if country == `i' , cluster(hhid)  
 	eststo std_fsi_1`i'
 	estadd loc FE 		"Yes"
