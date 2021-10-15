@@ -37,25 +37,25 @@
     if `"`c(username)'"' == "jdmichler" {
         global 		code  	"C:/Users/jdmichler/git/AIDELabAZ/covid_food_security"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output "G:/My Drive/wb_covid/data/analysis/food_security"
+		global 		output  "G:/My Drive/wb_covid/output/food_security/paper"
     }
 
     if `"`c(username)'"' == "aljosephson" {
         global 		code  	"C:/Users/aljosephson/git/wb_covid"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output "G:/My Drive/wb_covid/data/analysis/food_security"
+		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
     }
 
 	if `"`c(username)'"' == "annfu" {
 		global 		code  	"C:/Users/annfu/git/wb_covid"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output "G:/My Drive/wb_covid/data/analysis/food_security"
+		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
 	}
 	
 	if `"`c(username)'"' == "Lorin Rudin-Rush" {
 		global 		code  	"C:/Users/Lorin Rudin-Rush/Documents/GitHub/covid_food_security"
 		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output "G:/My Drive/wb_covid/data/analysis/food_security"
+		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
 	}
 	
 	

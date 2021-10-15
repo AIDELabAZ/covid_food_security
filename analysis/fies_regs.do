@@ -24,9 +24,10 @@
 ************************************************************************
 
 * define
+	global  input   =   "$data/analysis/food_security"
 	global	tab		=	"$output/tables"
 	global	fig		=	"$output/figures"
-	global	logout	=	"$output/logs"
+	global	logout	=	"$data/analysis/food_security/logs"
 
 * open log
 	cap log 			close
@@ -38,7 +39,7 @@
 ************************************************************************
 
 * read in data
-	use				"$output/fies_reg_data", replace
+	use				"$input/fies_reg_data", replace
 	
 	
 * test regressions
