@@ -2,7 +2,7 @@
 * Created on: October 2020
 * Created by: jdm
 * Edited by: lirr
-* Last edit: 11 October 2021
+* Last edit: 14 October 2021
 * Stata v.17.0
 
 * does
@@ -44,7 +44,7 @@
 * read in data
 	use				"$output/fies_reg_data", replace
 	
-/*	
+	
 * test regressions
 	bys country: 	reg std_fsi_wt i.post##i.sector [aweight = hhw_covid], vce(cluster hhid)
 
@@ -63,126 +63,165 @@
 	eststo clear
 
 * first-difference
-	bys country:	reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
-			eststo  std_fsi_1
+	levelsof 		country, local(levels)
+	foreach 		i of local levels {
+	reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', cluster(hhid)
+			eststo  std_fsi_1`i'
 			estadd loc FE  		"No"
 			estadd loc Missing      "Yes"
 					summ std_fsi_wt if post==0 [aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
-
-	bys country:	areg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], absorb(hhid) ///
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', absorb(hhid) ///
 		cluster(hhid)
-			eststo  std_fsi_2
+			eststo  std_fsi_2`i'
 			estadd local FE  		"Yes"
 			estadd local Missing      "Yes"
 					summ std_fsi_wt if post == 0 [aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
-					
+	}				
+
 * did sector
-	bys country:	reg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	reg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
-			eststo  std_fsi_3
+		[pweight = hhw_covid] if country == `i', absorb(hhid) cluster(hhid)
+			eststo  std_fsi_3`i'
 			estadd local FE  		"No"
 			estadd local Missing      "Yes"
 					summ std_fsi_wt if post == 0  & sector == 0 ///
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
-					
-	bys country:	areg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
-			eststo  std_fsi_4
+		[pweight = hhw_covid] if country == `i', absorb(hhid) cluster(hhid)
+			eststo  std_fsi_4`i'
 			estadd local FE  		"Yes"
 			estadd local Missing      "Yes"
 					summ std_fsi_wt if post == 0  & sector == 0 ///
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
+	}
 
 * did sexhh
-	bys country:	reg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	reg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
-			eststo  std_fsi_3
+		[pweight = hhw_covid] if country == `i', absorb(hhid) cluster(hhid)
+			eststo  std_fsi_3`i'
 			estadd local FE  		"No"
 			estadd local Missing      "Yes"
 					summ std_fsi_wt if post == 0  & sexhh == 0 ///
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
-					
-	bys country:	areg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+	}			
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], absorb(hhid) cluster(hhid)
-			eststo  std_fsi_4
+		[pweight = hhw_covid] if country == `i', absorb(hhid) cluster(hhid)
+			eststo  std_fsi_4`i'
 			estadd local FE  		"Yes"
 			estadd local Missing      "Yes"
 					summ std_fsi_wt if post == 0  & sexhh == 0 ///
 					[aweight = hhw_covid]
 					estadd scalar C_mean = r(mean)
-				
-					
+	}			
+
+	
 ************************************************************************
 **# 3 - mild fies index regression
 ************************************************************************
 
 * first difference
-	bys country:	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
-		eststo mild_fs_1
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', cluster(hhid)
+		eststo mild_fs_1`i'
 		estadd loc FE		"No"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
-
-	bys country:	areg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
-		absorb(hhid) cluster(hhid)
-		eststo mild_fs_2
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
+		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', absorb(hhid) cluster(hhid)
+		eststo mild_fs_2`i'
 		estadd loc FE		"Yes"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
+	}
 
 * did sector
-	bys country:	reg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	reg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], cluster(hhid)
-		eststo mild_fs_3
+		[pweight = hhw_covid] if country == `i', cluster(hhid)
+		eststo mild_fs_3`i'
 		estadd loc FE		"No"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 & sector == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
-
-	bys country:	areg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
-		absorb(hhid) cluster(hhid)
-		eststo mild_fs_4
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', absorb(hhid) cluster(hhid)
+		eststo mild_fs_4`i'
 		estadd loc FE		"Yes"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 & sector == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
+	}
 
-*did sexhh
-	bys country:	reg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+* did sexhh
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	bys country: reg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid], cluster(hhid)
-		eststo mild_fs_5
+		[pweight = hhw_covid] if country == `i', cluster(hhid)
+		eststo mild_fs_5`i'
 		estadd loc FE		"No"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
-
-	bys country:	areg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], ///
-		absorb(hhid) cluster(hhid)
-		eststo mild_fs_6
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels{
+	areg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
+		if country == `i', absorb(hhid) cluster(hhid)
+		eststo mild_fs_6`i'
 		estadd loc FE		"Yes"
 		estadd loc Missing	"Yes"
 				sum mild_fs if post == 0 & sexhh == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
-
+	}
+				
 									
 ************************************************************************
 **# 4 - moderate fies index regression
@@ -353,7 +392,7 @@ bys country: iebaltab ///
 **# 7 - lorin's code testing section
 ************************************************************************ 
 
-	levelsof country, local(levels)
+	*levelsof country, local(levels)
 	
 /*	bys country: reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
 		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
@@ -366,7 +405,7 @@ bys country: iebaltab ///
 					estadd scalar C_mean = r(mean)	 
 */	 
 
-	egen group = group(country)
+	
 	
 	levelsof 		country, local(levels)
 	foreach 		i of local levels {
