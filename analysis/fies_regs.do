@@ -41,14 +41,6 @@
 * read in data
 	use				"$input/fies_reg_data", replace
 	
-	
-* test regressions
-	bys country: 	reg std_fsi_wt i.post##i.sector [aweight = hhw_covid], vce(cluster hhid)
-
-* test regressions
-	bys country: 	reg std_fsi_wt i.post##i.sexhh [aweight = hhw_covid], vce(cluster hhid)
-	
-
 * gen y0 and xfill by hhid
 	gen 			std_fsi_y0 = std_fsi_wt if wave == 0
 	xfill 			std_fsi_y0, i(hhid)
@@ -73,49 +65,51 @@
 * first-difference - sector
 	levelsof 		country, local(levels)
 	foreach 		i of local levels {
-	reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
-		if country == `i', vce(cluster hhid)
-			eststo  std_fsi_1`i'
-			estadd loc FE  		"No"
-			estadd loc Missing      "Yes"
-					summ std_fsi_wt if post==0 [aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
+		reg 			std_fsi_wt i.post fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							vce(cluster hhid)
+		eststo  		std_fsi_1`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							[aweight = hhw_covid]
+		estadd scalar 	mu = r(mean)
+		estadd loc 		missing "Yes" : std_fsi_1`i'
 	}
 	
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels{
-	reg std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid] if country == `i', vce(cluster hhid)
-			eststo  std_fsi_2`i'
-			estadd local FE  		"No"
-			estadd local Missing      "Yes"
-					summ std_fsi_wt if post == 0  & sector == 0 ///
-					[aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
+		reg 			std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							vce(cluster hhid)
+		eststo  		std_fsi_2`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							& sector == 1 [aweight = hhw_covid]
+		estadd scalar 	mu = r(mean)
+		estadd loc 		missing "Yes" : std_fsi_2`i'
 	}					
 
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels{
-	reg std_fsi_wt i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid] if country == `i' & wave > 0, vce(cluster hhid)
-			eststo  std_fsi_3`i'
-			estadd local FE  		"No"
-			estadd local Missing      "Yes"
-					summ std_fsi_wt if post == 0  & sector == 0 ///
-					[aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
+		reg 			std_fsi_wt i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i' & wave > 0, ///
+							vce(cluster hhid)
+		eststo  		std_fsi_3`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							& sector == 1 [aweight = hhw_covid]
+		estadd scalar	mu = r(mean)
+		estadd loc		missing "Yes" : std_fsi_3`i'
 	}		
 				
 * build table for standardized raw FIES score and sector					
 	esttab 			std_fsi_15 std_fsi_25 std_fsi_35 ///
 					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", nolabel) ///
+					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
+					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", nolabel) ///
 					prehead("\begin{tabular}{l*{3}{c}} \\[-1.8ex]\hline \hline \\[-1.8ex]" ///
 					"& \multicolumn{1}{c}{First-Diff} & \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{ANCOVA} \\") ///
 					drop(*msng _cons *y0) fragment nogap replace 
@@ -123,19 +117,22 @@
 	esttab 			std_fsi_11 std_fsi_21 std_fsi_31 ///
 					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ", nolabel) ///
+					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
+					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ", nolabel) ///
 					drop(*msng _cons *y0) fragment nogap append
 					
 	esttab 			std_fsi_12 std_fsi_22 std_fsi_32 ///
 					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", nolabel) ///
+					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
+					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", nolabel) ///
 					drop(*msng _cons *y0) fragment nogap append
 		
 	esttab 			std_fsi_13 std_fsi_23 std_fsi_33 ///
 					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", nolabel) ///
+					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
+					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", nolabel) ///
 					drop(*msng _cons *y0) fragment nogap append ///
 					postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{4}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
@@ -151,43 +148,45 @@
 * first-difference - sexhh
 	levelsof 		country, local(levels)
 	foreach 		i of local levels {
-	reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
-		if country == `i', vce(cluster hhid)
-			eststo  std_fsi_4`i'
-			estadd loc FE  		"No"
-			estadd loc Missing      "Yes"
-					summ std_fsi_wt if post==0 [aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
+		reg 			std_fsi_wt i.post fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							vce(cluster hhid)
+		eststo  		std_fsi_4`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							[aweight = hhw_covid]
+		estadd scalar 	mu = r(mean)
+		estadd loc 		missing "Yes" : std_fsi_4`i'
 	}
 	
 * did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels{
-	reg std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid] if country == `i', vce(cluster hhid)
-			eststo  std_fsi_5`i'
-			estadd local FE  		"No"
-			estadd local Missing      "Yes"
-					summ std_fsi_wt if post == 0  & sexhh == 0 ///
-					[aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
-	}			
+		reg 			std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							vce(cluster hhid)
+		eststo  		std_fsi_5`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							& sexhh == 1 [aweight = hhw_covid]
+		estadd scalar 	mu = r(mean)
+		estadd loc 		missing "Yes" : std_fsi_5`i'
+	}					
+
 
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels{
-	reg std_fsi_wt i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-		[pweight = hhw_covid] if country == `i' & wave > 0, vce(cluster hhid)
-			eststo  std_fsi_6`i'
-			estadd local FE  		"No"
-			estadd local Missing      "Yes"
-					summ std_fsi_wt if post == 0  & sector == 0 ///
-					[aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)
-	}			
+		reg 			std_fsi_wt i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i' & wave > 0, ///
+							vce(cluster hhid)
+		eststo  		std_fsi_6`i'
+		sum 			std_fsi_wt if post == 0 & country == `i' ///
+							& sexhh == 1 [aweight = hhw_covid]
+		estadd scalar	mu = r(mean)
+		estadd loc		missing "Yes" : std_fsi_6`i'
+	}		
 	
 * build table for standardized raw FIES score and sexhh					
 	esttab 			std_fsi_45 std_fsi_55 std_fsi_65 ///
