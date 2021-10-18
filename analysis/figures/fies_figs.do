@@ -121,9 +121,40 @@
 	lab val			nwave nwave
 	lab var			nwave "Survey Month"
 	
-* generate mean values
-	sort			country hhid wave
-	egen 			mean_fsi = mean(std_fsi_wt), by(country wave)
+* generate weighted mean values by country
+	sort			country hhid nwave
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		forvalues 		i = 0/16 {
+			sum 			std_fsi_wt if nwave == `i' & country == `c' ///
+							[aweight = hhw_covid]
+			gen 			mean_fs_`c'_`i'  = r(mean) if nwave == `i' & country == `c'
+		}
+	}
+	
+* generate value for wave = -1
+	sum 			std_fsi_wt if nwave == -1 & country == 3 ///
+							[aweight = hhw_covid]
+	gen 			mean_fs_3_n1  = r(mean) if nwave == -1 & country == 3
+
+* copy country and pre/post values into single variable	
+	gen 			mean_fsi = .
+	lab var			mean_fsi "Standardized FIES Count"
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		forvalues 		i = 0/16 {
+			replace			mean_fsi = mean_fs_`c'_`i' if nwave == `i' & country == `c'
+		}
+	}
+
+* generate value for wave = -1	
+	replace			mean_fsi = mean_fs_3_n1  if nwave == -1 & country == 3
+
+	drop			mean_fs_* 
+
+* generate indicators for mild, mod, sev
 	egen 			mean_mild = mean(mild_fs), by(country wave)
 	egen 			mean_mod = mean(mod_fs), by(country wave)
 	egen 			mean_sev = mean(sev_fs), by(country wave)
@@ -138,13 +169,13 @@
 
 * graph - std_fsi_wt by country
 	sort			country wave
-	twoway 			line mean_fsi nwave [pweight = hhw_covid] if country == 5, ///
+	twoway 			line mean_fsi nwave [aweight = hhw_covid] if country == 5, ///
 						lcolor($edkblue) lw(*2) lpattern(solid) || ///
-						line mean_fsi nwave [pweight = hhw_covid] if country == 1, ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 1, ///
 						lcolor($eltgreen) lw(*2) lpattern(dash) || ///
-						line mean_fsi nwave [pweight = hhw_covid] if country == 2, ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 2, ///
 						lcolor($maroon) lw(*2) lpattern(dash_3dot) || ///
-						line mean_fsi nwave [pweight = hhw_covid] if country == 3, ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 3, ///
 						lcolor($khaki) lw(*2) lpattern(vshortdash) title("") sort ///
 						ytitle("Standardized FIES Count") xtitle("Survey Month Year") ///
 						xlabel(-1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
@@ -162,20 +193,20 @@
 						
 						
 * graph - ethiopia
-	twoway 			line mean_mild mean_mod mean_sev nwave [pweight = hhw_covid] ///
+	twoway 			line mean_mild mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 1, sort title("Ethiopia") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
 						ytitle("") xtitle("") xlabel(0 "2019" 1 "Apr '20" ///
 						2 "May '20" 3 "Jun '20" 4 "Jul '20" 5 "Aug '20" ///
-						6 "Sep '20" 7 "Oct '20", angle(45)) legend(pos(6) ///
+						6 "Sep '20" 7 "Oct '20", angle(45)) ///
+						ylabel(0 "0" .2 ".2" .4 ".4" .6 ".6" .8 ".8" 1 "1") legend(pos(6) ///
 						col(1) label(1 "Mild Food Insecurity (Raw Score > 0)") label(2 ///
 						"Moderate Food Insecurity (Raw Score > 3)") label(3 ///
 						"Severe Food Insecurity (Raw Score > 7)")) ///
-						saving("$fig/eth_fsi", replace)		
-					
+						saving("$fig/eth_fsi", replace)					
 						
 * graph - malawi
-	twoway 			line mean_mild mean_mod mean_sev nwave [pweight = hhw_covid] ///
+	twoway 			line mean_mild mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 2, sort title("Malawi") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
 						ytitle("% Reporting Food Insecurity") xtitle("Survey Month Year") ///
@@ -190,7 +221,7 @@
 						saving("$fig/mwi_fsi", replace)							
 						
 * graph - nigeria
-	twoway 			line mean_mild mean_mod mean_sev nwave [pweight = hhw_covid] ///
+	twoway 			line mean_mild mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 3, sort title("Nigeria") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
 						ytitle("") xtitle("Survey Month Year") xlabel(-1 "2018" ///
@@ -203,7 +234,7 @@
 						saving("$fig/nga_fsi", replace)							
 						
 * graph - burkina faso
-	twoway 			line mean_mild mean_mod mean_sev nwave [pweight = hhw_covid] ///
+	twoway 			line mean_mild mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 5, sort title("Burkina Faso") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
 						ytitle("% Reporting Food Insecurity") xtitle("") ///

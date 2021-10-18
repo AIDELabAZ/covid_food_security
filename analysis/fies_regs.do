@@ -42,8 +42,13 @@
 	use				"$input/fies_reg_data", replace
 	
 * gen y0 and xfill by hhid
-	gen 			std_fsi_y0 = std_fsi_wt if wave == 0
+	gen 			std_fsi_y0 = std_fsi if wave == 0
 	xfill 			std_fsi_y0, i(hhid)
+	lab var			std_fsi_y0 "Standardized FIES at baseline"
+	
+	gen 			std_fsi_wt_y0 = std_fsi_wt if wave == 0
+	xfill 			std_fsi_wt_y0, i(hhid)
+	lab var			std_fsi_wt_y0 "Standardized FIES at baseline (weighted)"
 
 * relabel
 	lab def			post 0 "pre-COVID" 1 "COVID", replace
@@ -71,7 +76,7 @@
 		estadd scalar 	mu = r(mean)
 		estadd loc 		missing "Yes" : std_fsi_1`i'
 	}
-	
+
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels{
@@ -128,7 +133,7 @@
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : std_fsi_5`i'
 	}		
-				
+			
 * build table for standardized raw FIES score and sector					
 	esttab 			std_fsi_15 std_fsi_25 std_fsi_35 std_fsi_45 std_fsi_55 ///
 					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///

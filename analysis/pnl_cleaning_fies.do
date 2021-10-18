@@ -30,6 +30,7 @@
 	global	mwi		=	"$data/malawi/refined/wave_00"
 	global	nga		=	"$data/nigeria/refined/wave_00"
 	global	bf		=	"$data/burkina_faso/refined/wave_00"
+	global  ans		=   "$data/analysis/food_security"
 	global	logout	=	"$data/analysis/food_security/logs"
 
 * open log
@@ -280,32 +281,63 @@
 	egen 			hunger = rowtotal(fs6_nr fs7_nr fs8_nr), missing
 	replace 		hunger = 1 if hunger > 0 & hunger !=.
 	lab var			hunger "Went hungry"
-			
 
-* standardized outcomes
-	egen 			std_fsi = std(fsi) if post == 0
+* standardized outcomes by country and pre/post
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			egen 			std_fs_`c'_`i' = std(fsi) if post == `i' & country == `c'
+		}
+	}
+
+* copy country and pre/post values into single variable
+	gen 			std_fsi = .
 	lab var			std_fsi "Standardized sum of 8 FIES questions"
 	
-	egen 			std_fsi_post = std(fsi) if post == 1
-	replace 		std_fsi = std_fsi_post if post == 1
-	drop			std_fsi_post	
-			
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			replace			std_fsi = std_fs_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+	drop			std_fs_*
+	
 * standardized outcomes (taking into account the sampling weight)
-	sum				fsi [aweight = hhw_covid] if post==0
-	gen 			fsi_mean0 = r(mean)
-	gen 			fsi_sd0 = r(sd)
-	lab var			fsi_mean0 "FSI mean pre-covid"
-	lab var			fsi_sd0 "FSI s.d. pre-covid"
-		
-	sum				fsi [aweight = hhw_covid] if post==1
-	gen 			fsi_mean1 = r(mean)
-	gen 			fsi_sd1 = r(sd)
-	lab var			fsi_mean1 "FSI mean post-covid"
-	lab var			fsi_sd1 "FSI s.d. post-covid"
-			
-	gen 			std_fsi_wt = (fsi - fsi_mean0)/fsi_sd0 if post==0
-	replace 		std_fsi_wt = (fsi - fsi_mean1)/fsi_sd1 if post==1
+	scalar 			define mean_std = 0
+	scalar 			define sd_std = 1
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			qui sum 		fsi [aweight = hhw_covid] if post == `i' & country == `c'
+			gen 			sumwt =`r(sum_w)' if post == `i' & country == `c'
+			gen 			wtmean =`r(mean)' if post == `i' & country == `c'
+			egen double		CSS = total( hhw_covid * (fsi-wtmean)^2 ) if post == `i' & country == `c'
+			gen double 		variance = CSS/sumwt if post == `i' & country == `c'
+			gen double 		std_fsi_`c'_`i' = ( sd_std * (fsi-wtmean) / sqrt(variance) )  ///
+								+ mean_std if post == `i' & country == `c'
+			drop 			sumwt wtmean CSS variance
+		}
+	}
+
+* copy country and pre/post values into single variable			
+	gen 			std_fsi_wt = .
 	lab var			std_fsi_wt "Standardized sum of 8 FIES questions (weighted)"
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			replace			std_fsi_wt = std_fsi_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+	drop			std_fsi_1* std_fsi_2* std_fsi_3* std_fsi_5*
+
+* summarize two values
+	bys 			country post: ///
+						sum std_fsi std_fsi_wt [aweight = hhw_covid]
+	
 	
 ************************************************************************
 **# 3 - end matter, clean up to save
@@ -317,7 +349,7 @@
 	compress
 	
 * save 
-	save			"$output/fies_reg_data", replace
+	save			"$ans/fies_reg_data", replace
 
 * close the log
 	log	close
