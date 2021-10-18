@@ -58,10 +58,6 @@
 **# 2 - raw fies index regression
 ************************************************************************
 
-************************************************************************
-**# 2a - raw fies index regression - sector
-************************************************************************
-
 * first-difference - sector
 	levelsof 		country, local(levels)
 	foreach 		i of local levels {
@@ -103,62 +99,7 @@
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : std_fsi_3`i'
 	}		
-				
-* build table for standardized raw FIES score and sector					
-	esttab 			std_fsi_15 std_fsi_25 std_fsi_35 ///
-					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
-					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", nolabel) ///
-					prehead("\begin{tabular}{l*{3}{c}} \\[-1.8ex]\hline \hline \\[-1.8ex]" ///
-					"& \multicolumn{1}{c}{First-Diff} & \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{ANCOVA} \\") ///
-					drop(*msng _cons *y0) fragment nogap replace 
 		
-	esttab 			std_fsi_11 std_fsi_21 std_fsi_31 ///
-					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
-					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append
-					
-	esttab 			std_fsi_12 std_fsi_22 std_fsi_32 ///
-					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
-					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append
-		
-	esttab 			std_fsi_13 std_fsi_23 std_fsi_33 ///
-					using "$tab/std_fsi_sector.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean" "missing Missing Control") sfmt(3) ///
-					refcat(1.post "\multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append ///
-					postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{4}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"blah blah.} \\" ///
-					"\end{tabular}")
-
-					
-************************************************************************
-**# 2b - raw fies index regression - sexhh
-************************************************************************
-										
-
-* first-difference - sexhh
-	levelsof 		country, local(levels)
-	foreach 		i of local levels {
-		reg 			std_fsi_wt i.post fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
-							vce(cluster hhid)
-		eststo  		std_fsi_4`i'
-		sum 			std_fsi_wt if post == 0 & country == `i' ///
-							[aweight = hhw_covid]
-		estadd scalar 	mu = r(mean)
-		estadd loc 		missing "Yes" : std_fsi_4`i'
-	}
-	
 * did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels{
@@ -166,11 +107,11 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i', ///
 							vce(cluster hhid)
-		eststo  		std_fsi_5`i'
+		eststo  		std_fsi_4`i'
 		sum 			std_fsi_wt if post == 0 & country == `i' ///
 							& sexhh == 1 [aweight = hhw_covid]
 		estadd scalar 	mu = r(mean)
-		estadd loc 		missing "Yes" : std_fsi_5`i'
+		estadd loc 		missing "Yes" : std_fsi_4`i'
 	}					
 
 
@@ -181,43 +122,65 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo  		std_fsi_6`i'
+		eststo  		std_fsi_5`i'
 		sum 			std_fsi_wt if post == 0 & country == `i' ///
 							& sexhh == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : std_fsi_6`i'
+		estadd loc		missing "Yes" : std_fsi_5`i'
 	}		
-	
-* build table for standardized raw FIES score and sexhh					
-	esttab 			std_fsi_45 std_fsi_55 std_fsi_65 ///
-					using "$tab/std_fsi_sexhh.tex", booktabs label b(3) se(a2) ///
+				
+* build table for standardized raw FIES score and sector					
+	esttab 			std_fsi_15 std_fsi_25 std_fsi_35 std_fsi_45 std_fsi_55 ///
+					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", nolabel) ///
-					prehead("\begin{tabular}{l*{3}{c}} \\[-1.8ex]\hline \hline \\[-1.8ex]" ///
-					"& \multicolumn{1}{c}{First-Diff} & \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{ANCOVA} \\") ///
-					drop(*msng _cons *y0) fragment nogap replace 
+					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
+					"\multicolumn{6}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
+					nolabel) prehead("\begin{tabular}{l*{5}{c}} \\[-1.8ex]\hline " ///
+					"\hline \\[-1.8ex] &  & " ///
+					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
+					"\cmidrule(lr){3-4} \cmidrule(lr){5-6} \\ "  ///
+					"& \multicolumn{1}{c}{First-Diff} & \multicolumn{1}{c}{Diff-in-Diff} " ///
+					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					fragment nogap replace 
 		
-	esttab 			std_fsi_41 std_fsi_51 std_fsi_61 ///
-					using "$tab/std_fsi_sexhh.tex", booktabs label b(3) se(a2) ///
+	esttab 			std_fsi_11 std_fsi_21 std_fsi_31 std_fsi_41 std_fsi_51 ///
+					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append
+					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
+					"\multicolumn{5}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
+					nolabel) drop(*msng _cons *y0) ///
+					fragment nogap append
 					
-	esttab 			std_fsi_42 std_fsi_52 std_fsi_62 ///
-					using "$tab/std_fsi_sexhh.tex", booktabs label b(3) se(a2) ///
+	esttab 			std_fsi_12 std_fsi_22 std_fsi_32 std_fsi_42 std_fsi_52 ///
+					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append
+					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
+					"\multicolumn{5}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
+					nolabel) drop(*msng _cons *y0) ///
+					fragment nogap append
 		
-	esttab 			std_fsi_43 std_fsi_53 std_fsi_63 ///
-					using "$tab/std_fsi_sexhh.tex", booktabs label b(3) se(a2) ///
+	esttab 			std_fsi_13 std_fsi_23 std_fsi_33 std_fsi_43 std_fsi_53 ///
+					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
-					refcat(1.post "& \multicolumn{3}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", nolabel) ///
-					drop(*msng _cons *y0) fragment nogap append ///
-					postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{4}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"blah blah.} \\" ///
+					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
+					"\multicolumn{5}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
+					nolabel) drop(*msng _cons *y0) ///
+					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
+					"\multicolumn{6}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
+					"Dependent variable is the standardized raw FIES score weighted " ///
+					"using household survey weights. Baseline Mean in the first " ///
+					"column represents the pre-pandemic mean of the outcome variable in each " ///
+					"country. In the last four columns, the Baseline Mean represents the " ///
+					"pre-pandemic mean of the outcome variable in the comparison area " ///
+					"— e.g., rural areas in the second and third columns and male " ///
+					"headed households in the final two columns. Each regression " ///
+					"includes a set of indicator variables to control for when " ///
+					"household skip or refuse to answer a specific FIES question. " ///
+					"Cluster corrected robust standard errors are reported in parentheses " ///
+					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
+
 		
 			
 ************************************************************************
