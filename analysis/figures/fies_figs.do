@@ -186,8 +186,7 @@
 						"Ethiopia") label(3 "Malawi") label(4 "Nigeria")) ///
 						saving("$fig/mean_fsi", replace)	
 			
-	grc1leg2 		"$fig/mean_fsi.gph", col(1) ring(0) pos(12) holes(4) ///
-						commonscheme
+	grc1leg2 		"$fig/mean_fsi.gph", col(1) pos(6) commonscheme
 				
 	graph export 	"$fig/mean_fsi.png", as(png) replace
 						
