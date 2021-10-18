@@ -79,7 +79,7 @@
 
 * did - sector
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 		reg 			std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i', ///
@@ -93,7 +93,7 @@
 
 * ancova - sector
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 		reg 			std_fsi_wt i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
@@ -107,7 +107,7 @@
 		
 * did - sexhh
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 		reg 			std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i', ///
@@ -122,7 +122,7 @@
 
 * ancova - sexhh
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 		reg 			std_fsi_wt i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
@@ -194,7 +194,7 @@
 
 * first difference
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	reg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
 		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
 		if country == `i', cluster(hhid)
@@ -206,7 +206,7 @@
 	}
 	
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	areg mild_fs i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
 		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
 		if country == `i', absorb(hhid) cluster(hhid)
@@ -219,7 +219,7 @@
 
 * did sector
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	reg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid] if country == `i', cluster(hhid)
@@ -231,7 +231,7 @@
 	}
 	
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	areg mild_fs i.post##i.sector fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
 		if country == `i', absorb(hhid) cluster(hhid)
@@ -244,7 +244,7 @@
 
 * did sexhh
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	bys country: reg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 		[pweight = hhw_covid] if country == `i', cluster(hhid)
@@ -256,7 +256,7 @@
 	}
 	
 	levelsof		country, local(levels)
-	foreach			i of local levels{
+	foreach			i of local levels {
 	areg mild_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
 		fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid] ///
 		if country == `i', absorb(hhid) cluster(hhid)
