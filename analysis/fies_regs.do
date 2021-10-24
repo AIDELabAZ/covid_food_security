@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 20 October 2021
+* Edited by: jdm
+* Last edit: 24 October 2021
 * Stata v.17.0
 
 * does
@@ -139,9 +139,9 @@
 					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{5}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  & " ///
+					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
+					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
+					"\hline \\[-1.8ex] & " ///
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
@@ -152,7 +152,7 @@
 					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
+					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 					
@@ -160,7 +160,7 @@
 					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 		
@@ -168,10 +168,10 @@
 					using "$tab/std_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{6}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
+					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
 					"using household survey weights. Baseline Mean in the first " ///
 					"column represents the pre-pandemic mean of the outcome variable in each " ///
@@ -263,12 +263,12 @@
 
 * build table for mild fies index
 	esttab 			mild_fs_25 mild_fs_35 mild_fs_45 mild_fs_55 ///
-					using "$tab/mild_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{5}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  & " ///
+					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
+					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
+					"\hline \\[-1.8ex] &  " ///
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
@@ -276,29 +276,29 @@
 					fragment nogap replace 
 		
 	esttab 			mild_fs_21 mild_fs_31 mild_fs_41 mild_fs_51 ///
-					using "$tab/mild_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
+					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 					
 	esttab 			mild_fs_22 mild_fs_32 mild_fs_42 mild_fs_52 ///
-					using "$tab/mild_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 		
 	esttab 			mild_fs_23 mild_fs_33 mild_fs_43 mild_fs_53 ///
-					using "$tab/mild_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{6}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
+					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
 					"using household survey weights. Baseline Mean in the first " ///
 					"column represents the pre-pandemic mean of the outcome variable in each " ///
@@ -390,12 +390,12 @@
 
 * build table for moderate fies index
 	esttab 			mod_fs_25 mod_fs_35 mod_fs_45 mod_fs_55 ///
-					using "$tab/mod_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{5}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  & " ///
+					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
+					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
+					"\hline \\[-1.8ex] &  " ///
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
@@ -403,29 +403,29 @@
 					fragment nogap replace 
 		
 	esttab 			mod_fs_21 mod_fs_31 mod_fs_41 mod_fs_51 ///
-					using "$tab/mod_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
+					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 					
 	esttab 			mod_fs_22 mod_fs_32 mod_fs_42 mod_fs_52 ///
-					using "$tab/mod_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append
 		
 	esttab 			mod_fs_23 mod_fs_33 mod_fs_43 mod_fs_53 ///
-					using "$tab/mod_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					"\multicolumn{5}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
+					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
 					nolabel) drop(*msng _cons *y0) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{6}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
+					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
 					"using household survey weights. Baseline Mean in the first " ///
 					"column represents the pre-pandemic mean of the outcome variable in each " ///
@@ -438,7 +438,7 @@
 					"Cluster corrected robust standard errors are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
-	
+	afd
 				
 ************************************************************************
 **# 5 - severe fies index regression
@@ -549,7 +549,7 @@
 
 * build table for moderate fies index
 	esttab 			sev_fs_25 sev_fs_35 sev_fs_45 sev_fs_55 ///
-					using "$tab/sev_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					"\multicolumn{5}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
@@ -562,7 +562,7 @@
 					fragment nogap replace 
 		
 	esttab 			sev_fs_21 sev_fs_31 sev_fs_41 sev_fs_51 ///
-					using "$tab/sev_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					"\multicolumn{5}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
@@ -570,7 +570,7 @@
 					fragment nogap append
 					
 	esttab 			sev_fs_22 sev_fs_32 sev_fs_42 sev_fs_52 ///
-					using "$tab/sev_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					"\multicolumn{5}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
@@ -578,7 +578,7 @@
 					fragment nogap append
 		
 	esttab 			mod_fs_23 mod_fs_33 mod_fs_43 mod_fs_53 ///
-					using "$tab/sev_fs.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					"\multicolumn{5}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
