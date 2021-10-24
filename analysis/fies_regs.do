@@ -519,7 +519,7 @@
 
 
 * without controlling for missing variables
-
+/*
 * first difference
 	bys country: reg std_fsi_wt i.post [pweight = hhw_covid], cluster(hhid)
 	eststo std_fsi_1
@@ -545,6 +545,7 @@
 	estadd loc FE 		"Yes"
 				sum std_fsi_wt if post == 0 & sector == 0 [aweight = hhw_covid]
 				estadd scalar C_mean = r(mean)
+*/
 
 * build table for moderate fies index
 	esttab 			sev_fs_25 sev_fs_35 sev_fs_45 sev_fs_55 ///
@@ -596,21 +597,6 @@
 					"Cluster corrected robust standard errors are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
-	
-
-				
-************************************************************************
-**# 6 - descriptive analysis
-************************************************************************
-
-* first table
-
-bys country: iebaltab ///
-				fs1_nr fs2_nr fs3_nr fs4_nr fs5_nr fs6_nr fs7_nr fs8_nr ///
-				[pweight = hhw_covid] if post == 1, ///
-				grpvar(urban) order(1 0) grplabels(1 "Urban" @ 0 "Rural")	///
-				vce(cluster hhid) ///
-				
 	 
 				
 ************************************************************************
