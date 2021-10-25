@@ -250,37 +250,37 @@
 	lab var			fsi2 "Sum of 8 FIES questions without replacement"
 
 * binary food security indicators (Smith et al. 2017)
-	gen				mild_fs = (fsi > 0)
-	lab var			mild_fs "Mild food insecurity"
+	gen				mld_fsi = (fsi > 0)
+	lab var			mld_fsi "Mild food insecurity"
 	
-	gen				mod_fs = (fsi > 3)
-	lab var			mod_fs "Moderate food insecurity"
+	gen				mod_fsi = (fsi > 3)
+	lab var			mod_fsi "Moderate food insecurity"
 	
-	gen				sev_fs = (fsi > 7)
-	lab var			sev_fs "severe food insecurity"
+	gen				sev_fsi = (fsi > 7)
+	lab var			sev_fsi "severe food insecurity"
 	
 			
-	gen 			mild2_fs = (fsi2 > 0) if fsi2 != .
-	lab var			mild_fs "Mild food insecurity - without replacement"
+	gen 			mld2_fsi = (fsi2 > 0) if fsi2 != .
+	lab var			mld_fsi "Mild food insecurity - without replacement"
 	
-	gen 			mod2_fs = (fsi2 > 3) if fsi2 != .
-	lab var			mod_fs "Moderate food insecurity - without replacement"
+	gen 			mod2_fsi = (fsi2 > 3) if fsi2 != .
+	lab var			mod_fsi "Moderate food insecurity - without replacement"
 	
-	gen 			sev2_fs = (fsi2 > 7) if fsi2 != .	
-	lab var			sev_fs "severe food insecurity - without replacement"
+	gen 			sev2_fsi = (fsi2 > 7) if fsi2 != .	
+	lab var			sev_fsi "severe food insecurity - without replacement"
 			
 * additional binary food security based on FIES domains
-	egen 			anx = rowtotal(fs1_nr fs2_nr), missing
-	replace 		anx = 1 if anx > 0 & anx != .
-	lab var			anx "Anxious about food security"
+	egen 			anx_fsi = rowtotal(fs1_nr fs2_nr), missing
+	replace 		anx_fsi = 1 if anx_fsi > 0 & anx_fsi != .
+	lab var			anx_fsi "Anxious about food security"
 			
-	egen 			meal_reduct = rowtotal(fs3_nr fs4_nr fs5_nr), missing
-	replace 		meal_reduct = 1 if meal_reduct > 0 & meal_red !=.
-	lab var			meal_reduct "Reduced meals eaten"
+	egen 			mea_fsi = rowtotal(fs3_nr fs4_nr fs5_nr), missing
+	replace 		mea_fsi = 1 if mea_fsi > 0 & mea_fsi !=.
+	lab var			mea_fsi "Reduced meals eaten"
 			
-	egen 			hunger = rowtotal(fs6_nr fs7_nr fs8_nr), missing
-	replace 		hunger = 1 if hunger > 0 & hunger !=.
-	lab var			hunger "Went hungry"
+	egen 			hun_fsi = rowtotal(fs6_nr fs7_nr fs8_nr), missing
+	replace 		hun_fsi = 1 if hun_fsi > 0 & hun_fsi !=.
+	lab var			hun_fsi "Went hungry"
 
 * standardized outcomes by country and pre/post
 	levelsof 		country, local(levels)
