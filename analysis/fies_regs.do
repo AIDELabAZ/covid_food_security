@@ -2,7 +2,7 @@
 * Created on: October 2020
 * Created by: jdm
 * Edited by: lirr
-* Last edit: 24 October 2021
+* Last edit: 29 October 2021
 * Stata v.17.0
 
 * does
@@ -861,7 +861,7 @@
 
 
 	 
-				
+	
 ************************************************************************
 **# 7 - lorin's code testing section
 ************************************************************************ 
@@ -874,7 +874,9 @@
 	coefplot			std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35 ///
 							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35 ///
 							anx_fsi_25 anx_fsi_35 mea_fsi_25 mea_fsi_35 ///
-							hun_fsi_25 hun_fsi_35, drop(*_cons *post *y0)
+							hun_fsi_25 hun_fsi_35, drop(*_cons *post 	///
+							std_fsi_y0 mld_fsi_y0 mod_fsi_y0 sev_fsi_y0 ///
+							anx_fsi_y0 hun_fsi_y0 mea_fsi_y0)
 							xline(0, lcolor(maroon))  ///
 							xtitle("Burkina Faso Urban Rural FIES Regression") ///
 							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
@@ -883,7 +885,7 @@
 								anx_fsi_25 mea_fsi_25 hun_fsi_25 std_fsi_35 ///
 								mld_fsi_35 mod_fsi_35 sev_fsi_35 ///
 								anx_fsi_35 mea_fsi_35 hun_fsi_35)
-					
+				
 					
 
 
