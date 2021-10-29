@@ -1,4 +1,4 @@
-* Project: diversification
+* Project: food security
 * Created on: Oct 2021
 * Created by: jdm
 * Edited by: jdm
@@ -18,7 +18,7 @@
 	* has run fies_regs
 
 * TO DO:
-	* section 2: baseline/endline descriptives
+	* section 3: baseline/endline descriptives
 
 
 * **********************************************************************

@@ -860,9 +860,57 @@
 
 */	
 ************************************************************************
-**# 7 - end matter, clean up to save
+**# 7 - create coefplots
 ************************************************************************
+
+	coefplot			std_fsi_35 mld_fsi_35 ///
+							mod_fsi_35 sev_fsi_35 ///
+							, drop(*_cons *post *.wave	///
+							std_fsi_y0 mld_fsi_y0 mod_fsi_y0 sev_fsi_y0 ///
+							anx_fsi_y0 hun_fsi_y0 mea_fsi_y0) ///
+							xline(0, lcolor(maroon))  ///
+							xtitle("Burkina Faso Urban Rural FIES Regression") ///
+							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
+							ciopts(lwidth(*3) lcolor(*3)) ///
+							order(std_fsi_25 mld_fsi_25 mod_fsi_25 sev_fsi_25 ///
+								anx_fsi_25 mea_fsi_25 hun_fsi_25 std_fsi_35 ///
+								mld_fsi_35 mod_fsi_35 sev_fsi_35)
+
+	coefplot			std_fsi_25 std_fsi_35 ///
+							, drop(*_cons *post *.wave 1.sector	///
+							std_fsi_y0 mld_fsi_y0 mod_fsi_y0 sev_fsi_y0 ///
+							anx_fsi_y0 hun_fsi_y0 mea_fsi_y0) ///
+							xline(0, lcolor(maroon))  ///
+							xtitle("Burkina Faso Urban Rural FIES Regression") ///
+							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
+							ciopts(lwidth(*3) lcolor(*3) ) 
+							
+							
+		
+	eststo std_fsi_25, rename (1.post#2.sector urban) refresh
+	esttab std_fsi_35, rename (2.sector urban)
 	
+	, rename(altmpg mpg)
+	
+	
+	coefplot			std_fsi_25, keep(1.post#2.sector) || std_fsi_35, keep(2.sector)
+	
+	coefplot			std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35 ///
+							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35 ///
+							, keep(urban) ///
+							xline(0, lcolor(maroon))  ///
+							xtitle("Burkina Faso Urban Rural FIES Regression") ///
+							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
+							ciopts(lwidth(*3) lcolor(*3) ) ///
+							order(std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35  ///
+							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35)
+	
+	
+	
+************************************************************************
+**# 8 - end matter, clean up to save
+************************************************************************
+									
 * compress data
 	compress
 	
