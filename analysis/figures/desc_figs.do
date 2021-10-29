@@ -2,7 +2,7 @@
 * Created on: Oct 2021
 * Created by: jdm
 * Edited by: jdm
-* Last edited: 29 Octo 2021
+* Last edited: 18 Oct 2020
 * Stata v.17.0
 
 * does
@@ -18,7 +18,7 @@
 	* has run fies_regs
 
 * TO DO:
-	* section 2: baseline/endline descriptives
+	* all countries
 
 
 * **********************************************************************
@@ -36,7 +36,7 @@
 	log using			"$logout/fies_figs", append
 	
 ************************************************************************
-**# 1 - relabel vars and gen new vars
+**# 1 - initial did analysis
 ************************************************************************
 
 * read in data
@@ -262,9 +262,9 @@
 			
 	
 ************************************************************************
-**# 3 - sector and sexhh at baseline
+**# 2 - sector and sexhh at baseline
 ************************************************************************
-/*	
+	
 * graph E - index sector
 	twoway  (kdensity mwi_pre_index_ta if sector == 1, color(gray%30) recast(area)) ///
 			(kdensity mwi_pre_index_ta if sector == 2, color(maroon%30) recast(area) ///
@@ -291,12 +291,5 @@
 				
 	graph export 	"$fig/sexhh.png", as(png) replace
 
-*/			
-************************************************************************
-**# 4 - end matter, clean up to save
-************************************************************************
-	
 
-* close the log
-	log	close
 	

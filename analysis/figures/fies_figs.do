@@ -2,7 +2,7 @@
 * Created on: Oct 2021
 * Created by: jdm
 * Edited by: jdm
-* Last edited: 29 Oct 2020
+* Last edited: 18 Oct 2020
 * Stata v.17.0
 
 * does
@@ -34,7 +34,6 @@
 * open log
 	cap log 			close
 	log using			"$logout/fies_figs", append
-	
 	
 ************************************************************************
 **# 1 - initial did analysis
