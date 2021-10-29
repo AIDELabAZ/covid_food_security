@@ -1,8 +1,8 @@
 * Project: diversification
 * Created on: Oct 2021
 * Created by: jdm
-* Edited by: jdm
-* Last edited: 18 Oct 2020
+* Edited by: lirr
+* Last edited: 29 Oct 2020
 * Stata v.17.0
 
 * does
