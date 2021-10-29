@@ -209,7 +209,7 @@
 							vce(cluster hhid)
 		eststo 			mld_fsi_2`i'
 		sum				mld_fsi if post == 0 & country == `i' ///
-							& sector == 1
+							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mld_fsi_2`i'
 	}
@@ -237,7 +237,7 @@
 							vce(cluster hhid)
 		eststo 			mld_fsi_4`i'
 		summ			mld_fsi if post == 0 & country == `i' ///
-							& sexhh == 1
+							& sexhh == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mld_fsi_4`i'
 	}
@@ -251,7 +251,7 @@
 							vce(cluster hhid)
 		eststo			mld_fsi_5`i'
 		sum				mld_fsi if post == 0 & country == `i' ///
-							& sexhh == 1
+							& sexhh == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mld_fsi_5`i'
 	}
@@ -320,9 +320,9 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			mod_fs_2`i'
+		eststo 			mod_fsi_2`i'
 		sum				mod_fsi if post == 0 & country == `i' ///
-							& sector == 1
+							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fsi_2`i'
 	}
@@ -334,7 +334,7 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo			mod_fs_3`i'
+		eststo			mod_fsi_3`i'
 		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
@@ -348,9 +348,9 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			mod_fs_4`i'
+		eststo 			mod_fsi_4`i'
 		summ			mod_fsi if post == 0 & country == `i' ///
-							& sexhh == 1
+							& sexhh == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fsi_4`i'
 	}
@@ -362,7 +362,7 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo			mod_fs_5`i'
+		eststo			mod_fsi_5`i'
 		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
@@ -432,9 +432,9 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			sev_fs_2`i'
+		eststo 			sev_fsi_2`i'
 		sum				sev_fsi if post == 0 & country == `i' ///
-							& sector == 1
+							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : sev_fsi_2`i'
 	}
@@ -446,7 +446,7 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo			sev_fs_3`i'
+		eststo			sev_fsi_3`i'
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
@@ -457,11 +457,10 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			sev_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
-
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			sev_fs_4`i'
+		eststo 			sev_fsi_4`i'
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
@@ -476,7 +475,7 @@
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo			sev_fs_5`i'
+		eststo			sev_fsi_5`i'
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
