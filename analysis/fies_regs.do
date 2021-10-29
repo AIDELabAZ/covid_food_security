@@ -1,13 +1,14 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 24 October 2021
+* Edited by: jdm
+* Last edit: 29 October 2021
 * Stata v.17.0
 
 * does
 	* reads in cleaned, regression ready data
 	* conducts analysis
+	* contains unused code for anxiety, hunger, and meals skipped
 
 * assumes
 	* cleaned fies data file
@@ -15,7 +16,7 @@
 
 
 * TO DO:
-	* create standardized hunger, meal reduction and anxiety for ancova? 
+	* complete
 
 
 ************************************************************************
@@ -90,8 +91,8 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			std_fsi_wt i.post##i.sector fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_2`i'
 		sum 			std_fsi_wt if post == 0 & country == `i' ///
@@ -104,7 +105,7 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			std_fsi_wt i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_3`i'
@@ -118,8 +119,8 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			std_fsi_wt i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_4`i'
 		sum 			std_fsi_wt if post == 0 & country == `i' ///
@@ -133,7 +134,7 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			std_fsi_wt i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_5`i'
@@ -154,7 +155,7 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
 	esttab 			std_fsi_21 std_fsi_31 std_fsi_41 std_fsi_51 ///
@@ -162,7 +163,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
 	esttab 			std_fsi_22 std_fsi_32 std_fsi_42 std_fsi_52 ///
@@ -170,7 +171,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
 	esttab 			std_fsi_23 std_fsi_33 std_fsi_43 std_fsi_53 ///
@@ -178,7 +179,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -203,8 +204,8 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			mld_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mld_fsi_2`i'
 		sum				mld_fsi if post == 0 & country == `i' ///
@@ -217,7 +218,7 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg				mld_fsi i.sector mld_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			mld_fsi_3`i'
@@ -231,8 +232,8 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			mld_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mld_fsi_4`i'
 		summ			mld_fsi if post == 0 & country == `i' ///
@@ -245,7 +246,7 @@
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg				mld_fsi i.sexhh mld_fsi_y0 fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			mld_fsi_5`i'
@@ -257,7 +258,7 @@
 
 * build table for mild fies index
 	esttab 			mld_fsi_25 mld_fsi_35 mld_fsi_45 mld_fsi_55 ///
-					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mld_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
@@ -266,31 +267,31 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
 	esttab 			mld_fsi_21 mld_fsi_31 mld_fsi_41 mld_fsi_51 ///
-					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mld_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
 	esttab 			mld_fsi_22 mld_fsi_32 mld_fsi_42 mld_fsi_52 ///
-					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mld_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
 	esttab 			mld_fsi_23 mld_fsi_33 mld_fsi_43 mld_fsi_53 ///
-					using "$tab/mild_fsi.tex", booktabs label b(3) se(a2) ///
+					using "$tab/mld_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -315,12 +316,12 @@
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			mod_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			mod_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mod_fs_2`i'
-		sum				mod_fs if post == 0 & country == `i' ///
+		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fs_2`i'
@@ -329,12 +330,12 @@
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg				mod_fs i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		reg				mod_fsi i.sector mod_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			mod_fs_3`i'
-		sum				mod_fs if post == 0 & country == `i' ///
+		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fs_3`i'
@@ -343,12 +344,12 @@
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			mod_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			mod_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mod_fs_4`i'
-		summ			mod_fs if post == 0 & country == `i' ///
+		summ			mod_fsi if post == 0 & country == `i' ///
 							& sexhh == 1
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fs_4`i'
@@ -357,12 +358,12 @@
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg				mod_fs i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		reg				mod_fsi i.sexhh mod_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			mod_fs_5`i'
-		sum				mod_fs if post == 0 & country == `i' ///
+		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : mod_fs_5`i'
@@ -379,7 +380,7 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
 	esttab 			mod_fs_21 mod_fs_31 mod_fs_41 mod_fs_51 ///
@@ -387,7 +388,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
 	esttab 			mod_fs_22 mod_fs_32 mod_fs_42 mod_fs_52 ///
@@ -395,7 +396,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
 	esttab 			mod_fs_23 mod_fs_33 mod_fs_43 mod_fs_53 ///
@@ -403,7 +404,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -427,12 +428,12 @@
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			sev_fs i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			sev_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng /// 
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			sev_fs_2`i'
-		sum				sev_fs if post == 0 & country == `i' ///
+		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : sev_fs_2`i'
@@ -441,12 +442,12 @@
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg				sev_fs i.sector std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		reg				sev_fsi i.sector sev_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			sev_fs_3`i'
-		sum				sev_fs if post == 0 & country == `i' ///
+		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : sev_fs_3`i'
@@ -455,12 +456,12 @@
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			sev_fs i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			sev_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			sev_fs_4`i'
-		summ			sev_fs if post == 0 & country == `i' ///
+		summ			sev_fsi if post == 0 & country == `i' ///
 							& sexhh == 1
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : sev_fs_4`i'
@@ -470,12 +471,12 @@
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg				sev_fs i.sexhh std_fsi_y0 fs1_msng fs2_msng fs3_msng ///
-							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+		reg				sev_fsi i.sexhh sev_fsi_y0 fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo			sev_fs_5`i'
-		sum				sev_fs if post == 0 & country == `i' ///
+		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : sev_fs_5`i'
@@ -492,7 +493,7 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
 	esttab 			sev_fs_21 sev_fs_31 sev_fs_41 sev_fs_51 ///
@@ -500,7 +501,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
 	esttab 			sev_fs_22 sev_fs_32 sev_fs_42 sev_fs_52 ///
@@ -508,7 +509,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
 	esttab 			sev_fs_23 sev_fs_33 sev_fs_43 sev_fs_53 ///
@@ -516,7 +517,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -532,8 +533,7 @@
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
-
-					
+/*			
 ************************************************************************
 **# 6 - anxiety index regression
 ************************************************************************
@@ -541,11 +541,11 @@
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx i.post##i.sector fs1_msng fs2_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			anx_fsi i.post##i.sector fs1_msng fs2_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			anx_2`i'
-		sum				anx if post == 0 & country == `i' ///
+		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : anx_2`i'
@@ -554,11 +554,11 @@
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx i.sector std_fsi_y0 fs1_msng fs2_msng  ///
+		reg 			anx_fsi i.sector std_fsi_y0 fs1_msng fs2_msng  ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo 			anx_3`i'
-		sum				anx if post == 0 & country == `i' ///
+		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : anx_3`i'
@@ -567,11 +567,11 @@
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx i.post##i.sexhh fs1_msng fs2_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			anx_fsi i.post##i.sexhh fs1_msng fs2_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			anx_4`i'
-		sum				anx if post == 0 & country == `i' ///
+		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : anx_4`i'
@@ -580,11 +580,11 @@
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx i.sexhh std_fsi_y0 fs1_msng fs2_msng  ///
+		reg 			anx_fsi i.sexhh std_fsi_y0 fs1_msng fs2_msng  ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
 		eststo 			anx_5`i'
-		sum				anx if post == 0 & country == `i' ///
+		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
 		estadd loc		missing "Yes" : anx_5`i'
@@ -601,7 +601,7 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
 	esttab 			anx_21 anx_31 anx_41 anx_51 ///
@@ -609,7 +609,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
 	esttab 			anx_22 anx_32 anx_42 anx_52 ///
@@ -617,7 +617,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
 	esttab 			anx_23 anx_33 anx_43 anx_53 ///
@@ -625,7 +625,7 @@
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -649,57 +649,57 @@
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			meal_reduct i.post##i.sector fs3_msng fs4_msng fs5_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			mea_fsi i.post##i.sector fs3_msng fs4_msng fs5_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			meal_reduct_2`i'
-		sum				meal_reduct if post == 0 & country == `i' ///
+		eststo 			mea_2`i'
+		sum				mea_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : meal_reduct_2`i'
+		estadd loc		missing "Yes" : mea_2`i'
 	}
 
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			meal_reduct i.sector std_fsi_y0 fs3_msng fs4_msng /// 
-						fs5_msng [pweight = hhw_covid] if country == `i', ///
+		reg 			mea_fsi i.sector std_fsi_y0 fs3_msng fs4_msng /// 
+						fs5_msng [pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			meal_reduct_3`i'
-		sum				meal_reduct if post == 0 & country == `i' ///
+		eststo 			mea_3`i'
+		sum				mea_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : meal_reduct_3`i'
+		estadd loc		missing "Yes" : mea_3`i'
 	}
 
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			meal_reduct i.post##i.sexhh fs3_msng fs4_msng fs5_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			mea_fsi i.post##i.sexhh fs3_msng fs4_msng fs5_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			meal_reduct_4`i'
-		sum				meal_reduct if post == 0 & country == `i' ///
+		eststo 			mea_4`i'
+		sum				mea_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : meal_reduct_4`i'
+		estadd loc		missing "Yes" : mea_4`i'
 	}
 
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			meal_reduct i.sexhh std_fsi_y0 fs3_msng fs4_msng /// 
-						fs5_msng [pweight = hhw_covid] if country == `i', ///
+		reg 			mea_fsi i.sexhh std_fsi_y0 fs3_msng fs4_msng /// 
+						fs5_msng [pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			meal_reduct_5`i'
-		sum				meal_reduct if post == 0 & country == `i' ///
+		eststo 			mea_5`i'
+		sum				mea_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : meal_reduct_5`i'
+		estadd loc		missing "Yes" : mea_5`i'
 	}
 	
 * build table for meal reduction index
-	esttab 			meal_reduct_25 meal_reduct_35 meal_reduct_45 meal_reduct_55 ///
+	esttab 			mea_25 mea_35 mea_45 mea_55 ///
 					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -709,31 +709,31 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
-	esttab 			meal_reduct_21 meal_reduct_31 meal_reduct_41 meal_reduct_51 ///
+	esttab 			mea_21 mea_31 mea_41 mea_51 ///
 					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
-	esttab 			meal_reduct_22 meal_reduct_32 meal_reduct_42 meal_reduct_52 ///
+	esttab 			mea_22 mea_32 mea_42 mea_52 ///
 					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
-	esttab 			meal_reduct_23 meal_reduct_33 meal_reduct_43 meal_reduct_53 ///
+	esttab 			mea_23 mea_33 mea_43 mea_53 ///
 					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -758,57 +758,57 @@
 * did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hunger i.post##i.sector fs6_msng fs7_msng fs8_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			hun_fsi i.post##i.sector fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			hunger_2`i'
-		sum				hunger if post == 0 & country == `i' ///
+		eststo 			hun_2`i'
+		sum				hun_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hunger_2`i'
+		estadd loc		missing "Yes" : hun_2`i'
 	}
 	
 * ancova - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hunger i.sector std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			hun_fsi i.sector std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			hunger_3`i'
-		sum				hunger if post == 0 & country == `i' ///
+		eststo 			hun_3`i'
+		sum				hun_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hunger_3`i'
+		estadd loc		missing "Yes" : hun_3`i'
 	}
 	
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hunger i.post##i.sexhh fs6_msng fs7_msng fs8_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			hun_fsi i.post##i.sexhh fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			hunger_4`i'
-		sum				hunger if post == 0 & country == `i' ///
+		eststo 			hun_4`i'
+		sum				hun_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hunger_4`i'
+		estadd loc		missing "Yes" : hun_4`i'
 	}
 	
 * ancova - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hunger i.sexhh std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
-							[pweight = hhw_covid] if country == `i', ///
+		reg 			hun_fsi i.sexhh std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			hunger_5`i'
-		sum				hunger if post == 0 & country == `i' ///
+		eststo 			hun_5`i'
+		sum				hun_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hunger_5`i'
+		estadd loc		missing "Yes" : hun_5`i'
 	}
 	
 * build table for meal reduction index
-	esttab 			hunger_25 hunger_35 hunger_45 hunger_55 ///
+	esttab 			hun_25 hun_35 hun_45 hun_55 ///
 					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -818,31 +818,31 @@
 					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
 					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
 					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0) ///
+					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
-	esttab 			hunger_21 hunger_31 hunger_41 hunger_51 ///
+	esttab 			hun_21 hun_31 hun_41 hun_51 ///
 					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
-	esttab 			hunger_22 hunger_32 hunger_42 hunger_52 ///
+	esttab 			hun_22 hun_32 hun_42 hun_52 ///
 					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
-	esttab 			hunger_23 hunger_33 hunger_43 hunger_53 ///
+	esttab 			hun_23 hun_33 hun_43 hun_53 ///
 					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0) ///
+					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
@@ -858,35 +858,19 @@
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 
-
-
-	 
-				
+*/	
 ************************************************************************
-**# 7 - lorin's code testing section
-************************************************************************ 
+**# 7 - end matter, clean up to save
+************************************************************************
+	
+* compress data
+	compress
+	
+* save 
+	save			"$input/fies_reg_results", replace	
 
-	*levelsof country, local(levels)
-	
-/*	bys country: reg std_fsi_wt i.post fs1_msng fs2_msng fs3_msng fs4_msng ///
-		fs5_msng fs6_msng fs7_msng fs8_msng [pweight = hhw_covid], cluster(hhid)
-			foreach l in local levels {
-				eststo  std_fsi_1`l'
-			}
-				estadd loc FE  		"No"
-				estadd loc Missing      "Yes"
-					summ std_fsi_wt if post==0 [aweight = hhw_covid]
-					estadd scalar C_mean = r(mean)	 
-	 
-
+* close the log
+	log	close
 	
 	
-	levelsof 		country, local(levels)
-	foreach 		i of local levels {
-	reg std_fsi_wt i.post [pweight = hhw_covid] if country == `i' , cluster(hhid)  
-	eststo std_fsi_1`i'
-	estadd loc FE 		"Yes"
-				sum std_fsi_wt if post == 0 & country == `i' [aweight = hhw_covid]
-				estadd scalar C_mean = r(mean)
-	}
-	 */
+/* END */	
