@@ -324,7 +324,7 @@
 		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fs_2`i'
+		estadd loc		missing "Yes" : mod_fsi_2`i'
 	}
 
 * ancova - sector
@@ -338,7 +338,7 @@
 		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fs_3`i'
+		estadd loc		missing "Yes" : mod_fsi_3`i'
 	}
 	
 *did - sexhh
@@ -352,7 +352,7 @@
 		summ			mod_fsi if post == 0 & country == `i' ///
 							& sexhh == 1
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fs_4`i'
+		estadd loc		missing "Yes" : mod_fsi_4`i'
 	}
 
 * ancova - sexhh
@@ -366,11 +366,11 @@
 		sum				mod_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fs_5`i'
+		estadd loc		missing "Yes" : mod_fsi_5`i'
 	}
 
 * build table for moderate fies index
-	esttab 			mod_fs_25 mod_fs_35 mod_fs_45 mod_fs_55 ///
+	esttab 			mod_fsi_25 mod_fsi_35 mod_fsi_45 mod_fsi_55 ///
 					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -383,7 +383,7 @@
 					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
-	esttab 			mod_fs_21 mod_fs_31 mod_fs_41 mod_fs_51 ///
+	esttab 			mod_fsi_21 mod_fsi_31 mod_fsi_41 mod_fsi_51 ///
 					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -391,7 +391,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
-	esttab 			mod_fs_22 mod_fs_32 mod_fs_42 mod_fs_52 ///
+	esttab 			mod_fsi_22 mod_fsi_32 mod_fsi_42 mod_fsi_52 ///
 					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -399,7 +399,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
-	esttab 			mod_fs_23 mod_fs_33 mod_fs_43 mod_fs_53 ///
+	esttab 			mod_fsi_23 mod_fsi_33 mod_fsi_43 mod_fsi_53 ///
 					using "$tab/mod_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -436,7 +436,7 @@
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fs_2`i'
+		estadd loc		missing "Yes" : sev_fsi_2`i'
 	}
 
 * ancova - sector
@@ -450,21 +450,22 @@
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fs_3`i'
+		estadd loc		missing "Yes" : sev_fsi_3`i'
 	}
 	
 *did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
 		reg 			sev_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng /// 
+
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			sev_fs_4`i'
-		summ			sev_fsi if post == 0 & country == `i' ///
-							& sexhh == 1
+		sum				sev_fsi if post == 0 & country == `i' ///
+							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fs_4`i'
+		estadd loc		missing "Yes" : sev_fsi_4`i'
 	}
 
 
@@ -479,11 +480,11 @@
 		sum				sev_fsi if post == 0 & country == `i' ///
 							& sector == 1 [aweight = hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fs_5`i'
+		estadd loc		missing "Yes" : sev_fsi_5`i'
 	}
 
 * build table for severe fies index
-	esttab 			sev_fs_25 sev_fs_35 sev_fs_45 sev_fs_55 ///
+	esttab 			sev_fsi_25 sev_fsi_35 sev_fsi_45 sev_fsi_55 ///
 					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -496,7 +497,7 @@
 					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
-	esttab 			sev_fs_21 sev_fs_31 sev_fs_41 sev_fs_51 ///
+	esttab 			sev_fsi_21 sev_fsi_31 sev_fsi_41 sev_fsi_51 ///
 					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -504,7 +505,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
-	esttab 			sev_fs_22 sev_fs_32 sev_fs_42 sev_fs_52 ///
+	esttab 			sev_fsi_22 sev_fsi_32 sev_fsi_42 sev_fsi_52 ///
 					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -512,7 +513,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
-	esttab 			sev_fs_23 sev_fs_33 sev_fs_43 sev_fs_53 ///
+	esttab 			sev_fsi_23 sev_fsi_33 sev_fsi_43 sev_fsi_53 ///
 					using "$tab/sev_fsi.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -548,7 +549,7 @@
 		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_2`i'
+		estadd loc		missing "Yes" : anx_fsi_2`i'
 	}
 
 * ancova - sector
@@ -561,7 +562,7 @@
 		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_3`i'
+		estadd loc		missing "Yes" : anx_fsi_3`i'
 	}
 
 *did - sexhh
@@ -574,7 +575,7 @@
 		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_4`i'
+		estadd loc		missing "Yes" : anx_fsi_4`i'
 	}
 	
 * ancova - sexhh
@@ -587,11 +588,11 @@
 		sum				anx_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_5`i'
+		estadd loc		missing "Yes" : anx_fsi_5`i'
 	}
 	
 * build table for anxiety index
-	esttab 			anx_25 anx_35 anx_45 anx_55 ///
+	esttab 			anx_fsi_25 anx_fsi_35 anx_fsi_45 anx_fsi_55 ///
 					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -604,7 +605,7 @@
 					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
 					fragment nogap replace 
 		
-	esttab 			anx_21 anx_31 anx_41 anx_51 ///
+	esttab 			anx_fsi_21 anx_fsi_31 anx_fsi_41 anx_fsi_51 ///
 					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -612,7 +613,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 					
-	esttab 			anx_22 anx_32 anx_42 anx_52 ///
+	esttab 			anx_fsi_22 anx_fsi_32 anx_fsi_42 anx_fsi_52 ///
 					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
@@ -620,7 +621,7 @@
 					nolabel) drop(*msng _cons *y0 *.wave) ///
 					fragment nogap append
 		
-	esttab 			anx_23 anx_33 anx_43 anx_53 ///
+	esttab 			anx_fsi_23 anx_fsi_33 anx_fsi_43 anx_fsi_53 ///
 					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///

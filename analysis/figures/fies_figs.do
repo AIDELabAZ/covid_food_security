@@ -157,9 +157,9 @@
 	drop			mean_fs_* 
 
 * generate indicators for mild, mod, sev
-	egen 			mean_mild = mean(mild_fs), by(country wave)
-	egen 			mean_mod = mean(mod_fs), by(country wave)
-	egen 			mean_sev = mean(sev_fs), by(country wave)
+	egen 			mean_mild = mean(mld_fsi), by(country wave)
+	egen 			mean_mod = mean(mod_fsi), by(country wave)
+	egen 			mean_sev = mean(sev_fsi), by(country wave)
 	
 * generate color pallette
 	colorpalette	economist
@@ -289,4 +289,17 @@
 	graph export 	"$fig/sexhh.png", as(png) replace
 
 
+************************************************************************
+**# 2 - plot testing section
+************************************************************************
+
+*coefplot attempt for BF Urban
+
+
+	
+	
+	
+	
+	
+	
 	
