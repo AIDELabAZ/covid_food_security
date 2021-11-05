@@ -157,10 +157,10 @@ restore
 	
 	lab val			region region
 
-*  rename sector
-	replace			sector = 0 if sector == 1
-	replace			sector = 1 if sector == 2
-	replace			sector = 2 if sector == 0
+*  rename sector - despite the label, 2 = urban, 1 = rural
+*	replace			sector = 0 if sector == 1
+*	replace			sector = 1 if sector == 2
+*	replace			sector = 2 if sector == 0
 
 	lab def			sector 1 "Rural" 2 "Urban"
 	

@@ -863,49 +863,301 @@
 **# 7 - create coefplots
 ************************************************************************
 
-	coefplot			std_fsi_35 mld_fsi_35 ///
-							mod_fsi_35 sev_fsi_35 ///
-							, drop(*_cons *post *.wave	///
-							std_fsi_y0 mld_fsi_y0 mod_fsi_y0 sev_fsi_y0 ///
-							anx_fsi_y0 hun_fsi_y0 mea_fsi_y0) ///
-							xline(0, lcolor(maroon))  ///
-							xtitle("Burkina Faso Urban Rural FIES Regression") ///
-							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
-							ciopts(lwidth(*3) lcolor(*3)) ///
-							order(std_fsi_25 mld_fsi_25 mod_fsi_25 sev_fsi_25 ///
-								anx_fsi_25 mea_fsi_25 hun_fsi_25 std_fsi_35 ///
-								mld_fsi_35 mod_fsi_35 sev_fsi_35)
+************************************************************************
+**## 7.1 - urban/rural coefplot
+************************************************************************
 
-	coefplot			std_fsi_25 std_fsi_35 ///
-							, drop(*_cons *post *.wave 1.sector	///
-							std_fsi_y0 mld_fsi_y0 mod_fsi_y0 sev_fsi_y0 ///
-							anx_fsi_y0 hun_fsi_y0 mea_fsi_y0) ///
-							xline(0, lcolor(maroon))  ///
-							xtitle("Burkina Faso Urban Rural FIES Regression") ///
-							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
-							ciopts(lwidth(*3) lcolor(*3) ) 
+	coefplot			 (std_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) /// bkf
+							rename(1.post#2.sector = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) /// eth
+							rename(1.post#2.sector = "FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "FIES Score ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Mild Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Moderate Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Severe Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) /// mwi
+							rename(1.post#2.sector = " FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_32, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_32, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_32, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_32, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) /// nga
+							rename(1.post#2.sector = " FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_33, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " FIES Score ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_33, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Mild Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_33, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Moderate Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_33, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = " Severe Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
+							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
+							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
+							" FIES Score " = "{bf:Nigeria}")  ///
+							legend(pos(4) order(2 4) col(1)) ///
+							saving("$fig/coef_sector", replace)	
+			
+	grc1leg2 		"$fig/coef_sector.gph", col(1) ring(0) pos(3) ///
+						 commonscheme
+				
+	graph export 	"$fig/coef_sector.png", as(png) replace
+
+************************************************************************
+**## 7.2 - female/male coefplot
+************************************************************************
+
+	coefplot			 (std_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) /// bkf
+							rename(1.post#2.sexhh = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_55, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_55, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_55, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_55, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) /// eth
+							rename(1.post#2.sexhh = "FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_51, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "FIES Score ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_51, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Mild Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_51, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Moderate Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_51, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = "Severe Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) /// mwi
+							rename(1.post#2.sexhh = " FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_52, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_52, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_52, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_52, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(std_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) /// nga
+							rename(1.post#2.sexhh = " FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_53, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " FIES Score ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_53, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Mild Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_53, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Moderate Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_53, label(ANCOVA) keep(2.sexhh) ///
+							rename(2.sexhh = " Severe Insecurity ") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
+							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
+							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
+							" FIES Score " = "{bf:Nigeria}")  ///
+							legend(pos(4) order(2 4) col(1)) ///
+							saving("$fig/coef_sexhh", replace)	
+			
+	grc1leg2 		"$fig/coef_sexhh.gph", col(1) ring(0) pos(3) ///
+						 commonscheme
+				
+	graph export 	"$fig/coef_sexhh.png", as(png) replace
+										
+				
+************************************************************************
+**# 8 - create coefplots by country
+************************************************************************
+/*
+* burkina faso
+	coefplot			 (std_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_35, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
+							order(std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35 ///
+							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35 ) ///
+							xline(0, lcolor(maroon))  xtitle("Coefficients") ///
+							levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							headings("FIES Score" = "{bf:Burkina Faso}") ///
+							legend(pos(6) order(2 4) col(2))
 							
-							
-		
-	eststo std_fsi_25, rename (1.post#2.sector urban) refresh
-	esttab std_fsi_35, rename (2.sector urban)
-	
-	, rename(altmpg mpg)
-	
-	
-	coefplot			std_fsi_25, keep(1.post#2.sector) || std_fsi_35, keep(2.sector)
-	
-	coefplot			std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35 ///
-							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35 ///
-							, keep(urban) ///
-							xline(0, lcolor(maroon))  ///
-							xtitle("Burkina Faso Urban Rural FIES Regression") ///
-							levels(95) msymbol(D) mfcolor(white) pstyle(p2) ///
-							ciopts(lwidth(*3) lcolor(*3) ) ///
-							order(std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35  ///
-							mod_fsi_25 mod_fsi_35 sev_fsi_25 sev_fsi_35)
-	
-	
+
+* ethiopia
+	coefplot			 (std_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "FIES Score") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mld_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Mild Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(mod_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Moderate Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ) ///
+							(sev_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_31, label(ANCOVA) keep(2.sector) ///
+							rename(2.sector = "Severe Insecurity") msymbol(S) ///
+							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
+							order(std_fsi_25 std_fsi_35 mld_fsi_25 mld_fsi_35 ) ///
+							xline(0, lcolor(maroon))  xtitle("Coefficients") ///
+							levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							headings("FIES Score" = "{bf:Ethiopia}") ///
+							legend(pos(6) order(2 4) col(2))
+*/							
 	
 ************************************************************************
 **# 8 - end matter, clean up to save

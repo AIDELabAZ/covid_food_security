@@ -67,6 +67,7 @@
 	drop				nwave
 	drop if 			sexhh == .
 	
+	
 ************************************************************************
 **# 2 - build data set
 ************************************************************************
@@ -123,7 +124,7 @@
 	keep				country wave hhid hhsize hhsize_adult hhsize_child ///
 							hhsize_schchild sexhh sector region fies_1 fies_2 ///
 							fies_3 fies_4 fies_5 fies_6 fies_7 fies_8 fies_9 ///
-							post hhw_cs
+							post hhw_cs concern_1 concern_2
 							
 	order				country hhid wave post region sector hhw_cs sexhh hhsize ///
 							hhsize_adult hhsize_child hhsize_schchild
@@ -132,6 +133,9 @@
 	lab var				sexhh "Sex of household head"
 	lab var				region "Region"
 	lab var				sector "Urban or rural household"
+
+* run intermediate file to create descriptive graphs for sector and sexhh
+	run				"$code/analysis/figures/desc_hetero"				
 	
 * drop waves where no fies data exists
 	drop if				country == 1 & wave == 7 

@@ -260,38 +260,7 @@
 	graph export 	"$fig/cty_fsi.png", as(png) replace
 						
 			
-	
-************************************************************************
-**# 3 - sector and sexhh at baseline
-************************************************************************
-/*	
-* graph E - index sector
-	twoway  (kdensity mwi_pre_index_ta if sector == 1, color(gray%30) recast(area)) ///
-			(kdensity mwi_pre_index_ta if sector == 2, color(maroon%30) recast(area) ///
-			xtitle("Diversification Index") ytitle("Density") ///
-			ylabel(, nogrid labsize(small)) xlabel(, nogrid labsize(small))), ///
-			legend(pos(6) col(1) label(1 "Rural") label(2 "Urban") ) ///
-			saving("$fig/sector", replace)	
-			
-	grc1leg2 		"$fig/sector.gph", col(1) ring(0) pos(2) holes(4) ///
-						commonscheme
 				
-	graph export 	"$fig/sector.png", as(png) replace
-	
-* graph E - index sex
-	twoway  (kdensity mwi_pre_index_ta if sexhh == 1, color(gray%30) recast(area)) ///
-			(kdensity mwi_pre_index_ta if sexhh == 2, color(eltblue%30) recast(area) ///
-			xtitle("Diversification Index") ytitle("Density") ///
-			ylabel(, nogrid labsize(small)) xlabel(, nogrid labsize(small))), ///
-			legend(pos(6) col(1) label(1 "Male") label(2 "Female") ) ///
-			saving("$fig/sexhh", replace)	
-			
-	grc1leg2 		"$fig/sexhh.gph", col(1) ring(0) pos(2) holes(4) ///
-						commonscheme
-				
-	graph export 	"$fig/sexhh.png", as(png) replace
-
-*/			
 ************************************************************************
 **# 4 - end matter, clean up to save
 ************************************************************************
