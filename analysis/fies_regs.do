@@ -1339,7 +1339,7 @@
 	
 * mod_fsi ethiopia
 	gen 			mod_fsi_y0_1 = mod_fsi_y0 if country == 1
-	gen				mod_fsi_1_1 = mod_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	gen				mod_fsi_1_2 = mod_fsi if country == 1 & wave == 2 // first # is country second # is wave
 	
 * mod_fsi malawi
 	gen 			mod_fsi_y0_2 = mod_fsi_y0 if country == 2
@@ -1347,7 +1347,7 @@
 		
 * mod_fsi nigeria
 	gen 			mod_fsi_y0_3 = mod_fsi_y0 if country == 3
-	gen				mod_fsi_3_2 = mod_fsi if country == 3 & wave == 2 // first # is country second # is wave
+	gen				mod_fsi_3_4 = mod_fsi if country == 3 & wave == 4 // first # is country second # is wave
 
 * sev_fsi burkina faso	
 	gen 			sev_fsi_y0_5 = sev_fsi_y0 if country == 5 
@@ -1355,7 +1355,7 @@
 	
 * sev_fsi ethiopia
 	gen 			sev_fsi_y0_1 = sev_fsi_y0 if country == 1
-	gen				sev_fsi_1_1 = sev_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	gen				sev_fsi_1_2 = sev_fsi if country == 1 & wave == 2 // first # is country second # is wave
 	
 * sev_fsi malawi
 	gen 			sev_fsi_y0_2 = sev_fsi_y0 if country == 2
@@ -1363,7 +1363,7 @@
 		
 * std_fsi nigeria
 	gen 			sev_fsi_y0_3 = sev_fsi_y0 if country == 3
-	gen				sev_fsi_3_2 = sev_fsi if country == 3 & wave == 2 // first # is country second # is wave
+	gen				sev_fsi_3_4 = sev_fsi if country == 3 & wave == 4 // first # is country second # is wave
 
 	
 * correlations std_fsi
@@ -1380,15 +1380,15 @@
 
 * correlations mod_fsi
 	corr			mod_fsi_y0_5 mod_fsi_5_5
-	corr			mod_fsi_y0_1 mod_fsi_1_1
+	corr			mod_fsi_y0_1 mod_fsi_1_2
 	corr			mod_fsi_y0_2 mod_fsi_2_3
-	corr			mod_fsi_y0_3 mod_fsi_3_2
+	corr			mod_fsi_y0_3 mod_fsi_3_4
 
 * correlations sev_fsi
 	corr			sev_fsi_y0_5 sev_fsi_5_5
-	corr			sev_fsi_y0_1 sev_fsi_1_1
+	corr			sev_fsi_y0_1 sev_fsi_1_2
 	corr			sev_fsi_y0_2 sev_fsi_2_3
-	corr			sev_fsi_y0_3 sev_fsi_3_2	
+	corr			sev_fsi_y0_3 sev_fsi_3_4	
 	
 	
 	
