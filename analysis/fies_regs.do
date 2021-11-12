@@ -1,14 +1,15 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: jdm
-* Last edit: 29 October 2021
+* Edited by: lirr
+* Last edit: 12 November 2021
 * Stata v.17.0
 
 * does
 	* reads in cleaned, regression ready data
 	* conducts analysis
 	* contains unused code for anxiety, hunger, and meals skipped
+	* contains correlation checks for ancova
 
 * assumes
 	* cleaned fies data file
@@ -963,6 +964,7 @@
 							(sev_fsi_33, label(ANCOVA) keep(2.sector) ///
 							rename(2.sector = " Severe Insecurity ") msymbol(S) ///
 							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
+
 							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
 							xtitle("Point Estimates and 95% Confidence Intervals") ///
 							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
@@ -976,8 +978,76 @@
 				
 	graph export 	"$fig/coef_sector.png", as(png) replace
 
+	
 ************************************************************************
-**## 7.2 - female/male coefplot
+**## 7.2 - urban/rural coefplot DID only
+************************************************************************
+
+	coefplot			 (std_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) /// bkf
+							rename(1.post#2.sector = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) /// eth
+							rename(1.post#2.sector = "FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) /// mwi
+							rename(1.post#2.sector = " FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) /// nga
+							rename(1.post#2.sector = " FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) , ///
+							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
+							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
+							" FIES Score " = "{bf:Nigeria}")  ///
+							legend(pos(4) order(2) col(1)) ///
+							saving("$fig/coef_sector_did", replace)	
+
+	grc1leg2 		"$fig/coef_sector_did.gph", col(1) ring(0) pos(3) ///
+						 commonscheme
+				
+	graph export 	"$fig/coef_sector_did.png", as(png) replace
+
+
+	
+************************************************************************
+**## 7.3 - female/male coefplot
 ************************************************************************
 
 	coefplot			 (std_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) /// bkf
@@ -1088,7 +1158,73 @@
 						 commonscheme
 				
 	graph export 	"$fig/coef_sexhh.png", as(png) replace
-										
+
+	
+************************************************************************
+**## 7.4 - female/male coefplot DID only
+************************************************************************
+
+	coefplot			 (std_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) /// bkf
+							rename(1.post#2.sexhh = "FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) /// eth
+							rename(1.post#2.sexhh = "FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) /// mwi
+							rename(1.post#2.sexhh = " FIES Score") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Mild Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Moderate Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Severe Insecurity") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) /// nga
+							rename(1.post#2.sexhh = " FIES Score ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mld_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Mild Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(mod_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Moderate Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(sev_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Severe Insecurity ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ), ///
+							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
+							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
+							" FIES Score " = "{bf:Nigeria}")  ///
+							legend(pos(4) order(2) col(1)) ///
+							saving("$fig/coef_sexhh_did", replace)	
+			
+	grc1leg2 		"$fig/coef_sexhh_did.gph", col(1) ring(0) pos(3) ///
+						 commonscheme
+				
+	graph export 	"$fig/coef_sexhh_did.png", as(png) replace
+	
 				
 ************************************************************************
 **# 8 - create coefplots by country
@@ -1160,7 +1296,104 @@
 */							
 	
 ************************************************************************
-**# 8 - end matter, clean up to save
+**# 9 - check correlation ANCOVA
+************************************************************************
+	
+* generate correlation variables to check for ancova 
+
+* std_fsi burkina faso	
+	gen 			std_fsi_y0_5 = std_fsi_y0 if country == 5 
+	gen				std_fsi_5_5 = std_fsi if country == 5 & wave == 5 // first # is country second # is wave
+	
+* std_fsi ethiopia
+	gen 			std_fsi_y0_1 = std_fsi_y0 if country == 1
+	gen				std_fsi_1_1 = std_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	
+* std_fsi malawi
+	gen 			std_fsi_y0_2 = std_fsi_y0 if country == 2
+	gen				std_fsi_2_3 = std_fsi if country == 2 & wave == 3 // first # is country second # is wave
+		
+* std_fsi nigeria
+	gen 			std_fsi_y0_3 = std_fsi_y0 if country == 3
+	gen				std_fsi_3_2 = std_fsi if country == 3 & wave == 2 // first # is country second # is wave
+	
+* mld_fsi burkina faso	
+	gen 			mld_fsi_y0_5 = mld_fsi_y0 if country == 5 
+	gen				mld_fsi_5_5 = mld_fsi if country == 5 & wave == 5 // first # is country second # is wave
+	
+* mld_fsi ethiopia
+	gen 			mld_fsi_y0_1 = mld_fsi_y0 if country == 1
+	gen				mld_fsi_1_1 = mld_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	
+* mld_fsi malawi
+	gen 			mld_fsi_y0_2 = mld_fsi_y0 if country == 2
+	gen				mld_fsi_2_3 = mld_fsi if country == 2 & wave == 3 // first # is country second # is wave
+		
+* mld_fsi nigeria
+	gen 			mld_fsi_y0_3 = mld_fsi_y0 if country == 3
+	gen				mld_fsi_3_2 = mld_fsi if country == 3 & wave == 2 // first # is country second # is wave
+
+* mod_fsi burkina faso	
+	gen 			mod_fsi_y0_5 = mod_fsi_y0 if country == 5 
+	gen				mod_fsi_5_5 = mod_fsi if country == 5 & wave == 5 // first # is country second # is wave
+	
+* mod_fsi ethiopia
+	gen 			mod_fsi_y0_1 = mod_fsi_y0 if country == 1
+	gen				mod_fsi_1_1 = mod_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	
+* mod_fsi malawi
+	gen 			mod_fsi_y0_2 = mod_fsi_y0 if country == 2
+	gen				mod_fsi_2_3 = mod_fsi if country == 2 & wave == 3 // first # is country second # is wave
+		
+* mod_fsi nigeria
+	gen 			mod_fsi_y0_3 = mod_fsi_y0 if country == 3
+	gen				mod_fsi_3_2 = mod_fsi if country == 3 & wave == 2 // first # is country second # is wave
+
+* sev_fsi burkina faso	
+	gen 			sev_fsi_y0_5 = sev_fsi_y0 if country == 5 
+	gen				sev_fsi_5_5 = sev_fsi if country == 5 & wave == 5 // first # is country second # is wave
+	
+* sev_fsi ethiopia
+	gen 			sev_fsi_y0_1 = sev_fsi_y0 if country == 1
+	gen				sev_fsi_1_1 = sev_fsi if country == 1 & wave == 1 // first # is country second # is wave
+	
+* sev_fsi malawi
+	gen 			sev_fsi_y0_2 = sev_fsi_y0 if country == 2
+	gen				sev_fsi_2_3 = sev_fsi if country == 2 & wave == 3 // first # is country second # is wave
+		
+* std_fsi nigeria
+	gen 			sev_fsi_y0_3 = sev_fsi_y0 if country == 3
+	gen				sev_fsi_3_2 = sev_fsi if country == 3 & wave == 2 // first # is country second # is wave
+
+	
+* correlations std_fsi
+	corr			std_fsi_y0_5 std_fsi_5_5
+	corr			std_fsi_y0_1 std_fsi_1_1
+	corr			std_fsi_y0_2 std_fsi_2_3
+	corr			std_fsi_y0_3 std_fsi_3_2	
+	
+* correlations mld_fsi
+	corr			mld_fsi_y0_5 mld_fsi_5_5
+	corr			mld_fsi_y0_1 mld_fsi_1_1
+	corr			mld_fsi_y0_2 mld_fsi_2_3
+	corr			mld_fsi_y0_3 mld_fsi_3_2
+
+* correlations mod_fsi
+	corr			mod_fsi_y0_5 mod_fsi_5_5
+	corr			mod_fsi_y0_1 mod_fsi_1_1
+	corr			mod_fsi_y0_2 mod_fsi_2_3
+	corr			mod_fsi_y0_3 mod_fsi_3_2
+
+* correlations sev_fsi
+	corr			sev_fsi_y0_5 sev_fsi_5_5
+	corr			sev_fsi_y0_1 sev_fsi_1_1
+	corr			sev_fsi_y0_2 sev_fsi_2_3
+	corr			sev_fsi_y0_3 sev_fsi_3_2	
+	
+	
+	
+************************************************************************
+**# 9 - end matter, clean up to save
 ************************************************************************
 									
 * compress data

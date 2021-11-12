@@ -2,7 +2,7 @@
 * Created on: July 2020
 * Created by: jdm
 * Edited by: lirr
-* Last edit: 11 October 2021
+* Last edit: 12 November 2021
 * Stata v.17.0
 
 * does
@@ -341,8 +341,8 @@
 * summarize two values
 	bys 			country post: ///
 						sum std_fsi std_fsi_wt [aweight = hhw_covid]
-	
-	
+
+
 ************************************************************************
 **# 3 - end matter, clean up to save
 ************************************************************************
