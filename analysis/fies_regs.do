@@ -964,7 +964,6 @@
 							(sev_fsi_33, label(ANCOVA) keep(2.sector) ///
 							rename(2.sector = " Severe Insecurity ") msymbol(S) ///
 							mcolor(gs1) mfcolor(white) ciopts(color(eltgreen)) ), ///
-
 							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
 							xtitle("Point Estimates and 95% Confidence Intervals") ///
 							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
