@@ -502,7 +502,7 @@
 					fragment nogap append
 					
 	esttab 			sev_fsi_22 sev_fsi_42 ///
-					using "$tab/std_fsi_diff.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi_diff.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{2}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
@@ -510,7 +510,7 @@
 					fragment nogap append
 		
 	esttab 			sev_fsi_23 sev_fsi_43 ///
-					using "$tab/std_fsi_diff.tex", booktabs label b(3) se(a2) ///
+					using "$tab/sev_fsi_diff.tex", booktabs label b(3) se(a2) ///
 					r2(3) nonumbers nomtitles nobaselevels compress ///
 					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
 					" & \multicolumn{2}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
