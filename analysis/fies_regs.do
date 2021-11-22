@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 19 November 2021
+* Edited by: jdm
+* Last edit: 22 November 2021
 * Stata v.17.0
 
 * does
@@ -20,8 +20,7 @@
 	* complete
 
 
-***********************************************
-*************************
+************************************************************************
 **# 0 - setup
 ************************************************************************
 
@@ -154,8 +153,7 @@
 					" & \multicolumn{2}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
 					nolabel) prehead("\begin{tabular}{l*{2}{c}} \\[-1.8ex]\hline " ///
 					"\hline \\[-1.8ex] & " ///
-					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{Diff-in-Diff} \\  " ) ///
+					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ " ) ///
 					drop(*msng _cons *.wave) ///
 					fragment nogap replace 
 		
@@ -184,15 +182,13 @@
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{3}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
 					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
+					"using household survey weights. Baseline Mean represents the " ///
 					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
+					"— e.g., rural areas in the first column and male headed households " ///
+					"in the second column. Each regression includes round fixed effects " ///
+					"and a set of indicator variables to control for when household " ///
+					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
+					"clustered at the household-levle are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 		
@@ -265,8 +261,7 @@
 					" & \multicolumn{2}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
 					nolabel) prehead("\begin{tabular}{l*{2}{c}} \\[-1.8ex]\hline " ///
 					"\hline \\[-1.8ex] & " ///
-					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{Diff-in-Diff} \\  " ) ///
+					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ " ) ///
 					drop(*msng _cons *.wave) ///
 					fragment nogap replace 
 		
@@ -294,16 +289,14 @@
 					nolabel) drop(*msng _cons *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{3}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
+					"Dependent variable is mild food insecurity weighted " ///
+					"using household survey weights. Baseline Mean represents the " ///
 					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
+					"— e.g., rural areas in the first column and male headed households " ///
+					"in the second column. Each regression includes round fixed effects " ///
+					"and a set of indicator variables to control for when household " ///
+					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
+					"clustered at the household-levle are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 		
@@ -376,8 +369,7 @@
 					" & \multicolumn{2}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
 					nolabel) prehead("\begin{tabular}{l*{2}{c}} \\[-1.8ex]\hline " ///
 					"\hline \\[-1.8ex] & " ///
-					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{Diff-in-Diff} \\  " ) ///
+					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ " ) ///
 					drop(*msng _cons *.wave) ///
 					fragment nogap replace 
 		
@@ -405,16 +397,14 @@
 					nolabel) drop(*msng _cons *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{3}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
+					"Dependent variable is moderate food insecurity weighted " ///
+					"using household survey weights. Baseline Mean represents the " ///
 					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
+					"— e.g., rural areas in the first column and male headed households " ///
+					"in the second column. Each regression includes round fixed effects " ///
+					"and a set of indicator variables to control for when household " ///
+					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
+					"clustered at the household-levle are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
@@ -488,8 +478,7 @@
 					" & \multicolumn{2}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
 					nolabel) prehead("\begin{tabular}{l*{2}{c}} \\[-1.8ex]\hline " ///
 					"\hline \\[-1.8ex] & " ///
-					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} & \multicolumn{1}{c}{Diff-in-Diff} \\  " ) ///
+					"\multicolumn{1}{c}{Urban-Rural} & \multicolumn{1}{c}{Female-Male} \\ " ) ///
 					drop(*msng _cons *.wave) ///
 					fragment nogap replace 
 		
@@ -517,16 +506,14 @@
 					nolabel) drop(*msng _cons *.wave) ///
 					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
 					"\multicolumn{3}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
+					"Dependent variable is severe food insecurity weighted " ///
+					"using household survey weights. Baseline Mean represents the " ///
 					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
+					"— e.g., rural areas in the first column and male headed households " ///
+					"in the second column. Each regression includes round fixed effects " ///
+					"and a set of indicator variables to control for when household " ///
+					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
+					"clustered at the household-levle are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
@@ -1031,11 +1018,10 @@
 							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
 							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
 							" FIES Score " = "{bf:Nigeria}")  ///
-							legend(pos(4) order(2) col(1)) ///
+							legend(off) ///
 							saving("$fig/coef_sector_did", replace)	
 
-	grc1leg2 		"$fig/coef_sector_did.gph", col(1) ring(0) pos(3) ///
-						 commonscheme
+	grc1leg2 		"$fig/coef_sector_did.gph", loff commonscheme
 				
 	graph export 	"$fig/coef_sector_did.png", as(png) replace
 
@@ -1212,11 +1198,10 @@
 							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
 							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
 							" FIES Score " = "{bf:Nigeria}")  ///
-							legend(pos(4) order(2) col(1)) ///
+							legend(off) ///
 							saving("$fig/coef_sexhh_did", replace)	
 			
-	grc1leg2 		"$fig/coef_sexhh_did.gph", col(1) ring(0) pos(3) ///
-						 commonscheme
+	grc1leg2 		"$fig/coef_sexhh_did.gph", loff commonscheme
 				
 	graph export 	"$fig/coef_sexhh_did.png", as(png) replace
 	
