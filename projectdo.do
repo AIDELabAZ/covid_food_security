@@ -52,8 +52,8 @@
 		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
 	}
 	
-	if `"`c(username)'"' == "Lorin Rudin-Rush" {
-		global 		code  	"C:/Users/Lorin Rudin-Rush/Documents/GitHub/covid_food_security"
+	if `"`c(username)'"' == "ual-laptop" {
+		global 		code  	"C:/Users/ual-laptop/Documents/GitHub/covid_food_security"
 		global 		data	"G:/My Drive/wb_covid/data"
 		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
 	}

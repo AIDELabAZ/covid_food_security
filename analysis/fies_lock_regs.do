@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: November 2021
 * Created by: jdm
-* Edited by: jdm
-* Last edit: 29 November 2021
+* Edited by: lirr
+* Last edit: 12 December 2021
 * Stata v.17.0
 
 * does
@@ -13,8 +13,10 @@
 	* ietoolkit.ado
 
 * TO DO:
-	* 
-
+	* organize regressions
+	* start tables
+	* start graphs
+	* estouts etc.
 
 ************************************************************************
 **# 0 - setup
@@ -169,6 +171,62 @@
 							fe vce(cluster hhid)
 	}
 
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			 mld_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			mod_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			sev_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			sev_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			anx_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			mea_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			hun_fsi i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
 * lockdown study
 	levelsof		country, local(levels)
 	foreach			i of local levels {
@@ -178,6 +236,61 @@
 							fe vce(cluster hhid)
 	}
 
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			 mld_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			mod_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			sev_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			sev_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			anx_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			mea_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		xtreg 			hun_fsi i.lock fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
+							[pweight = hhw_covid] if country == `i', ///
+							fe vce(cluster hhid)
+	}
 
 ************************************************************************
 **# 3 - difference in difference
@@ -191,7 +304,56 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 	}					
-		
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}					
+
+	
 * covid did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
@@ -200,6 +362,54 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 	}				
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}	
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
 	
 	
 * lockdown did - sector
@@ -210,7 +420,56 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 	}					
-		
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}	
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.lock##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	
 * lockdown did - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
@@ -220,6 +479,54 @@
 							vce(cluster hhid)
 	}				
 		
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}	
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.lock##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.nwave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+	}		
+		
 * month did - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
@@ -228,6 +535,55 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							nocons vce(cluster hhid)
 	}					
+
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+
+		levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+		
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.sector##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+		
 	
 * month did - sexhh
 	levelsof		country, local(levels)
@@ -238,3 +594,50 @@
 							nocons vce(cluster hhid)
 	}				
 		
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mld_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+
+		levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mod_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			sev_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+		
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			anx_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			mea_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}					
+	
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			hun_fsi i.sexhh##i.nwave fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng  ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							nocons vce(cluster hhid)
+	}							
