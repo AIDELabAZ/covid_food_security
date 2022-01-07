@@ -2,7 +2,7 @@
 * Created on: October 2020
 * Created by: jdm
 * Edited by: jdm
-* Last edit: 22 November 2021
+* Last edit: 7 January 2022
 * Stata v.17.0
 
 * does
@@ -84,6 +84,73 @@
 
 	eststo clear
 
+* recode waves
+	gen				nwave = wave if wave < 1
+	
+	* ethiopia
+		replace			nwave = 1 if country == 1 & wave == 1
+		replace			nwave = 2 if country == 1 & wave == 2
+		replace			nwave = 3 if country == 1 & wave == 3
+		replace			nwave = 5 if country == 1 & wave == 4
+		replace			nwave = 6 if country == 1 & wave == 5
+		replace			nwave = 7 if country == 1 & wave == 6
+		replace			nwave = 8 if country == 1 & wave == 7
+		replace			nwave = 9 if country == 1 & wave == 8
+		replace			nwave = 10 if country == 1 & wave == 9
+		replace			nwave = 11 if country == 1 & wave == 10
+		replace			nwave = 13 if country == 1 & wave == 11
+		replace			nwave = 15 if country == 1 & wave == 12
+		
+	* malawi
+		replace			nwave = 3 if country == 2 & wave == 1
+		replace			nwave = 4 if country == 2 & wave == 2
+		replace			nwave = 5 if country == 2 & wave == 3
+		replace			nwave = 6 if country == 2 & wave == 4
+		replace			nwave = 8 if country == 2 & wave == 5
+		replace			nwave = 9 if country == 2 & wave == 6
+		replace			nwave = 10 if country == 2 & wave == 7
+		replace			nwave = 12 if country == 2 & wave == 8
+		replace			nwave = 13 if country == 2 & wave == 9
+		replace			nwave = 14 if country == 2 & wave == 10
+		replace			nwave = 15 if country == 2 & wave == 11
+		replace			nwave = 16 if country == 2 & wave == 12
+		
+	* nigeria
+		replace			nwave = 2 if country == 3 & wave == 1
+		replace			nwave = 3 if country == 3 & wave == 2
+		replace			nwave = 4 if country == 3 & wave == 3
+		replace			nwave = 5 if country == 3 & wave == 4
+		replace			nwave = 6 if country == 3 & wave == 5
+		replace			nwave = 7 if country == 3 & wave == 6
+		replace			nwave = 8 if country == 3 & wave == 7
+		replace			nwave = 9 if country == 3 & wave == 8
+		replace			nwave = 10 if country == 3 & wave == 9
+		replace			nwave = 11 if country == 3 & wave == 10
+		replace			nwave = 12 if country == 3 & wave == 11
+		replace			nwave = 13 if country == 3 & wave == 12
+		
+	* burkina faso
+		replace			nwave = 3 if country == 5 & wave == 1
+		replace			nwave = 5 if country == 5 & wave == 2
+		replace			nwave = 7 if country == 5 & wave == 3
+		replace			nwave = 8 if country == 5 & wave == 4
+		replace			nwave = 9 if country == 5 & wave == 5
+		replace			nwave = 10 if country == 5 & wave == 6
+		replace			nwave = 11 if country == 5 & wave == 7
+		replace			nwave = 12 if country == 5 & wave == 8
+		replace			nwave = 13 if country == 5 & wave == 9
+		replace			nwave = 15 if country == 5 & wave == 10
+		
+* define labels for nwave
+	lab def			nwave -1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" ///
+						3 "Jun '20" 4 "Jul '20" 5 "Aug '20" ///
+						6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" ///
+						12 "Mar '21" 13 "Apr '21" 14 "May '21" ///
+						15 "Jun '21" 16 "Jul '21"
+	lab val			nwave nwave
+	lab var			nwave "Survey Month"
+	
 ************************************************************************
 **# 2 - raw fies index regression
 ************************************************************************
@@ -517,332 +584,215 @@
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
-/*			
+		
 ************************************************************************
-**# 6 - anxiety index regression
+**# 6 - event study regressions
 ************************************************************************
 
-* did - sector
+* index - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx_fsi i.post##i.sector fs1_msng fs2_msng  ///
+		reg 			std_fsi_wt i.nwave##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			anx_2`i'
-		sum				anx_fsi if post == 0 & country == `i' ///
+		eststo 			wave_fsi_sec`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_fsi_2`i'
+		estadd loc		missing "Yes" : wave_fsi_sec`i'
 	}
 
-* ancova - sector
+* index - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx_fsi i.sector std_fsi_y0 fs1_msng fs2_msng  ///
+		reg 			std_fsi_wt i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			anx_3`i'
-		sum				anx_fsi if post == 0 & country == `i' ///
+		eststo 			wave_fsi_sex`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_fsi_3`i'
+		estadd loc		missing "Yes" : wave_fsi_sex`i'
 	}
 
-*did - sexhh
+* mld - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx_fsi i.post##i.sexhh fs1_msng fs2_msng  ///
+		reg 			mld_fsi i.nwave##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			anx_4`i'
-		sum				anx_fsi if post == 0 & country == `i' ///
+		eststo 			wave_mld_sec`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_fsi_4`i'
+		estadd loc		missing "Yes" : wave_mld_sec`i'
 	}
-	
-* ancova - sexhh
+
+* mld - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			anx_fsi i.sexhh std_fsi_y0 fs1_msng fs2_msng  ///
+		reg 			mld_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			anx_5`i'
-		sum				anx_fsi if post == 0 & country == `i' ///
+		eststo 			wave_mld_sex`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : anx_fsi_5`i'
+		estadd loc		missing "Yes" : wave_mld_sex`i'
 	}
-	
-* build table for anxiety index
-	esttab 			anx_fsi_25 anx_fsi_35 anx_fsi_45 anx_fsi_55 ///
-					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  " ///
-					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
-					fragment nogap replace 
-		
-	esttab 			anx_fsi_21 anx_fsi_31 anx_fsi_41 anx_fsi_51 ///
-					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-					
-	esttab 			anx_fsi_22 anx_fsi_32 anx_fsi_42 anx_fsi_52 ///
-					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-		
-	esttab 			anx_fsi_23 anx_fsi_33 anx_fsi_43 anx_fsi_53 ///
-					using "$tab/anx_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
-					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
-					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
-					"\end{tabular}")
 
-	
-************************************************************************
-**# 7 - meal reduction index regression
-************************************************************************
-
-* did - sector
+* mod - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			mea_fsi i.post##i.sector fs3_msng fs4_msng fs5_msng  ///
+		reg 			mod_fsi i.nwave##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			mea_2`i'
-		sum				mea_fsi if post == 0 & country == `i' ///
+		eststo 			wave_mod_sec`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mea_2`i'
+		estadd loc		missing "Yes" : wave_mod_sec`i'
 	}
 
-* ancova - sector
+* mod - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			mea_fsi i.sector std_fsi_y0 fs3_msng fs4_msng /// 
-						fs5_msng [pweight = hhw_covid] if country == `i' & wave > 0, ///
-							vce(cluster hhid)
-		eststo 			mea_3`i'
-		sum				mea_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mea_3`i'
-	}
-
-*did - sexhh
-	levelsof		country, local(levels)
-	foreach			i of local levels {
-		reg 			mea_fsi i.post##i.sexhh fs3_msng fs4_msng fs5_msng  ///
-							[pweight = hhw_covid] if country == `i' & wave != -1, ///
-							vce(cluster hhid)
-		eststo 			mea_4`i'
-		sum				mea_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mea_4`i'
-	}
-
-* ancova - sexhh
-	levelsof		country, local(levels)
-	foreach			i of local levels {
-		reg 			mea_fsi i.sexhh std_fsi_y0 fs3_msng fs4_msng /// 
-						fs5_msng [pweight = hhw_covid] if country == `i' & wave > 0, ///
-							vce(cluster hhid)
-		eststo 			mea_5`i'
-		sum				mea_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mea_5`i'
-	}
-	
-* build table for meal reduction index
-	esttab 			mea_25 mea_35 mea_45 mea_55 ///
-					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  " ///
-					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
-					fragment nogap replace 
-		
-	esttab 			mea_21 mea_31 mea_41 mea_51 ///
-					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-					
-	esttab 			mea_22 mea_32 mea_42 mea_52 ///
-					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-		
-	esttab 			mea_23 mea_33 mea_43 mea_53 ///
-					using "$tab/meal_reduct_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
-					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
-					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
-					"\end{tabular}")
-
-
-	
-************************************************************************
-**# 7 - hunger index regression
-************************************************************************
-
-* did - sector
-	levelsof		country, local(levels)
-	foreach			i of local levels {
-		reg 			hun_fsi i.post##i.sector fs6_msng fs7_msng fs8_msng  ///
-							[pweight = hhw_covid] if country == `i' & wave != -1, ///
-							vce(cluster hhid)
-		eststo 			hun_2`i'
-		sum				hun_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hun_2`i'
-	}
-	
-* ancova - sector
-	levelsof		country, local(levels)
-	foreach			i of local levels {
-		reg 			hun_fsi i.sector std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
+		reg 			mod_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			hun_3`i'
-		sum				hun_fsi if post == 0 & country == `i' ///
+		eststo 			wave_mod_sex`i'
+		sum				std_fsi_wt if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hun_3`i'
+		estadd loc		missing "Yes" : wave_mod_sex`i'
 	}
-	
-*did - sexhh
+
+* sev - sector
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hun_fsi i.post##i.sexhh fs6_msng fs7_msng fs8_msng  ///
+		reg 			sev_fsi i.nwave##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
-		eststo 			hun_4`i'
-		sum				hun_fsi if post == 0 & country == `i' ///
+		eststo 			wave_sev_sec`i'
+		sum				sev_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hun_4`i'
+		estadd loc		missing "Yes" : wave_sev_sec`i'
 	}
-	
-* ancova - sexhh
+
+* sev - sexhh
 	levelsof		country, local(levels)
 	foreach			i of local levels {
-		reg 			hun_fsi i.sexhh std_fsi_y0 fs6_msng fs7_msng fs8_msng  ///
+		reg 			sev_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
 							[pweight = hhw_covid] if country == `i' & wave > 0, ///
 							vce(cluster hhid)
-		eststo 			hun_5`i'
-		sum				hun_fsi if post == 0 & country == `i' ///
+		eststo 			wave_sev_sex`i'
+		sum				sev_fsi if post == 0 & country == `i' ///
 							[aweight =  hhw_covid]
 		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : hun_5`i'
+		estadd loc		missing "Yes" : wave_sev_sex`i'
 	}
-	
-* build table for meal reduction index
-	esttab 			hun_25 hun_35 hun_45 hun_55 ///
-					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel A: Burkina Faso}} \\ [-1ex] ", ///
-					nolabel) prehead("\begin{tabular}{l*{4}{c}} \\[-1.8ex]\hline " ///
-					"\hline \\[-1.8ex] &  " ///
-					"\multicolumn{2}{c}{Urban-Rural} & \multicolumn{2}{c}{Female-Male} \\ "  ///
-					"& \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} & \multicolumn{1}{c}{Diff-in-Diff} " ///
-					"& \multicolumn{1}{c}{ANCOVA} \\") drop(*msng _cons *y0 *.wave) ///
-					fragment nogap replace 
-		
-	esttab 			hun_21 hun_31 hun_41 hun_51 ///
-					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel B: Ethiopia}} \\ [-1ex] ",  ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-					
-	esttab 			hun_22 hun_32 hun_42 hun_52 ///
-					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel C: Malawi}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append
-		
-	esttab 			hun_23 hun_33 hun_43 hun_53 ///
-					using "$tab/hunger_i.tex", booktabs label b(3) se(a2) ///
-					r2(3) nonumbers nomtitles nobaselevels compress ///
-					scalar("mu Baseline Mean") sfmt(3) refcat(1.post ///
-					" & \multicolumn{4}{c}{\textbf{Panel D: Nigeria}} \\ [-1ex] ", ///
-					nolabel) drop(*msng _cons *y0 *.wave) ///
-					fragment nogap append postfoot("\\[-1.8ex]\hline \hline \\[-1.8ex] " ///
-					"\multicolumn{5}{p{\linewidth}}{\footnotesize  \textit{Note}: " ///
-					"Dependent variable is the standardized raw FIES score weighted " ///
-					"using household survey weights. Baseline Mean in the first " ///
-					"column represents the pre-pandemic mean of the outcome variable in each " ///
-					"country. In the last four columns, the Baseline Mean represents the " ///
-					"pre-pandemic mean of the outcome variable in the comparison area " ///
-					"— e.g., rural areas in the second and third columns and male " ///
-					"headed households in the final two columns. Each regression " ///
-					"includes a set of indicator variables to control for when " ///
-					"household skip or refuse to answer a specific FIES question. " ///
-					"Cluster corrected robust standard errors are reported in parentheses " ///
-					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
-					"\end{tabular}")
 
-*/	
+* index - sector - ethiopia
+	coefplot			wave_fsi_sec1, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_fies_sec", replace)	
+
+* index - sector - malawi
+	coefplot			wave_fsi_sec2, keep(3.nwave#2.sector 4.nwave#2.sector ///
+							5.nwave#2.sector 6.nwave#2.sector 8.nwave#2.sector ///
+							9.nwave#2.sector 10.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector 14.nwave#2.sector 15.nwave#2.sector ///
+							16.nwave#2.sector) rename(3.nwave#2.sector = "Jun '20" ///
+							4.nwave#2.sector = "Jul '20" 5.nwave#2.sector = "Aug '20" ///
+							6.nwave#2.sector = "Sep '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							12.nwave#2.sector = "Mar '21" 13.nwave#2.sector = "Apr '21" ///
+							14.nwave#2.sector = "May '21" 15.nwave#2.sector = "Jun '21" ///
+							16.nwave#2.sector = "Jul '21") msymbol(D)  vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_fies_sec", replace)	
+	
+* index - sector - nigeria
+	coefplot			wave_fsi_sec3, keep(2.nwave#2.sector 3.nwave#2.sector ///
+							4.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector) rename(2.nwave#2.sector = "May '20" ///
+							3.nwave#2.sector = "Jun '20" 4.nwave#2.sector = "Jul '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 12.nwave#2.sector = "Mar '21" ///
+							13.nwave#2.sector = "Apr '21") msymbol(D)  vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_fies_sec", replace)	
+	
+* index - sector - burkina						
+	coefplot			wave_fsi_sec5, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") msymbol(D)  vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") legend(off) ///
+							saving("$fig/bf_fies_sec", replace)							
+		
+	graph combine 		"$fig/eth_fies_sec.gph" "$fig/mwi_fies_sec.gph" ///
+						"$fig/nga_fies_sec.gph", col(2) iscale(.5)  ///
+						 commonscheme
+						 
 ************************************************************************
 **# 7 - create coefplots
 ************************************************************************
