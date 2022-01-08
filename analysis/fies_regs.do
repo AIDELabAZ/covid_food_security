@@ -712,7 +712,10 @@
 							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
 							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
 							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
-							15.nwave#2.sector = "Jun '21") msymbol(D) vertical ///
+							15.nwave#2.sector = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Aug '20" = 5 "Sep '20" = 6 ///
+							"Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 "Jan '21" = 10 ///
+							"Feb '21" = 11 "Apr '21" = 13 "Jun '21" = 15) msymbol(D) vertical ///
 							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
 							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
 							levels(95) xtitle("Survey Month Year") recast(line) ///
