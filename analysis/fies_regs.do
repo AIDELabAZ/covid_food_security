@@ -738,7 +738,10 @@
 							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
 							12.nwave#2.sector = "Mar '21" 13.nwave#2.sector = "Apr '21" ///
 							14.nwave#2.sector = "May '21" 15.nwave#2.sector = "Jun '21" ///
-							16.nwave#2.sector = "Jul '21") msymbol(D)  vertical ///
+							16.nwave#2.sector = "Jul '21") reloc("Jun '20" = 3 ///
+							"Jul '20" = 4 "Aug '20" = 5 "Sep '20" = 6 "Nov '20" = 8 ///
+							"Dec '20" = 9 "Jan '21" = 10 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15 "Jul '21" = 16) msymbol(D)  vertical ///
 							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
 							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
 							levels(95) xtitle("Survey Month Year") recast(line) ///
@@ -761,8 +764,11 @@
 							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
 							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
 							11.nwave#2.sector = "Feb '21" 12.nwave#2.sector = "Mar '21" ///
-							13.nwave#2.sector = "Apr '21") msymbol(D)  vertical ///
-							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							13.nwave#2.sector = "Apr '21") reloc("May '20" = 2 ///
+							"Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 "Sep '20" = 6 ///
+							"Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 "Jan '21" = 10 ///
+							"Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
 							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
 							levels(95) xtitle("Survey Month Year") recast(line) ///
 							ytitle("Point Estimates and 95% Confidence Intervals")  ///
@@ -784,13 +790,21 @@
 							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
 							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
 							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
-							15.nwave#2.sector = "Jun '21") msymbol(D)  vertical ///
-							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							15.nwave#2.sector = "Jun '21") reloc( "Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 "Sep '20" = 6 ///
+							"Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 "Jan '21" = 10 ///
+							"Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 "May '21" = 14 ///
+							"Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
 							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
 							levels(95) xtitle("Survey Month Year") recast(line) ///
 							ytitle("Point Estimates and 95% Confidence Intervals")  ///
-							title("Burkina Faso") legend(off) ///
-							saving("$fig/bf_fies_sec", replace)							
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_fies_sec", replace)							
 		
 	graph combine 		"$fig/eth_fies_sec.gph" "$fig/mwi_fies_sec.gph" ///
 						"$fig/nga_fies_sec.gph", col(2) iscale(.5)  ///
