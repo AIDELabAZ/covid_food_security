@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: jdm
-* Last edit: 8 January 2022
+* Edited by: lirr
+* Last edit: 9 January 2022
 * Stata v.17.0
 
 * does
@@ -1298,13 +1298,13 @@
 	
 	graph combine 		"$fig/eth_fies_sex.gph" "$fig/mwi_fies_sex.gph" ///
 						"$fig/nga_fies_sex.gph"  "$fig/bf_fies_sex.gph" , col(2) iscale(.5)  ///
-						 commonscheme saving("$fig/fies_sec", replace)
+						 commonscheme saving("$fig/fies_sex", replace)
 						 
 	graph export 		"$fig/fies_sex.png", as(png) replace
 
 
 ************************************************************************
-**## 7.7 - Event Study Coefplot Mild - Sector
+**## 7.7 - Event Study Coefplot Mild - Sector 
 ************************************************************************	
 
 * mild - sector - ethiopia
@@ -1414,14 +1414,609 @@
 							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
 							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
 							legend(off) saving("$fig/bf_mld_sec", replace)							
-		
+
 	graph combine 		"$fig/eth_mld_sec.gph" "$fig/mwi_mld_sec.gph" ///
 						"$fig/nga_mld_sec.gph"  "$fig/bf_mld_sec.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/mld_sec", replace)
 						 
-	graph export 		"$fig/mld_sec.png", as(png) replace	
+	graph export 		"$fig/mld_sec.png", as(png) replace
+													
+							
+************************************************************************
+**## 7.8 - Event Study Coefplot Mild - Sex
+************************************************************************	
+
+* mild - sexhh - ethiopia
+	coefplot			wave_mld_sex1, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3  "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15)  msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_mld_sex", replace)	
+
+* mild - sexhh - malawi
+	coefplot			wave_mld_sex2, keep(3.nwave#2.sexhh 4.nwave#2.sexhh ///
+							5.nwave#2.sexhh 6.nwave#2.sexhh 8.nwave#2.sexhh ///
+							9.nwave#2.sexhh 10.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh 14.nwave#2.sexhh 15.nwave#2.sexhh ///
+							16.nwave#2.sexhh) rename(3.nwave#2.sexhh = "Jun '20" ///
+							4.nwave#2.sexhh = "Jul '20" 5.nwave#2.sexhh = "Aug '20" ///
+							6.nwave#2.sexhh = "Sep '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							12.nwave#2.sexhh = "Mar '21" 13.nwave#2.sexhh = "Apr '21" ///
+							14.nwave#2.sexhh = "May '21" 15.nwave#2.sexhh = "Jun '21" ///
+							16.nwave#2.sexhh = "Jul '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 ///
+							"Apr '21" = 13 "May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_mld_sex", replace)	
+	
+* mild - sexhh - nigeria
+	coefplot			wave_mld_sex3, keep(2.nwave#2.sexhh 3.nwave#2.sexhh ///
+							4.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh) rename(2.nwave#2.sexhh = "May '20" ///
+							3.nwave#2.sexhh = "Jun '20" 4.nwave#2.sexhh = "Jul '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 12.nwave#2.sexhh = "Mar '21" ///
+							13.nwave#2.sexhh = "Apr '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_mld_sex", replace)	
+	
+* mild - sexhh - burkina						
+	coefplot			wave_mld_sex5, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_mld_sex", replace)							
+	
+	graph combine 		"$fig/eth_mld_sex.gph" "$fig/mwi_mld_sex.gph" ///
+						"$fig/nga_mld_sex.gph"  "$fig/bf_mld_sex.gph" , col(2) iscale(.5)  ///
+						 commonscheme saving("$fig/mld_sex", replace)
+						 
+	graph export 		"$fig/mld_sex.png", as(png) replace	
 
 
+
+************************************************************************
+**## 7.9 - Event Study Coefplot Mod - Sector
+************************************************************************	
+
+* mod - sector - ethiopia
+	coefplot			wave_mod_sec1, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3  "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15)  msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_mod_sec", replace)	
+
+* mod - sector - malawi
+	coefplot			wave_mod_sec2, keep(3.nwave#2.sector 4.nwave#2.sector ///
+							5.nwave#2.sector 6.nwave#2.sector 8.nwave#2.sector ///
+							9.nwave#2.sector 10.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector 14.nwave#2.sector 15.nwave#2.sector ///
+							16.nwave#2.sector) rename(3.nwave#2.sector = "Jun '20" ///
+							4.nwave#2.sector = "Jul '20" 5.nwave#2.sector = "Aug '20" ///
+							6.nwave#2.sector = "Sep '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							12.nwave#2.sector = "Mar '21" 13.nwave#2.sector = "Apr '21" ///
+							14.nwave#2.sector = "May '21" 15.nwave#2.sector = "Jun '21" ///
+							16.nwave#2.sector = "Jul '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 ///
+							"Apr '21" = 13 "May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_mod_sec", replace)	
+	
+* mod - sector - nigeria
+	coefplot			wave_mod_sec3, keep(2.nwave#2.sector 3.nwave#2.sector ///
+							4.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector) rename(2.nwave#2.sector = "May '20" ///
+							3.nwave#2.sector = "Jun '20" 4.nwave#2.sector = "Jul '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 12.nwave#2.sector = "Mar '21" ///
+							13.nwave#2.sector = "Apr '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_mod_sec", replace)	
+	
+* mod - sector - burkina						
+	coefplot			wave_mod_sec5, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 "Sep '20" = 6 ///
+							"Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 "Jan '21" = 10 ///
+							"Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 "May '21" = 14 ///
+							"Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_mod_sec", replace)							
+
+	graph combine 		"$fig/eth_mod_sec.gph" "$fig/mwi_mod_sec.gph" ///
+						"$fig/nga_mod_sec.gph"  "$fig/bf_mod_sec.gph" , col(2) iscale(.5)  ///
+						 commonscheme saving("$fig/mod_sec", replace)
+						 
+	graph export 		"$fig/mod_sec.png", as(png) replace
+	
+							
+************************************************************************
+**## 7.10 - Event Study Coefplot Mod - Sex 
+************************************************************************	
+
+* mod - sexhh - ethiopia
+	coefplot			wave_mod_sex1, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3  "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15)  msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_mod_sex", replace)	
+
+* mod - sexhh - malawi
+	coefplot			wave_mod_sex2, keep(3.nwave#2.sexhh 4.nwave#2.sexhh ///
+							5.nwave#2.sexhh 6.nwave#2.sexhh 8.nwave#2.sexhh ///
+							9.nwave#2.sexhh 10.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh 14.nwave#2.sexhh 15.nwave#2.sexhh ///
+							16.nwave#2.sexhh) rename(3.nwave#2.sexhh = "Jun '20" ///
+							4.nwave#2.sexhh = "Jul '20" 5.nwave#2.sexhh = "Aug '20" ///
+							6.nwave#2.sexhh = "Sep '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							12.nwave#2.sexhh = "Mar '21" 13.nwave#2.sexhh = "Apr '21" ///
+							14.nwave#2.sexhh = "May '21" 15.nwave#2.sexhh = "Jun '21" ///
+							16.nwave#2.sexhh = "Jul '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 ///
+							"Apr '21" = 13 "May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_mod_sex", replace)	
+	
+* mod - sexhh - nigeria
+	coefplot			wave_mod_sex3, keep(2.nwave#2.sexhh 3.nwave#2.sexhh ///
+							4.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh) rename(2.nwave#2.sexhh = "May '20" ///
+							3.nwave#2.sexhh = "Jun '20" 4.nwave#2.sexhh = "Jul '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 12.nwave#2.sexhh = "Mar '21" ///
+							13.nwave#2.sexhh = "Apr '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_mod_sex", replace)	
+	
+* mod - sexhh - burkina						
+	coefplot			wave_mod_sex5, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_mod_sex", replace)							
+	
+	graph combine 		"$fig/eth_mod_sex.gph" "$fig/mwi_mod_sex.gph" ///
+						"$fig/nga_mod_sex.gph"  "$fig/bf_mod_sex.gph" , col(2) iscale(.5)  ///
+						 commonscheme saving("$fig/mod_sex", replace)
+						 
+	graph export 		"$fig/mod_sex.png", as(png) replace	
+
+	
+************************************************************************
+**## 7.11 - Event Study Coefplot Sev - Sector
+************************************************************************	
+
+* sev - sector - ethiopia
+	coefplot			wave_sev_sec1, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3  "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15)  msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_sev_sec", replace)	
+
+* sev - sector - malawi
+	coefplot			wave_sev_sec2, keep(3.nwave#2.sector 4.nwave#2.sector ///
+							5.nwave#2.sector 6.nwave#2.sector 8.nwave#2.sector ///
+							9.nwave#2.sector 10.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector 14.nwave#2.sector 15.nwave#2.sector ///
+							16.nwave#2.sector) rename(3.nwave#2.sector = "Jun '20" ///
+							4.nwave#2.sector = "Jul '20" 5.nwave#2.sector = "Aug '20" ///
+							6.nwave#2.sector = "Sep '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							12.nwave#2.sector = "Mar '21" 13.nwave#2.sector = "Apr '21" ///
+							14.nwave#2.sector = "May '21" 15.nwave#2.sector = "Jun '21" ///
+							16.nwave#2.sector = "Jul '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 ///
+							"Apr '21" = 13 "May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_sev_sec", replace)	
+	
+* sev - sector - nigeria
+	coefplot			wave_sev_sec3, keep(2.nwave#2.sector 3.nwave#2.sector ///
+							4.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 12.nwave#2.sector ///
+							13.nwave#2.sector) rename(2.nwave#2.sector = "May '20" ///
+							3.nwave#2.sector = "Jun '20" 4.nwave#2.sector = "Jul '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 12.nwave#2.sector = "Mar '21" ///
+							13.nwave#2.sector = "Apr '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_sev_sec", replace)	
+	
+* sev - sector - burkina						
+	coefplot			wave_sev_sec5, keep(1.nwave#2.sector 2.nwave#2.sector ///
+							3.nwave#2.sector 5.nwave#2.sector 6.nwave#2.sector ///
+							7.nwave#2.sector 8.nwave#2.sector 9.nwave#2.sector ///
+							10.nwave#2.sector 11.nwave#2.sector 13.nwave#2.sector ///
+							15.nwave#2.sector) rename(1.nwave#2.sector = "Apr '20" ///
+							2.nwave#2.sector = "May '20" 3.nwave#2.sector = "Jun '20" ///
+							5.nwave#2.sector = "Aug '20" 6.nwave#2.sector = "Sep '20" ///
+							7.nwave#2.sector = "Oct '20" 8.nwave#2.sector = "Nov '20" ///
+							9.nwave#2.sector = "Dec '20" 10.nwave#2.sector = "Jan '21" ///
+							11.nwave#2.sector = "Feb '21" 13.nwave#2.sector = "Apr '21" ///
+							15.nwave#2.sector = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 "Sep '20" = 6 ///
+							"Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 "Jan '21" = 10 ///
+							"Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 "May '21" = 14 ///
+							"Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_sev_sec", replace)							
+
+	graph combine 		"$fig/eth_sev_sec.gph" "$fig/mwi_sev_sec.gph" ///
+						"$fig/nga_sev_sec.gph"  "$fig/bf_sev_sec.gph" , col(2) iscale(.5)  ///
+						 commonscheme saving("$fig/sev_sec", replace)
+						 
+	graph export 		"$fig/sev_sec.png", as(png) replace
+
+	
+************************************************************************
+**## 7.10 - Event Study Coefplot Sev - Sex 
+************************************************************************	
+
+* sev - sexhh - ethiopia
+	coefplot			wave_sev_sex1, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3  "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15)  msymbol(D) vertical ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Ethiopia") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/eth_sev_sex", replace)	
+
+* sev - sexhh - malawi
+	coefplot			wave_sev_sex2, keep(3.nwave#2.sexhh 4.nwave#2.sexhh ///
+							5.nwave#2.sexhh 6.nwave#2.sexhh 8.nwave#2.sexhh ///
+							9.nwave#2.sexhh 10.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh 14.nwave#2.sexhh 15.nwave#2.sexhh ///
+							16.nwave#2.sexhh) rename(3.nwave#2.sexhh = "Jun '20" ///
+							4.nwave#2.sexhh = "Jul '20" 5.nwave#2.sexhh = "Aug '20" ///
+							6.nwave#2.sexhh = "Sep '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							12.nwave#2.sexhh = "Mar '21" 13.nwave#2.sexhh = "Apr '21" ///
+							14.nwave#2.sexhh = "May '21" 15.nwave#2.sexhh = "Jun '21" ///
+							16.nwave#2.sexhh = "Jul '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 ///
+							"Apr '21" = 13 "May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Malawi") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/mwi_sev_sex", replace)	
+	
+* sev - sexhh - nigeria
+	coefplot			wave_sev_sex3, keep(2.nwave#2.sexhh 3.nwave#2.sexhh ///
+							4.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 12.nwave#2.sexhh ///
+							13.nwave#2.sexhh) rename(2.nwave#2.sexhh = "May '20" ///
+							3.nwave#2.sexhh = "Jun '20" 4.nwave#2.sexhh = "Jul '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 12.nwave#2.sexhh = "Mar '21" ///
+							13.nwave#2.sexhh = "Apr '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Nigeria") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/nga_sev_sex", replace)	
+	
+* sev - sexhh - burkina						
+	coefplot			wave_sev_sex5, keep(1.nwave#2.sexhh 2.nwave#2.sexhh ///
+							3.nwave#2.sexhh 5.nwave#2.sexhh 6.nwave#2.sexhh ///
+							7.nwave#2.sexhh 8.nwave#2.sexhh 9.nwave#2.sexhh ///
+							10.nwave#2.sexhh 11.nwave#2.sexhh 13.nwave#2.sexhh ///
+							15.nwave#2.sexhh) rename(1.nwave#2.sexhh = "Apr '20" ///
+							2.nwave#2.sexhh = "May '20" 3.nwave#2.sexhh = "Jun '20" ///
+							5.nwave#2.sexhh = "Aug '20" 6.nwave#2.sexhh = "Sep '20" ///
+							7.nwave#2.sexhh = "Oct '20" 8.nwave#2.sexhh = "Nov '20" ///
+							9.nwave#2.sexhh = "Dec '20" 10.nwave#2.sexhh = "Jan '21" ///
+							11.nwave#2.sexhh = "Feb '21" 13.nwave#2.sexhh = "Apr '21" ///
+							15.nwave#2.sexhh = "Jun '21") reloc("Apr '20" = 1 ///
+							"May '20" = 2 "Jun '20" = 3 "Jul '20" = 4 "Aug '20" = 5 ///
+							"Sep '20" = 6 "Oct '20" = 7 "Nov '20" = 8 "Dec '20" = 9 ///
+							"Jan '21" = 10 "Feb '21" = 11 "Mar '21" = 12 "Apr '21" = 13 ///
+							"May '21" = 14 "Jun '21" = 15) msymbol(D) ///
+							vertical mcolor(gs8) mfcolor(white) ciopts(color(edkblue) ///
+							lwidth(*1) lcolor(*3) ) yline(0, lcolor(maroon)) ///
+							levels(95) xtitle("Survey Month Year") recast(line) ///
+							ytitle("Point Estimates and 95% Confidence Intervals")  ///
+							title("Burkina Faso") yscale(r(-0.6 0.6)) ylab(-0.6(0.2)0.6) ///
+							xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+							4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+							9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+							13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+							legend(off) saving("$fig/bf_sev_sex", replace)							
+	
+	graph combine 		"$fig/eth_sev_sex.gph" "$fig/mwi_sev_sex.gph" ///
+						"$fig/nga_sev_sex.gph"  "$fig/bf_sev_sex.gph" , col(2) iscale(.5)  ///
+						 commonscheme saving("$fig/sev_sex", replace)
+						 
+	graph export 		"$fig/sev_sex.png", as(png) replace	
+	
 	
 ************************************************************************
 **# 8 - create coefplots by country
