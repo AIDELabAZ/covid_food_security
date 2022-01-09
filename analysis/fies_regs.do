@@ -608,7 +608,7 @@
 	foreach			i of local levels {
 		reg 			std_fsi_wt i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i' & nwave > 0, ///
+							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_fsi_sex`i'
 		sum				std_fsi_wt if post == 0 & country == `i' ///
@@ -636,7 +636,7 @@
 	foreach			i of local levels {
 		reg 			mld_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i' & nwave > 0, ///
+							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mld_sex`i'
 		sum				std_fsi_wt if post == 0 & country == `i' ///
@@ -664,7 +664,7 @@
 	foreach			i of local levels {
 		reg 			mod_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i' & nwave > 0, ///
+							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mod_sex`i'
 		sum				std_fsi_wt if post == 0 & country == `i' ///
@@ -692,7 +692,7 @@
 	foreach			i of local levels {
 		reg 			sev_fsi i.nwave##i.sexhh fs1_msng fs2_msng fs3_msng ///
 							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng ///
-							[pweight = hhw_covid] if country == `i' & nwave > 0, ///
+							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_sev_sex`i'
 		sum				sev_fsi if post == 0 & country == `i' ///
