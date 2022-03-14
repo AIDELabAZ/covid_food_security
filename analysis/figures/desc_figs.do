@@ -1,8 +1,8 @@
 * Project: food security
 * Created on: Oct 2021
 * Created by: jdm
-* Edited by: jdm
-* Last edited: 29 Octo 2021
+* Edited by: lirr
+* Last edited: 14 March 2022
 * Stata v.17.0
 
 * does
@@ -191,7 +191,7 @@
 			
 	grc1leg2 		"$fig/mean_fsi.gph", col(1) pos(6) commonscheme
 				
-	graph export 	"$fig/mean_fsi.png", as(png) replace
+	graph export 	"$fig/mean_fsi.eps", as(eps) replace
 						
 						
 * graph - ethiopia
@@ -257,7 +257,7 @@
 						"$fig/mwi_fsi.gph" "$fig/nga_fsi.gph", ///
 						col(2) pos(6) iscale(.5) commonscheme
 				
-	graph export 	"$fig/cty_fsi.png", as(png) replace
+	graph export 	"$fig/cty_fsi.eps", as(eps) replace
 						
 			
 				

@@ -2,7 +2,7 @@
 * Created on: October 2020
 * Created by: jdm
 * Edited by: lirr
-* Last edit: 9 January 2022
+* Last edit: 14 March 2022
 * Stata v.17.0
 
 * does
@@ -817,7 +817,7 @@
 	grc1leg2 		"$fig/coef_sector.gph", col(1) ring(0) pos(3) ///
 						 commonscheme
 				
-	graph export 	"$fig/coef_sector.png", as(png) replace
+	graph export 	"$fig/coef_sector.eps", as(eps) replace
 
 	
 ************************************************************************
@@ -882,7 +882,7 @@
 
 	grc1leg2 		"$fig/coef_sector_did.gph", loff commonscheme
 				
-	graph export 	"$fig/coef_sector_did.png", as(png) replace
+	graph export 	"$fig/coef_sector_did.eps", as(eps) replace
 
 
 	
@@ -997,7 +997,7 @@
 	grc1leg2 		"$fig/coef_sexhh.gph", col(1) ring(0) pos(3) ///
 						 commonscheme
 				
-	graph export 	"$fig/coef_sexhh.png", as(png) replace
+	graph export 	"$fig/coef_sexhh.eps", as(eps) replace
 
 	
 ************************************************************************
@@ -1062,7 +1062,7 @@
 			
 	grc1leg2 		"$fig/coef_sexhh_did.gph", loff commonscheme
 				
-	graph export 	"$fig/coef_sexhh_did.png", as(png) replace
+	graph export 	"$fig/coef_sexhh_did.eps", as(eps) replace
 
 
 ************************************************************************
@@ -1181,7 +1181,7 @@
 						"$fig/nga_fies_sec.gph"  "$fig/bf_fies_sec.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/fies_sec", replace)
 						 
-	graph export 		"$fig/fies_sec.png", as(png) replace	
+	graph export 		"$fig/fies_sec.eps", as(eps) replace	
 	
 
 ************************************************************************
@@ -1300,7 +1300,7 @@
 						"$fig/nga_fies_sex.gph"  "$fig/bf_fies_sex.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/fies_sex", replace)
 						 
-	graph export 		"$fig/fies_sex.png", as(png) replace
+	graph export 		"$fig/fies_sex.eps", as(eps) replace
 
 
 ************************************************************************
@@ -1419,7 +1419,7 @@
 						"$fig/nga_mld_sec.gph"  "$fig/bf_mld_sec.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/mld_sec", replace)
 						 
-	graph export 		"$fig/mld_sec.png", as(png) replace
+	graph export 		"$fig/mld_sec.eps", as(eps) replace
 													
 							
 ************************************************************************
@@ -1538,7 +1538,7 @@
 						"$fig/nga_mld_sex.gph"  "$fig/bf_mld_sex.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/mld_sex", replace)
 						 
-	graph export 		"$fig/mld_sex.png", as(png) replace	
+	graph export 		"$fig/mld_sex.eps", as(eps) replace	
 
 
 
@@ -1658,7 +1658,7 @@
 						"$fig/nga_mod_sec.gph"  "$fig/bf_mod_sec.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/mod_sec", replace)
 						 
-	graph export 		"$fig/mod_sec.png", as(png) replace
+	graph export 		"$fig/mod_sec.eps", as(eps) replace
 	
 							
 ************************************************************************
@@ -1777,7 +1777,7 @@
 						"$fig/nga_mod_sex.gph"  "$fig/bf_mod_sex.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/mod_sex", replace)
 						 
-	graph export 		"$fig/mod_sex.png", as(png) replace	
+	graph export 		"$fig/mod_sex.eps", as(eps) replace	
 
 	
 ************************************************************************
@@ -1896,7 +1896,7 @@
 						"$fig/nga_sev_sec.gph"  "$fig/bf_sev_sec.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/sev_sec", replace)
 						 
-	graph export 		"$fig/sev_sec.png", as(png) replace
+	graph export 		"$fig/sev_sec.eps", as(eps) replace
 
 	
 ************************************************************************
@@ -2015,7 +2015,7 @@
 						"$fig/nga_sev_sex.gph"  "$fig/bf_sev_sex.gph" , col(2) iscale(.5)  ///
 						 commonscheme saving("$fig/sev_sex", replace)
 						 
-	graph export 		"$fig/sev_sex.png", as(png) replace	
+	graph export 		"$fig/sev_sex.eps", as(eps) replace	
 	
 	
 ************************************************************************

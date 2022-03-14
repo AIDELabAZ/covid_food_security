@@ -1,8 +1,8 @@
 * Project: food security
 * Created on: Nov 2021
 * Created by: jdm
-* Edited by: jdm
-* Last edited: 5 Nov 2021
+* Edited by: lirr
+* Last edited: 14 March 2022
 * Stata v.17.0
 
 * does
@@ -146,7 +146,7 @@
 			
 	grc1leg2 		"$fig/sector.gph", col(1) pos(6) commonscheme
 				
-	graph export 	"$fig/sector.png", as(png) replace
+	graph export 	"$fig/sector.eps", as(eps) replace
 
 * graph E - index sector
 	sort			country wave
@@ -170,7 +170,7 @@
 			
 	grc1leg2 		"$fig/sexhh.gph", col(1) pos(6) commonscheme
 				
-	graph export 	"$fig/sexhh.png", as(png) replace		
+	graph export 	"$fig/sexhh.eps", as(eps) replace		
 	
 restore					
 						
