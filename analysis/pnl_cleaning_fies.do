@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: jdm
-* Last edit: 7 October 2021
+* Edited by: lirr
+* Last edit: 11 October 2021
 * Stata v.17.0
 
 * does
@@ -181,7 +181,7 @@
 		replace			fies_`x' = 0 if fies_`x' == . & fs_`x'_missing != 0
 		lab val 		fies_`x' yesno
 	}
-	drop			fs_*_m*
+	
 	
 * tabulate fies responses
 	foreach v of numlist 1/9 {
@@ -208,6 +208,16 @@
 	rename			fies_7_noreplace fs4_nr
 	rename			fies_8_noreplace fs5_nr
 	rename			fies_9_noreplace fs9_nr
+	
+	rename			fs_1_missing fs6_msng
+	rename			fs_2_missing fs7_msng
+	rename			fs_3_missing fs8_msng
+	rename			fs_4_missing fs1_msng
+	rename			fs_5_missing fs2_msng
+	rename			fs_6_missing fs3_msng
+	rename			fs_7_missing fs4_msng
+	rename			fs_8_missing fs5_msng
+	rename			fs_9_missing fs9_msng
 		
 	label var 		fs1 "FIES 1: Worried will not have enough to eat"
 	label var 		fs2 "FIES 2: Worried will not eat nutritious food"
