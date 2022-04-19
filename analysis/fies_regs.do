@@ -1,7 +1,7 @@
 * Project: COVID Food Security
 * Created on: October 2020
 * Created by: jdm
-* Edited by: jdm
+* Edited by: lirr
 * Last edit: 19 April 2022
 * Stata v.17.0
 
@@ -14,12 +14,11 @@
 * assumes
 	* cleaned fies data file
 	* xfill.ado
-	* catplot.ado
-	* grc1leg2.ado
 	* palettes.ado
 	* colrspace.ado
 	* estout.ado
 	* grc1leg2.ado (version 1.6)
+	* blindschemes.ado
 
 * TO DO:
 	* complete

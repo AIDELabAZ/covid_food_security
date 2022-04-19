@@ -61,7 +61,7 @@
 if $pack == 1 {
 	
 	* for packages/commands, make a local containing any required packages
-		loc userpack "blindschemes estout palettes catplot colrspace carryforward" 
+		loc userpack "blindschemes estout palettes colrspace carryforward" 
 	
 	* install packages that are on ssc	
 		foreach package in `userpack' {
@@ -109,6 +109,7 @@ if $pack == 1 {
 ************************************************************************
 
 	run				"$code/analysis/pnl_cleaning_fies.do"
+	run				"$code/analysis/figures/desc_figs.do"
 	run				"$code/analysis/fies_regs"
 
 	

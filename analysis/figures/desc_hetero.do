@@ -1,7 +1,7 @@
 * Project: food security
 * Created on: Nov 2021
 * Created by: jdm
-* Edited by: jdm
+* Edited by: lirr
 * Last edited: 19 April 2022
 * Stata v.17.0
 
@@ -13,10 +13,10 @@
 * assumes
 	* cleaned fies panel data
 	* xfill.ado
-	* catplot.ado
 	* grc1leg2.ado (version 1.6)
 	* palettes.ado
 	* colrspace.ado
+	* blindschemes.ado
 
 * TO DO:
 	* complete
