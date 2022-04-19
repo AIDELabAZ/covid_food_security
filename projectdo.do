@@ -108,7 +108,7 @@ if $pack == 1 {
 	run				"$code/nigeria/nga_fies_pp0"
 	run				"$code/nigeria/nga_fies_ph0"
 	run 			"$code/burkina_faso/bf_fies_0"
-	run				"$code/analysis/pnl_cleaning.do"
+	run				"$code/analysis/pnl_cleaning_fies.do"
 	
 	
 ************************************************************************
