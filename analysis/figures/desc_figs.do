@@ -1,24 +1,25 @@
 * Project: food security
 * Created on: Oct 2021
 * Created by: jdm
-* Edited by: lirr
-* Last edited: 14 March 2022
+* Edited by: jdm
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
+	* run from pnl_cleaning_fies.ado (not run on own)
 	* reads in cleaned panel data
 	* generates figures for summary stats
 
 * assumes
-	* clean fies panel data
-	* catplot
-	* grc1leg2
-	* palettes
-	* colrspace
-	* has run fies_regs
+	* cleaned fies panel data
+	* xfill.ado
+	* catplot.ado
+	* grc1leg2.ado (version 1.6)
+	* palettes.ado
+	* colrspace.ado
 
 * TO DO:
-	* section 3: baseline/endline descriptives
+	* complete
 
 
 * **********************************************************************
@@ -34,6 +35,7 @@
 * open log
 	cap log 			close
 	log using			"$logout/fies_figs", append
+	
 	
 ************************************************************************
 **# 1 - relabel vars and gen new vars

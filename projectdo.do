@@ -102,13 +102,14 @@ if $pack == 1 {
 	run				"$code/nigeria/nga_fies_pp0"
 	run				"$code/nigeria/nga_fies_ph0"
 	run 			"$code/burkina_faso/bf_fies_0"
-	run				"$code/analysis/pnl_cleaning_fies.do"
 	
 	
 ************************************************************************
-**# 2 - run analysis .do files
+**# 2 - run final cleaning and analysis .do files
 ************************************************************************
 
+	run				"$code/analysis/pnl_cleaning_fies.do"
 	run				"$code/analysis/fies_regs"
 
+	
 /* END */

@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 12 November 2021
+* Edited by: jdm
+* Last edit: 19 April 2022
 * Stata v.17.0
 
 * does
@@ -13,8 +13,8 @@
 * assumes
 	* cleaned baseline country data
 	* cleaned lsms_panel from wb_covid repo
-	* xfill
-	* carryforward
+	* xfill.ado
+	* carryforward.ado
 
 * TO DO:
 	* complete
