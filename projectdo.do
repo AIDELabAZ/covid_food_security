@@ -13,7 +13,7 @@
 	* access to all data and code
 
 * TO DO:
-	* add all do-files
+	* check packages used
 
 
 ************************************************************************
@@ -21,7 +21,7 @@
 ************************************************************************
 
 * set $pack to 0 to skip package installation
-	global 			pack 	0
+	global 			pack 	1
 		
 * Specify Stata version in use
     global stataVersion 17.0    // set Stata version
@@ -45,12 +45,6 @@
 		global 		data	"G:/My Drive/wb_covid/data"
 		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
     }
-
-	if `"`c(username)'"' == "annfu" {
-		global 		code  	"C:/Users/annfu/git/wb_covid"
-		global 		data	"G:/My Drive/wb_covid/data"
-		global 		output "G:/My Drive/wb_covid/output/food_security/paper"
-	}
 	
 	if `"`c(username)'"' == "lirro" {
 		global 		code  	"C:/Users/lirro/Documents/GitHub/covid_food_security"
@@ -67,7 +61,7 @@
 if $pack == 1 {
 	
 	* for packages/commands, make a local containing any required packages
-		loc userpack "blindschemes estout palettes catplot grc1leg2 colrspace carryforward" 
+		loc userpack "blindschemes estout palettes catplot colrspace carryforward" 
 	
 	* install packages that are on ssc	
 		foreach package in `userpack' {
@@ -101,7 +95,7 @@ if $pack == 1 {
 ************************************************************************
 **# 1 - run household data cleaning .do file
 ************************************************************************
-/*
+
 * run do files for each country (takes a little while to run)
 	run				"$code/ethiopia/eth_fies_0"
 	run 			"$code/malawi/mwi_fies_0"
@@ -115,6 +109,6 @@ if $pack == 1 {
 **# 2 - run analysis .do files
 ************************************************************************
 
-
+	run				"$code/analysis/fies_regs"
 
 /* END */
