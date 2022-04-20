@@ -156,7 +156,7 @@
 	lab var			nwave "Survey Month"
 	
 ************************************************************************
-**# 2 - raw fies index regression
+**# 2 - raw fies index regression controlling for missing variables
 ************************************************************************
 
 * did - sector
