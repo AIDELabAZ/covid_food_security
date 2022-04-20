@@ -49,7 +49,7 @@ The `projectdo.do` file will help you install these.
 
 ### Step 1
 
-Clone this  repository https://github.com/afurbush/evolving_impacts_covid_africa. The general repo structure looks as follows:<br>
+Clone this  repository https://github.com/AIDELabAZ/covid_food_security. The general repo structure looks as follows:<br>
 
 ```stata
 evolving_impacts_covid_africa
