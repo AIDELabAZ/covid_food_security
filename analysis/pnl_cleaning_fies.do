@@ -286,60 +286,52 @@
 	replace 		hun_fsi = 1 if hun_fsi > 0 & hun_fsi !=.
 	lab var			hun_fsi "Went hungry"
 
-* standardized outcomes by country and pre/post
+* standardized outcomes by country and pre/post changing standardization to be only by country not pre/post
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-		foreach 		i in 0 1 {
-			egen 			std_fs_`c'_`i' = std(fsi) if post == `i' & country == `c'
-		}
+		egen 			std_fs_`c' = std(fsi) if country == `c'
 	}
 
-* copy country and pre/post values into single variable
+* copy country and pre/post values into single variable changing standardization to be only by country not pre/post
 	gen 			std_fsi = .
 	lab var			std_fsi "Standardized sum of 8 FIES questions"
 	
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-		foreach 		i in 0 1 {
-			replace			std_fsi = std_fs_`c'_`i' if post == `i' & country == `c'
-		}
+			replace			std_fsi = std_fs_`c' if country == `c'
 	}
 
 	drop			std_fs_*
 	
-* standardized outcomes (taking into account the sampling weight)
+* standardized outcomes (taking into account the sampling weight) removed loop using pre/post indicator
 	scalar 			define mean_std = 0
 	scalar 			define sd_std = 1
 	
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-		foreach 		i in 0 1 {
-			qui sum 		fsi [aweight = hhw_covid] if post == `i' & country == `c'
-			gen 			sumwt =`r(sum_w)' if post == `i' & country == `c'
-			gen 			wtmean =`r(mean)' if post == `i' & country == `c'
-			egen double		CSS = total( hhw_covid * (fsi-wtmean)^2 ) if post == `i' & country == `c'
-			gen double 		variance = CSS/sumwt if post == `i' & country == `c'
-			gen double 		std_fsi_`c'_`i' = ( sd_std * (fsi-wtmean) / sqrt(variance) )  ///
-								+ mean_std if post == `i' & country == `c'
+			qui sum 		fsi [aweight = hhw_covid] if country == `c'
+			gen 			sumwt =`r(sum_w)' if country == `c'
+			gen 			wtmean =`r(mean)' if country == `c'
+			egen double		CSS = total( hhw_covid * (fsi-wtmean)^2 ) if country == `c'
+			gen double 		variance = CSS/sumwt if country == `c'
+			gen double 		std_fsi_`c' = ( sd_std * (fsi-wtmean) / sqrt(variance) )  ///
+								+ mean_std if country == `c'
 			drop 			sumwt wtmean CSS variance
-		}
 	}
 
-* copy country and pre/post values into single variable			
+* copy country and pre/post values into single variable	removed pre/post values due to above changes		
 	gen 			std_fsi_wt = .
 	lab var			std_fsi_wt "Standardized sum of 8 FIES questions (weighted)"
 	
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-		foreach 		i in 0 1 {
-			replace			std_fsi_wt = std_fsi_`c'_`i' if post == `i' & country == `c'
-		}
+			replace			std_fsi_wt = std_fsi_`c' if country == `c'
 	}
 
 	drop			std_fsi_1* std_fsi_2* std_fsi_3* std_fsi_5*
 
 * summarize two values
-	bys 			country post: ///
+	bys 			country: /// removed post from bys country post 
 						sum std_fsi std_fsi_wt [aweight = hhw_covid]
 
 
