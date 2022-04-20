@@ -2,15 +2,16 @@
 * Created on: 22 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 6 October 2021
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
 	* reads in baseline burkina faso data
 	* pulls FIES data questions
+	* outputs burkina faso fies and household data
 
 * assumes
-	* raw burkina faso data 
+	* raw burkina faso data
 
 * TO DO:
 	* complete
@@ -157,10 +158,10 @@ restore
 	
 	lab val			region region
 
-*  rename sector
-	replace			sector = 0 if sector == 1
-	replace			sector = 1 if sector == 2
-	replace			sector = 2 if sector == 0
+*  rename sector - despite the label, 2 = urban, 1 = rural
+*	replace			sector = 0 if sector == 1
+*	replace			sector = 1 if sector == 2
+*	replace			sector = 2 if sector == 0
 
 	lab def			sector 1 "Rural" 2 "Urban"
 	

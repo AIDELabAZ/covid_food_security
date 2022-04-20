@@ -2,15 +2,16 @@
 * Created on: 2 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 5 October 2021
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
 	* reads in baseline ethiopia data
 	* pulls FIES data questions
+	* outputs ethiopia fies and household data
 
 * assumes
-	* raw ethiopia data 
+	* raw ethiopia data
 
 * TO DO:
 	* complete

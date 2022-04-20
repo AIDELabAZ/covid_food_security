@@ -2,7 +2,7 @@
 * Created on: 13 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 5 Oct 2021
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
@@ -11,7 +11,7 @@
 	* outputs nigeria post-planting fies and household data
 
 * assumes
-	* raw nigeria post-planting data 
+	* raw nigeria post-planting data
 
 * TO DO:
 	* complete

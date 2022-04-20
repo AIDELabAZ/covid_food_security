@@ -2,7 +2,7 @@
 * Created on: 7 September 2021
 * Created by: lirr
 * Edited by: lirr
-* Last edited: 5 Oct 2021
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
@@ -11,7 +11,7 @@
 	* outputs nigeria post-harvest fies and household data
 
 * assumes
-	* raw nigeria post-harvest data 
+	* raw nigeria post-harvest data
 
 * TO DO:
 	* complete

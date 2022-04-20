@@ -1,8 +1,8 @@
 * Project: COVID Food Security
 * Created on: July 2020
 * Created by: jdm
-* Edited by: lirr
-* Last edit: 11 October 2021
+* Edited by: jdm
+* Last edit: 19 April 2022
 * Stata v.17.0
 
 * does
@@ -13,8 +13,8 @@
 * assumes
 	* cleaned baseline country data
 	* cleaned lsms_panel from wb_covid repo
-	* xfill
-	* carryforward
+	* xfill.ado
+	* carryforward.ado
 
 * TO DO:
 	* complete
@@ -30,6 +30,7 @@
 	global	mwi		=	"$data/malawi/refined/wave_00"
 	global	nga		=	"$data/nigeria/refined/wave_00"
 	global	bf		=	"$data/burkina_faso/refined/wave_00"
+	global  ans		=   "$data/analysis/food_security"
 	global	logout	=	"$data/analysis/food_security/logs"
 
 * open log
@@ -65,6 +66,7 @@
 	bys hhid (nwave): 	carryforward sexhh, replace	
 	drop				nwave
 	drop if 			sexhh == .
+	
 	
 ************************************************************************
 **# 2 - build data set
@@ -122,7 +124,7 @@
 	keep				country wave hhid hhsize hhsize_adult hhsize_child ///
 							hhsize_schchild sexhh sector region fies_1 fies_2 ///
 							fies_3 fies_4 fies_5 fies_6 fies_7 fies_8 fies_9 ///
-							post hhw_cs
+							post hhw_cs concern_1 concern_2
 							
 	order				country hhid wave post region sector hhw_cs sexhh hhsize ///
 							hhsize_adult hhsize_child hhsize_schchild
@@ -131,6 +133,9 @@
 	lab var				sexhh "Sex of household head"
 	lab var				region "Region"
 	lab var				sector "Urban or rural household"
+
+* run intermediate file to create descriptive graphs for sector and sexhh
+	run				"$code/analysis/figures/desc_hetero"				
 	
 * drop waves where no fies data exists
 	drop if				country == 1 & wave == 7 
@@ -249,64 +254,95 @@
 	lab var			fsi2 "Sum of 8 FIES questions without replacement"
 
 * binary food security indicators (Smith et al. 2017)
-	gen				mild_fs = (fsi > 0)
-	lab var			mild_fs "Mild food insecurity"
+	gen				mld_fsi = (fsi > 0)
+	lab var			mld_fsi "Mild food insecurity"
 	
-	gen				mod_fs = (fsi > 3)
-	lab var			mod_fs "Moderate food insecurity"
+	gen				mod_fsi = (fsi > 3)
+	lab var			mod_fsi "Moderate food insecurity"
 	
-	gen				sev_fs = (fsi > 7)
-	lab var			sev_fs "severe food insecurity"
+	gen				sev_fsi = (fsi > 7)
+	lab var			sev_fsi "severe food insecurity"
 	
 			
-	gen 			mild2_fs = (fsi2 > 0) if fsi2 != .
-	lab var			mild_fs "Mild food insecurity - without replacement"
+	gen 			mld2_fsi = (fsi2 > 0) if fsi2 != .
+	lab var			mld_fsi "Mild food insecurity - without replacement"
 	
-	gen 			mod2_fs = (fsi2 > 3) if fsi2 != .
-	lab var			mod_fs "Moderate food insecurity - without replacement"
+	gen 			mod2_fsi = (fsi2 > 3) if fsi2 != .
+	lab var			mod_fsi "Moderate food insecurity - without replacement"
 	
-	gen 			sev2_fs = (fsi2 > 7) if fsi2 != .	
-	lab var			sev_fs "severe food insecurity - without replacement"
+	gen 			sev2_fsi = (fsi2 > 7) if fsi2 != .	
+	lab var			sev_fsi "severe food insecurity - without replacement"
 			
 * additional binary food security based on FIES domains
-	egen 			anx = rowtotal(fs1_nr fs2_nr), missing
-	replace 		anx = 1 if anx > 0 & anx != .
-	lab var			anx "Anxious about food security"
+	egen 			anx_fsi = rowtotal(fs1_nr fs2_nr), missing
+	replace 		anx_fsi = 1 if anx_fsi > 0 & anx_fsi != .
+	lab var			anx_fsi "Anxious about food security"
 			
-	egen 			meal_reduct = rowtotal(fs3_nr fs4_nr fs5_nr), missing
-	replace 		meal_reduct = 1 if meal_reduct > 0 & meal_red !=.
-	lab var			meal_reduct "Reduced meals eaten"
+	egen 			mea_fsi = rowtotal(fs3_nr fs4_nr fs5_nr), missing
+	replace 		mea_fsi = 1 if mea_fsi > 0 & mea_fsi !=.
+	lab var			mea_fsi "Reduced meals eaten"
 			
-	egen 			hunger = rowtotal(fs6_nr fs7_nr fs8_nr), missing
-	replace 		hunger = 1 if hunger > 0 & hunger !=.
-	lab var			hunger "Went hungry"
-			
+	egen 			hun_fsi = rowtotal(fs6_nr fs7_nr fs8_nr), missing
+	replace 		hun_fsi = 1 if hun_fsi > 0 & hun_fsi !=.
+	lab var			hun_fsi "Went hungry"
 
-* standardized outcomes
-	egen 			std_fsi = std(fsi) if post == 0
+* standardized outcomes by country and pre/post
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			egen 			std_fs_`c'_`i' = std(fsi) if post == `i' & country == `c'
+		}
+	}
+
+* copy country and pre/post values into single variable
+	gen 			std_fsi = .
 	lab var			std_fsi "Standardized sum of 8 FIES questions"
 	
-	egen 			std_fsi_post = std(fsi) if post == 1
-	replace 		std_fsi = std_fsi_post if post == 1
-	drop			std_fsi_post	
-			
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			replace			std_fsi = std_fs_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+	drop			std_fs_*
+	
 * standardized outcomes (taking into account the sampling weight)
-	sum				fsi [aweight = hhw_covid] if post==0
-	gen 			fsi_mean0 = r(mean)
-	gen 			fsi_sd0 = r(sd)
-	lab var			fsi_mean0 "FSI mean pre-covid"
-	lab var			fsi_sd0 "FSI s.d. pre-covid"
-		
-	sum				fsi [aweight = hhw_covid] if post==1
-	gen 			fsi_mean1 = r(mean)
-	gen 			fsi_sd1 = r(sd)
-	lab var			fsi_mean1 "FSI mean post-covid"
-	lab var			fsi_sd1 "FSI s.d. post-covid"
-			
-	gen 			std_fsi_wt = (fsi - fsi_mean0)/fsi_sd0 if post==0
-	replace 		std_fsi_wt = (fsi - fsi_mean1)/fsi_sd1 if post==1
+	scalar 			define mean_std = 0
+	scalar 			define sd_std = 1
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			qui sum 		fsi [aweight = hhw_covid] if post == `i' & country == `c'
+			gen 			sumwt =`r(sum_w)' if post == `i' & country == `c'
+			gen 			wtmean =`r(mean)' if post == `i' & country == `c'
+			egen double		CSS = total( hhw_covid * (fsi-wtmean)^2 ) if post == `i' & country == `c'
+			gen double 		variance = CSS/sumwt if post == `i' & country == `c'
+			gen double 		std_fsi_`c'_`i' = ( sd_std * (fsi-wtmean) / sqrt(variance) )  ///
+								+ mean_std if post == `i' & country == `c'
+			drop 			sumwt wtmean CSS variance
+		}
+	}
+
+* copy country and pre/post values into single variable			
+	gen 			std_fsi_wt = .
 	lab var			std_fsi_wt "Standardized sum of 8 FIES questions (weighted)"
 	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			replace			std_fsi_wt = std_fsi_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+	drop			std_fsi_1* std_fsi_2* std_fsi_3* std_fsi_5*
+
+* summarize two values
+	bys 			country post: ///
+						sum std_fsi std_fsi_wt [aweight = hhw_covid]
+
+
 ************************************************************************
 **# 3 - end matter, clean up to save
 ************************************************************************
@@ -317,7 +353,7 @@
 	compress
 	
 * save 
-	save			"$output/fies_reg_data", replace
+	save			"$ans/fies_reg_data", replace
 
 * close the log
 	log	close

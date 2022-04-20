@@ -2,15 +2,16 @@
 * Created on: Aug 2021
 * Created by: amf
 * Edited by: lirr
-* Last edited: 5 October 2021
+* Last edited: 19 April 2022
 * Stata v.17.0
 
 * does
-	* reads in baseline Malawi data
+	* reads in baseline malawi data
 	* pulls FIES data questions
+	* outputs malawi fies and household data
 
 * assumes
-	* raw malawi data 
+	* raw malawi data
 
 * TO DO:
 	* complete
