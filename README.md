@@ -1,5 +1,5 @@
 # Food Insecurity During the First Year of the COVID-19 Pandemic in Four African Countries: Replication Code
-This README describes the directory structure & should enable users to replicate all tables and figures for work related to food security and rural/urban heterogeneity during teh COVID-19 pandemic. The relevant survey data are available under under the High-Frequency Phone Survey collection: http://bit.ly/microdata-hfps.   
+This README describes the directory structure & should enable users to replicate all tables and figures for work related to Rudin-Rush, L. Michler, J.D., Josephson, A., and Bloem, J.R. (2022). "Food Insecurity During the First Year of the COVID-19 Pandemic in Four African Countries." The relevant survey data are available under under the High-Frequency Phone Survey collection: http://bit.ly/microdata-hfps.   
 
  ## Index
 
