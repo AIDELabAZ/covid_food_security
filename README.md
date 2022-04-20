@@ -52,7 +52,7 @@ The `projectdo.do` file will help you install these.
 Clone this  repository https://github.com/AIDELabAZ/covid_food_security. The general repo structure looks as follows:<br>
 
 ```stata
-evolving_impacts_covid_africa
+covid_food_security
 ├────README.md
 ├────projectdo.do
 ├────LICENSE
