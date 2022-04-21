@@ -2,7 +2,7 @@
 * Created on: October 2020
 * Created by: jdm
 * Edited by: jdm
-* Last edit: 20 April 2022
+* Last edit: 21 April 2022
 * Stata v.17.0
 
 * does
@@ -160,7 +160,11 @@
 	lab var			nwave "Survey Month"
 	
 ************************************************************************
-**# 2 - raw fies index regression controlling for missing variables
+**# 2 - standardized fies index regression
+************************************************************************
+	
+************************************************************************
+**## 2.1 - standardized pre/post & country fies index regression
 ************************************************************************
 
 * did - sector
@@ -171,10 +175,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_2`i'
-		sum 			std_fsi_wt if post == 0 & country == `i' ///
-							& sector == 1 [aweight = hhw_covid]
-		estadd scalar 	mu = r(mean)
-		estadd loc 		missing "Yes" : std_fsi_2`i'
 	}					
 	
 		
@@ -186,10 +186,31 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo  		std_fsi_4`i'
-		sum 			std_fsi_wt if post == 0 & country == `i' ///
-							& sexhh == 1 [aweight = hhw_covid]
-		estadd scalar 	mu = r(mean)
-		estadd loc 		missing "Yes" : std_fsi_4`i'
+	}					
+	
+************************************************************************
+**## 2.2 - standardized country only fies index regression
+************************************************************************
+
+* did - sector
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			std_fsi_wt_c i.post##i.sector fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+		eststo  		std_fsi_2`i'_c
+	}					
+	
+		
+* did - sexhh
+	levelsof		country, local(levels)
+	foreach			i of local levels {
+		reg 			std_fsi_wt_c i.post##i.sexhh fs1_msng fs2_msng fs3_msng ///
+							fs4_msng fs5_msng fs6_msng fs7_msng fs8_msng i.wave ///
+							[pweight = hhw_covid] if country == `i' & wave != -1, ///
+							vce(cluster hhid)
+		eststo  		std_fsi_4`i'_c
 	}					
 
 			
@@ -205,10 +226,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mld_fsi_2`i'
-		sum				mld_fsi if post == 0 & country == `i' ///
-							& sector == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mld_fsi_2`i'
 	}
 	
 * did - sexhh
@@ -219,10 +236,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mld_fsi_4`i'
-		summ			mld_fsi if post == 0 & country == `i' ///
-							& sexhh == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mld_fsi_4`i'
 	}
 
 									
@@ -238,10 +251,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mod_fsi_2`i'
-		sum				mod_fsi if post == 0 & country == `i' ///
-							& sector == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fsi_2`i'
 	}
 	
 *did - sexhh
@@ -252,10 +261,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			mod_fsi_4`i'
-		summ			mod_fsi if post == 0 & country == `i' ///
-							& sexhh == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : mod_fsi_4`i'
 	}
 	
 					
@@ -271,10 +276,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			sev_fsi_2`i'
-		sum				sev_fsi if post == 0 & country == `i' ///
-							& sector == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fsi_2`i'
 	}
 
 *did - sexhh
@@ -285,10 +286,6 @@
 							[pweight = hhw_covid] if country == `i' & wave != -1, ///
 							vce(cluster hhid)
 		eststo 			sev_fsi_4`i'
-		sum				sev_fsi if post == 0 & country == `i' ///
-							& sector == 1 [aweight = hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : sev_fsi_4`i'
 	}
 
 		
@@ -304,10 +301,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_fsi_sec`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_fsi_sec`i'
 	}
 
 * index - sexhh
@@ -318,10 +311,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_fsi_sex`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_fsi_sex`i'
 	}
 
 * mld - sector
@@ -332,10 +321,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mld_sec`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_mld_sec`i'
 	}
 
 * mld - sexhh
@@ -346,10 +331,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mld_sex`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_mld_sex`i'
 	}
 
 * mod - sector
@@ -360,10 +341,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mod_sec`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_mod_sec`i'
 	}
 
 * mod - sexhh
@@ -374,10 +351,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_mod_sex`i'
-		sum				std_fsi_wt if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_mod_sex`i'
 	}
 
 * sev - sector
@@ -388,10 +361,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_sev_sec`i'
-		sum				sev_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_sev_sec`i'
 	}
 
 * sev - sexhh
@@ -402,10 +371,6 @@
 							[pweight = hhw_covid] if country == `i' & nwave != -1, ///
 							vce(cluster hhid)
 		eststo 			wave_sev_sex`i'
-		sum				sev_fsi if post == 0 & country == `i' ///
-							[aweight =  hhw_covid]
-		estadd scalar	mu = r(mean)
-		estadd loc		missing "Yes" : wave_sev_sex`i'
 	}
 
 	
@@ -413,7 +378,7 @@
 **# 7 - create coefplots
 ************************************************************************
 
-	
+
 ************************************************************************
 **## 7.1 - urban/rural coefplot DID only
 ************************************************************************
@@ -466,7 +431,7 @@
 							(sev_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) ///
 							rename(1.post#2.sector = " Severe Insecurity ") msymbol(D) ///
 							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) , ///
-							xline(0, lcolor(maroon))  levels(95)  ciopts(lwidth(*3) lcolor(*3) ) ///
+							xline(0, lcolor(maroon)) levels(95) ciopts(lwidth(*3) lcolor(*3) ) ///
 							xtitle("Point Estimates and 95% Confidence Intervals") ///
 							headings("FIES Score" = "{bf:Burkina Faso}" "FIES Score " ///
 							= "{bf:Ethiopia}" " FIES Score" = "{bf:Malawi}" ///
@@ -1498,7 +1463,93 @@
 	
 	
 ************************************************************************
-**# 8 - end matter, clean up to save
+**# 8 - robustness check coefplots
+************************************************************************
+
+
+************************************************************************
+**## 8.1 - urban/rural coefplot w/ two standardizations
+************************************************************************
+
+	coefplot			 (std_fsi_25, label(Diff-in-Diff) keep(1.post#2.sector) /// bkf
+							rename(1.post#2.sector = "Standardized by Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///
+							(std_fsi_25_c, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Standardized over Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_21, label(Diff-in-Diff) keep(1.post#2.sector) /// eth
+							rename(1.post#2.sector = "Standardized by Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_21_c, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = "Standardized over Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///					
+							(std_fsi_22, label(Diff-in-Diff) keep(1.post#2.sector) /// mwi
+							rename(1.post#2.sector = " Standardized by Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///				
+							(std_fsi_22_c, label(Diff-in-Diff) keep(1.post#2.sector) ///
+							rename(1.post#2.sector = " Standardized over Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///
+							(std_fsi_23, label(Diff-in-Diff) keep(1.post#2.sector) /// nga
+							rename(1.post#2.sector = " Standardized by Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_23_c, label(Diff-in-Diff) keep(1.post#2.sector) /// nga
+							rename(1.post#2.sector = " Standardized over Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ), ///
+							xline(0, lcolor(maroon)) levels(95) ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("Standardized by Pre/Post " = "{bf:Burkina Faso}" ///
+							"Standardized by Pre/Post " = "{bf:Ethiopia}" ///
+							" Standardized by Pre/Post" = "{bf:Malawi}" ///
+							" Standardized by Pre/Post " = "{bf:Nigeria}") legend(off) ///
+							saving("$fig/coef_sector_did_c", replace)	
+
+	grc1leg2 		"$fig/coef_sector_did_c.gph", loff commonscheme
+				
+	graph export 	"$fig/coef_sector_did_c.eps", as(eps) replace
+
+	
+************************************************************************
+**## 8.2 - female/male coefplot w/ two standardizations
+************************************************************************
+
+	coefplot			 (std_fsi_45, label(Diff-in-Diff) keep(1.post#2.sexhh) /// bkf
+							rename(1.post#2.sexhh = "Standardized by Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///
+							(std_fsi_45_c, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Standardized over Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_41, label(Diff-in-Diff) keep(1.post#2.sexhh) /// eth
+							rename(1.post#2.sexhh = "Standardized by Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_41_c, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = "Standardized over Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///					
+							(std_fsi_42, label(Diff-in-Diff) keep(1.post#2.sexhh) /// mwi
+							rename(1.post#2.sexhh = " Standardized by Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///				
+							(std_fsi_42_c, label(Diff-in-Diff) keep(1.post#2.sexhh) ///
+							rename(1.post#2.sexhh = " Standardized over Pre/Post") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ) ///
+							(std_fsi_43, label(Diff-in-Diff) keep(1.post#2.sexhh) /// nga
+							rename(1.post#2.sexhh = " Standardized by Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(edkblue)) ) ///
+							(std_fsi_43_c, label(Diff-in-Diff) keep(1.post#2.sexhh) /// nga
+							rename(1.post#2.sexhh = " Standardized over Pre/Post ") msymbol(D) ///
+							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ), ///
+							xline(0, lcolor(maroon)) levels(95) ciopts(lwidth(*3) lcolor(*3) ) ///
+							xtitle("Point Estimates and 95% Confidence Intervals") ///
+							headings("Standardized by Pre/Post " = "{bf:Burkina Faso}" ///
+							"Standardized by Pre/Post " = "{bf:Ethiopia}" ///
+							" Standardized by Pre/Post" = "{bf:Malawi}" ///
+							" Standardized by Pre/Post " = "{bf:Nigeria}") legend(off) ///
+							saving("$fig/coef_sexhh_did_c", replace)	
+			
+	grc1leg2 		"$fig/coef_sexhh_did_c.gph", loff commonscheme
+				
+	graph export 	"$fig/coef_sexhh_did_c.eps", as(eps) replace
+	
+************************************************************************
+**# 9 - end matter, clean up to save
 ************************************************************************
 									
 * compress data

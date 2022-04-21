@@ -1,8 +1,8 @@
 * Project: food security
 * Created on: Oct 2021
 * Created by: jdm
-* Edited by: lirr
-* Last edited: 19 April 2022
+* Edited by: jdm
+* Last edited: 21 April 2022
 * Stata v.17.0
 
 * does
@@ -131,27 +131,10 @@
 		}
 	}
 
-* generate weighted mean values by country only
-	sort			country hhid nwave
-	
-	levelsof 		country, local(levels)
-	foreach 		c of local levels {
-		forvalues 		i = 0/16 {
-			sum 			std_fsi_wt_c if nwave == `i' & country == `c' ///
-							[aweight = hhw_covid]
-			gen 			mean_fs_c_`c'_`i'  = r(mean) if nwave == `i' & country == `c'
-		}
-	}
-	
 * generate value for wave = -1 by pre/post
 	sum 			std_fsi_wt if nwave == -1 & country == 3 ///
 							[aweight = hhw_covid]
 	gen 			mean_fs_3_n1  = r(mean) if nwave == -1 & country == 3
-
-* generate value for wave = -1 by country only
-	sum 			std_fsi_wt_c if nwave == -1 & country == 3 ///
-							[aweight = hhw_covid]
-	gen 			mean_fs_3_n1_c  = r(mean) if nwave == -1 & country == 3
 
 * copy country and pre/post values into single variable by pre/post
 	gen 			mean_fsi = .
@@ -164,6 +147,24 @@
 		}
 	}
 
+
+* generate weighted mean values by country only
+	sort			country hhid nwave
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		forvalues 		i = 0/16 {
+			sum 			std_fsi_wt_c if nwave == `i' & country == `c' ///
+							[aweight = hhw_covid]
+			gen 			mean_fs_c_`c'_`i'  = r(mean) if nwave == `i' & country == `c'
+		}
+	}	
+
+* generate value for wave = -1 by country only
+	sum 			std_fsi_wt_c if nwave == -1 & country == 3 ///
+							[aweight = hhw_covid]
+	gen 			mean_fs_3_n1_c  = r(mean) if nwave == -1 & country == 3
+
 * copy country and pre/post values into single variable	by country only
 	gen 			mean_fsi_c = .
 	lab var			mean_fsi_c "Standardized FIES Count"
@@ -174,7 +175,7 @@
 			replace			mean_fsi_c = mean_fs_c_`c'_`i' if nwave == `i' & country == `c'
 		}
 	}
-	
+
 * generate value for wave = -1	
 	replace			mean_fsi = mean_fs_3_n1  if nwave == -1 & country == 3
 	replace			mean_fsi_c = mean_fs_3_n1_c  if nwave == -1 & country == 3
@@ -193,6 +194,10 @@
 	
 ************************************************************************
 **# 2 - fies prevelance over time
+************************************************************************
+	
+************************************************************************
+**## 2.1 - standardized FIES scores over time
 ************************************************************************
 
 * graph - std_fsi_wt by country using pre/post standardization
@@ -216,7 +221,7 @@
 			
 	grc1leg2 		"$fig/mean_fsi.gph", col(1) pos(6) commonscheme
 				
-	graph export 	"$fig/mean_fsi.png", as(png) replace
+	graph export 	"$fig/mean_fsi.eps", as(eps) replace
 
 * graph - std_fsi_wt by country using pre/post standardization with pre-covid data
 	sort			country wave
@@ -263,8 +268,12 @@
 	grc1leg2 		"$fig/mean_fsi_c.gph", col(1) pos(6) commonscheme
 				
 	graph export 	"$fig/mean_fsi_c.png", as(png) replace						
-						
-* graph - ethiopia
+	
+************************************************************************
+**## 2.2 - mld, mod, sev over time
+************************************************************************
+					
+* graph - ethiopia post only
 	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 1 & nwave > 0, sort title("Ethiopia") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
@@ -278,7 +287,7 @@
 						"Severe Food Insecurity (Raw Score > 7)")) ///
 						saving("$fig/eth_fsi", replace)					
 						
-* graph - malawi
+* graph - malawi post only
 	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 2 & nwave > 0, sort title("Malawi") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
@@ -293,11 +302,12 @@
 						"Severe Food Insecurity (Raw Score > 7)")) ///
 						saving("$fig/mwi_fsi", replace)							
 						
-* graph - nigeria
+* graph - nigeria post only
 	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 3 & nwave > 0, sort title("Nigeria") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
-						ytitle("") xtitle("Survey Month Year") xlabel(1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						ytitle("") xtitle("Survey Month Year") xlabel(1 "Apr '20" ///
+						2 "May '20" 3 "Jun '20" ///
 						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
 						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
 						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
@@ -307,7 +317,7 @@
 						"Severe Food Insecurity (Raw Score > 7)")) ///
 						saving("$fig/nga_fsi", replace)							
 						
-* graph - burkina faso
+* graph - burkina faso post only
 	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
 						if country == 5 & nwave > 0, sort title("Burkina Faso") lpattern(solid ///
 						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
@@ -328,6 +338,73 @@
 						col(2) pos(6) iscale(.5) commonscheme
 				
 	graph export 	"$fig/cty_fsi.eps", as(eps) replace
+					
+					
+* graph - ethiopia pre and post
+	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
+						if country == 1, sort title("Ethiopia") lpattern(solid ///
+						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
+						ytitle("") xtitle("") xlabel(-1 "2018" 0 "2019" 1 "Apr '20" ///
+						2 "May '20" 3 "Jun '20" 4 "Jul '20" 5 "Aug '20" 6 "Sep '20" ///
+						7 "Oct '20" 8 "Nov '20" 9 "Dec '20" 10 "Jan '21" 11 "Feb '21" ///
+						12 "Mar '21" 13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						ylabel(0 "0" .2 ".2" .4 ".4" .6 ".6" .8 ".8" 1 "1") legend(pos(6) ///
+						col(1) label(1 "Mild Food Insecurity (Raw Score > 0)") label(2 ///
+						"Moderate Food Insecurity (Raw Score > 3)") label(3 ///
+						"Severe Food Insecurity (Raw Score > 7)")) ///
+						saving("$fig/eth_fsi_pre", replace)					
+						
+* graph - malawi pre and post
+	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
+						if country == 2, sort title("Malawi") lpattern(solid ///
+						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
+						ytitle("% Reporting Food Insecurity") xtitle("Survey Month Year") ///
+						xlabel(-1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						ylabel(0 "0" .2 ".2" .4 ".4" .6 ".6" .8 ".8" 1 "1") legend(pos(6) ///
+						col(1) label(1 "Mild Food Insecurity (Raw Score > 0)") label(2 ///
+						"Moderate Food Insecurity (Raw Score > 3)") label(3 ///
+						"Severe Food Insecurity (Raw Score > 7)")) ///
+						saving("$fig/mwi_fsi_pre", replace)							
+						
+* graph - nigeria pre and post
+	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
+						if country == 3, sort title("Nigeria") lpattern(solid ///
+						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
+						ytitle("") xtitle("Survey Month Year") xlabel(-1 "2018" ///
+						0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						ylabel(0 "0" .2 ".2" .4 ".4" .6 ".6" .8 ".8" 1 "1") ///
+						legend(pos(6) col(1) label(1 "Mild Food Insecurity (Raw Score > 0)") ///
+						label(2 "Moderate Food Insecurity (Raw Score > 3)") label(3 ///
+						"Severe Food Insecurity (Raw Score > 7)")) ///
+						saving("$fig/nga_fsi_pre", replace)							
+						
+* graph - burkina faso pre and post
+	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///
+						if country == 5, sort title("Burkina Faso") lpattern(solid ///
+						dash dash_3dot) lcolor($emerald $brown $lavender) lw(*2 *2 *2) ///
+						ytitle("% Reporting Food Insecurity") xtitle("") ///
+						xlabel(-1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						ylabel(0 "0" .2 ".2" .4 ".4" .6 ".6" .8 ".8" 1 "1") ///
+						legend(pos(6) col(1) label(1 "Mild Food Insecurity (Raw Score > 0)") ///
+						label(2 "Moderate Food Insecurity (Raw Score > 3)") label(3 ///
+						"Severe Food Insecurity (Raw Score > 7)")) ///
+						saving("$fig/bfo_fsi_pre", replace)			
+	
+	
+	grc1leg2 		"$fig/bfo_fsi_pre.gph" "$fig/eth_fsi_pre.gph" ///
+						"$fig/mwi_fsi_pre.gph" "$fig/nga_fsi_pre.gph", ///
+						col(2) pos(6) iscale(.5) commonscheme
+				
+	graph export 	"$fig/cty_fsi_pre.png", as(png) replace
 						
 			
 				
@@ -338,4 +415,6 @@
 
 * close the log
 	log	close
-	
+						
+		
+/* END */			

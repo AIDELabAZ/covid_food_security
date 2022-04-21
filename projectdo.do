@@ -11,6 +11,7 @@
 
 * assumes
 	* access to all data and code
+	* access to cleaned data produced by https://github.com/AIDELabAZ/wb_covid
 
 * TO DO:
 	* check packages used
@@ -109,8 +110,8 @@ if $pack == 1 {
 ************************************************************************
 
 	run				"$code/analysis/pnl_cleaning_fies.do"
-*	run				"$code/analysis/figures/desc_figs.do"
-*	run				"$code/analysis/fies_regs"
+	run				"$code/analysis/figures/desc_figs.do"
+	run				"$code/analysis/fies_regs"
 
 	
 /* END */
