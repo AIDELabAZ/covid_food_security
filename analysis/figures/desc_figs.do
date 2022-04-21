@@ -43,10 +43,6 @@
 * read in data
 	use				"$input/fies_reg_data", replace
 	
-* gen y0 and xfill by hhid
-	gen 			std_fsi_y0 = std_fsi_wt if wave == 0
-	xfill 			std_fsi_y0, i(hhid)
-
 * relabel
 	lab def			post 0 "pre-COVID" 1 "COVID", replace
 	
@@ -123,7 +119,7 @@
 	lab val			nwave nwave
 	lab var			nwave "Survey Month"
 	
-* generate weighted mean values by country
+* generate weighted mean values by country using pre/post weights
 	sort			country hhid nwave
 	
 	levelsof 		country, local(levels)
@@ -134,13 +130,30 @@
 			gen 			mean_fs_`c'_`i'  = r(mean) if nwave == `i' & country == `c'
 		}
 	}
+
+* generate weighted mean values by country only
+	sort			country hhid nwave
 	
-* generate value for wave = -1
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		forvalues 		i = 0/16 {
+			sum 			std_fsi_wt_c if nwave == `i' & country == `c' ///
+							[aweight = hhw_covid]
+			gen 			mean_fs_c_`c'_`i'  = r(mean) if nwave == `i' & country == `c'
+		}
+	}
+	
+* generate value for wave = -1 by pre/post
 	sum 			std_fsi_wt if nwave == -1 & country == 3 ///
 							[aweight = hhw_covid]
 	gen 			mean_fs_3_n1  = r(mean) if nwave == -1 & country == 3
 
-* copy country and pre/post values into single variable	
+* generate value for wave = -1 by country only
+	sum 			std_fsi_wt_c if nwave == -1 & country == 3 ///
+							[aweight = hhw_covid]
+	gen 			mean_fs_3_n1_c  = r(mean) if nwave == -1 & country == 3
+
+* copy country and pre/post values into single variable by pre/post
 	gen 			mean_fsi = .
 	lab var			mean_fsi "Standardized FIES Count"
 	
@@ -151,8 +164,20 @@
 		}
 	}
 
+* copy country and pre/post values into single variable	by country only
+	gen 			mean_fsi_c = .
+	lab var			mean_fsi_c "Standardized FIES Count"
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		forvalues 		i = 0/16 {
+			replace			mean_fsi_c = mean_fs_c_`c'_`i' if nwave == `i' & country == `c'
+		}
+	}
+	
 * generate value for wave = -1	
 	replace			mean_fsi = mean_fs_3_n1  if nwave == -1 & country == 3
+	replace			mean_fsi_c = mean_fs_3_n1_c  if nwave == -1 & country == 3
 
 	drop			mean_fs_* 
 
@@ -163,7 +188,6 @@
 
 	
 * generate color pallette
-	colorpalette	economist
 	colorpalette	economist, globals
 	
 	
@@ -171,7 +195,7 @@
 **# 2 - fies prevelance over time
 ************************************************************************
 
-* graph - std_fsi_wt by country
+* graph - std_fsi_wt by country using pre/post standardization
 	sort			country wave
 	twoway 			line mean_fsi nwave [aweight = hhw_covid] if country == 5 ///
 						& nwave > 0, lcolor($edkblue) lw(*2) lpattern(solid) || ///
@@ -192,8 +216,53 @@
 			
 	grc1leg2 		"$fig/mean_fsi.gph", col(1) pos(6) commonscheme
 				
-	graph export 	"$fig/mean_fsi.eps", as(eps) replace
-						
+	graph export 	"$fig/mean_fsi.png", as(png) replace
+
+* graph - std_fsi_wt by country using pre/post standardization with pre-covid data
+	sort			country wave
+	twoway 			line mean_fsi nwave [aweight = hhw_covid] if country == 5 ///
+						, lcolor($edkblue) lw(*2) lpattern(solid) || ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 1 ///
+						, lcolor($eltgreen) lw(*2) lpattern(dash) || ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 2 ///
+						, lcolor($maroon) lw(*2) lpattern(dash_3dot) || ///
+						line mean_fsi nwave [aweight = hhw_covid] if country == 3 ///
+						, lcolor($khaki) lw(*2) lpattern(vshortdash) title("") sort ///
+						ytitle("Standardized FIES Count") xtitle("Survey Month Year") ///
+						xlabel(-1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						legend(pos(6) col(4) label(1 "Burkina Faso") label(2 ///
+						"Ethiopia") label(3 "Malawi") label(4 "Nigeria")) ///
+						saving("$fig/mean_fsi_pre", replace)	
+			
+	grc1leg2 		"$fig/mean_fsi_pre.gph", col(1) pos(6) commonscheme
+				
+	graph export 	"$fig/mean_fsi_pre.png", as(png) replace
+	
+* graph - std_fsi_wt by country using country only standardization
+	sort			country wave
+	twoway 			line mean_fsi_c nwave [aweight = hhw_covid] if country == 5 ///
+						, lcolor($edkblue) lw(*2) lpattern(solid) || ///
+						line mean_fsi_c nwave [aweight = hhw_covid] if country == 1 ///
+						, lcolor($eltgreen) lw(*2) lpattern(dash) || ///
+						line mean_fsi_c nwave [aweight = hhw_covid] if country == 2 ///
+						, lcolor($maroon) lw(*2) lpattern(dash_3dot) || ///
+						line mean_fsi_c nwave [aweight = hhw_covid] if country == 3 ///
+						, lcolor($khaki) lw(*2) lpattern(vshortdash) title("") sort ///
+						ytitle("Standardized FIES Count") xtitle("Survey Month Year") ///
+						xlabel(-1 "2018" 0 "2019" 1 "Apr '20" 2 "May '20" 3 "Jun '20" ///
+						4 "Jul '20" 5 "Aug '20" 6 "Sep '20" 7 "Oct '20" 8 "Nov '20" ///
+						9 "Dec '20" 10 "Jan '21" 11 "Feb '21" 12 "Mar '21" ///
+						13 "Apr '21" 14 "May '21" 15 "Jun '21", angle(45)) ///
+						legend(pos(6) col(4) label(1 "Burkina Faso") label(2 ///
+						"Ethiopia") label(3 "Malawi") label(4 "Nigeria")) ///
+						saving("$fig/mean_fsi_c", replace)	
+			
+	grc1leg2 		"$fig/mean_fsi_c.gph", col(1) pos(6) commonscheme
+				
+	graph export 	"$fig/mean_fsi_c.png", as(png) replace						
 						
 * graph - ethiopia
 	twoway 			line mean_mld mean_mod mean_sev nwave [aweight = hhw_covid] ///

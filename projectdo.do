@@ -21,7 +21,7 @@
 ************************************************************************
 
 * set $pack to 0 to skip package installation
-	global 			pack 	1
+	global 			pack 	0
 		
 * Specify Stata version in use
     global stataVersion 17.0    // set Stata version
@@ -109,8 +109,8 @@ if $pack == 1 {
 ************************************************************************
 
 	run				"$code/analysis/pnl_cleaning_fies.do"
-	run				"$code/analysis/figures/desc_figs.do"
-	run				"$code/analysis/fies_regs"
+*	run				"$code/analysis/figures/desc_figs.do"
+*	run				"$code/analysis/fies_regs"
 
 	
 /* END */

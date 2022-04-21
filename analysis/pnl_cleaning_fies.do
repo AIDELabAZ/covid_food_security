@@ -2,7 +2,7 @@
 * Created on: July 2020
 * Created by: jdm
 * Edited by: jdm
-* Last edit: 19 April 2022
+* Last edit: 20 April 2022
 * Stata v.17.0
 
 * does
@@ -285,25 +285,62 @@
 	egen 			hun_fsi = rowtotal(fs6_nr fs7_nr fs8_nr), missing
 	replace 		hun_fsi = 1 if hun_fsi > 0 & hun_fsi !=.
 	lab var			hun_fsi "Went hungry"
+	
+* standardized outcomes by country and pre/post
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			egen 			std_fs_`c'_`i' = std(fsi) if post == `i' & country == `c'
+		}
+	}
 
-* standardized outcomes by country and pre/post changing standardization to be only by country not pre/post
+* standardized outcomes only by country not pre/post
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
 		egen 			std_fs_`c' = std(fsi) if country == `c'
 	}
-
-* copy country and pre/post values into single variable changing standardization to be only by country not pre/post
+	
+* copy country and pre/post values into single variable
 	gen 			std_fsi = .
 	lab var			std_fsi "Standardized sum of 8 FIES questions"
 	
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-			replace			std_fsi = std_fs_`c' if country == `c'
+		foreach 		i in 0 1 {
+			replace			std_fsi = std_fs_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+* copy country values into single variable
+	gen 			std_fsi_c = .
+	lab var			std_fsi_c "Standardized sum of 8 FIES questions"
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+			replace			std_fsi_c = std_fs_`c' if country == `c'
 	}
 
 	drop			std_fs_*
 	
-* standardized outcomes (taking into account the sampling weight) removed loop using pre/post indicator
+* standardized by country and pre/post values outcomes (taking into account the sampling weight)
+ 	scalar 			define mean_std = 0
+	scalar 			define sd_std = 1
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+		foreach 		i in 0 1 {
+			qui sum 		fsi [aweight = hhw_covid] if post == `i' & country == `c'
+			gen 			sumwt =`r(sum_w)' if post == `i' & country == `c'
+			gen 			wtmean =`r(mean)' if post == `i' & country == `c'
+			egen double		CSS = total( hhw_covid * (fsi-wtmean)^2 ) if post == `i' & country == `c'
+			gen double 		variance = CSS/sumwt if post == `i' & country == `c'
+			gen double 		std_fsi_`c'_`i' = ( sd_std * (fsi-wtmean) / sqrt(variance) )  ///
+								+ mean_std if post == `i' & country == `c'	
+			drop 			sumwt wtmean CSS variance
+		}
+	}
+	
+* standardized by country outcomes (taking into account the sampling weight)
 	scalar 			define mean_std = 0
 	scalar 			define sd_std = 1
 	
@@ -319,20 +356,34 @@
 			drop 			sumwt wtmean CSS variance
 	}
 
-* copy country and pre/post values into single variable	removed pre/post values due to above changes		
-	gen 			std_fsi_wt = .
+* copy country and pre/post values into single variable		
+ 	gen 			std_fsi_wt = .
 	lab var			std_fsi_wt "Standardized sum of 8 FIES questions (weighted)"
 	
 	levelsof 		country, local(levels)
 	foreach 		c of local levels {
-			replace			std_fsi_wt = std_fsi_`c' if country == `c'
+		foreach 		i in 0 1 {
+			replace			std_fsi_wt = std_fsi_`c'_`i' if post == `i' & country == `c'
+		}
+	}
+
+* copy country values into single variable	removed pre/post values due to above changes		
+	gen 			std_fsi_wt_c = .
+	lab var			std_fsi_wt_c "Standardized sum of 8 FIES questions (weighted)"
+	
+	levelsof 		country, local(levels)
+	foreach 		c of local levels {
+			replace			std_fsi_wt_c = std_fsi_`c' if country == `c'
 	}
 
 	drop			std_fsi_1* std_fsi_2* std_fsi_3* std_fsi_5*
 
-* summarize two values
-	bys 			country: /// removed post from bys country post 
+* summarize values
+	bys 			country post: ///
 						sum std_fsi std_fsi_wt [aweight = hhw_covid]
+						
+	bys 			country: ///
+						sum std_fsi_c std_fsi_wt_c [aweight = hhw_covid]
 
 
 ************************************************************************
