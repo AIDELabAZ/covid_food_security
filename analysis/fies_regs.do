@@ -259,7 +259,7 @@
 					"in the second column. Each regression includes round fixed effects " ///
 					"and a set of indicator variables to control for when household " ///
 					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
-					"clustered at the household-levle are reported in parentheses " ///
+					"clustered at the household-level are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 		
@@ -367,7 +367,7 @@
 					"in the second column. Each regression includes round fixed effects " ///
 					"and a set of indicator variables to control for when household " ///
 					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
-					"clustered at the household-levle are reported in parentheses " ///
+					"clustered at the household-level are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 		
@@ -475,7 +475,7 @@
 					"in the second column. Each regression includes round fixed effects " ///
 					"and a set of indicator variables to control for when household " ///
 					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
-					"clustered at the household-levle are reported in parentheses " ///
+					"clustered at the household-level are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
@@ -584,7 +584,7 @@
 					"in the second column. Each regression includes round fixed effects " ///
 					"and a set of indicator variables to control for when household " ///
 					"skip or refuse to answer a specific FIES question. Robust standard errors " ///
-					"clustered at the household-levle are reported in parentheses " ///
+					"clustered at the household-level are reported in parentheses " ///
 					"(\sym{*} \(p<0.10\), \sym{**} \(p<0.05\), \sym{***} \(p<0.01\)).} \\" ///
 					"\end{tabular}")
 	
