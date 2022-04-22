@@ -1497,7 +1497,7 @@
 							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ), ///
 							xline(0, lcolor(maroon)) levels(95) ciopts(lwidth(*3) lcolor(*3) ) ///
 							xtitle("Point Estimates and 95% Confidence Intervals") ///
-							headings("Standardized by Pre/Post " = "{bf:Burkina Faso}" ///
+							headings("Standardized by Pre/Post" = "{bf:Burkina Faso}" ///
 							"Standardized by Pre/Post " = "{bf:Ethiopia}" ///
 							" Standardized by Pre/Post" = "{bf:Malawi}" ///
 							" Standardized by Pre/Post " = "{bf:Nigeria}") legend(off) ///
@@ -1538,7 +1538,7 @@
 							mcolor(gs8) mfcolor(white) ciopts(color(cranberry)) ), ///
 							xline(0, lcolor(maroon)) levels(95) ciopts(lwidth(*3) lcolor(*3) ) ///
 							xtitle("Point Estimates and 95% Confidence Intervals") ///
-							headings("Standardized by Pre/Post " = "{bf:Burkina Faso}" ///
+							headings("Standardized by Pre/Post" = "{bf:Burkina Faso}" ///
 							"Standardized by Pre/Post " = "{bf:Ethiopia}" ///
 							" Standardized by Pre/Post" = "{bf:Malawi}" ///
 							" Standardized by Pre/Post " = "{bf:Nigeria}") legend(off) ///
