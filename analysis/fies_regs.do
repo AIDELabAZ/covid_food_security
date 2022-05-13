@@ -17,7 +17,7 @@
 	* palettes.ado
 	* colrspace.ado
 	* estout.ado
-	* grc1leg2.ado (version 1.6)
+	* grc1leg2.ado (version 1.6 or earlier | version 2.12 or later)
 	* blindschemes.ado
 
 * TO DO:
