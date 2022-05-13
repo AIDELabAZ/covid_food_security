@@ -24,10 +24,10 @@ As described in more detail below, the `.do`-file scripts variously go through e
 ## Data 
 
 The publicly-available data for each survey round is coupled with a basic information document, interview manual, and questionnaire for that round, which can be accessed through: 
+ - Burkina Faso: http://bit.ly/burkinafaso-phonesurvey
  - Ethiopia: http://bit.ly/ethiopia-phonesurvey 
  - Malawi: http://bit.ly/malawi-phonesurvey 
  - Nigeria: http://bit.ly/nigeria-phonesurvey
- - Uganda: http://bit.ly/uganda-phonesurvey 
  
 The approach to the phone survey questionnaire design and sampling is comparable across countries. It is informed by the template questionnaire and the phone survey sampling guidelines that have been publicly made available by the World Bank. These can be accessed through: 
  - Template Questionnaire: http://bit.ly/templateqx 
