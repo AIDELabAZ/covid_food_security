@@ -78,83 +78,8 @@ Open the projectdo.do file and update the global filepath with your username in 
     }
    ```
 
+
 ### Step 3
-
-Set up the file structure on your local machine as outlined below: 
-
-```stata
-C:/Users/USERNAME/food_security
-├────output
-|    ├──stata_tables
-|    └──stata_graphs
-└────data
-     ├──analysis
-     ├──burkinafaso
-     │    ├──refined
-     │    └──raw
-     │         ├──wave_00
-     │         ├──wave_01
-     │         ├──wave_02
-     │         ├──wave_03
-     |         ├──wave_04
-     |         ├──wave_05
-     |         ├──wave_06
-     |         ├──wave_07
-     |         ├──wave_08
-     |         ├──wave_09
-     |         ├──wave_10
-     │         └──wave_11     
-     ├──ethiopia
-     │    ├──refined
-     │    └──raw
-     │         ├──wave_00
-     │         ├──wave_01
-     │         ├──wave_02
-     │         ├──wave_03
-     │         ├──wave_04
-     │         ├──wave_05
-     │         ├──wave_06
-     │         ├──wave_07
-     │         ├──wave_08
-     │         ├──wave_09
-     │         ├──wave_10
-     │         ├──wave_11
-     │         └──wave_12
-     ├──malawi
-     │    ├──refined
-     │    └──raw
-     │         ├──wave_00
-     │         ├──wave_01
-     │         ├──wave_02
-     │         ├──wave_03
-     │         ├──wave_04
-     │         ├──wave_05
-     │         ├──wave_06
-     │         ├──wave_07
-     │         ├──wave_08
-     │         ├──wave_09
-     │         ├──wave_10
-     │         ├──wave_11
-     │         └──wave_12
-     └──nigeria
-          ├──refined
-          └──raw
-               ├──wave_00
-               ├──wave_01
-               ├──wave_02
-               ├──wave_03
-               ├──wave_04
-               ├──wave_05
-               ├──wave_06
-               ├──wave_07
-               ├──wave_08
-               ├──wave_09
-               ├──wave_10
-               ├──wave_11
-               └──wave_12
-```
-
-### Step 4
 
 Download microdata Stata files from the following links. You will need to create an account with the World Bank if you do not already have one and will be asked to provide a reason for downloading the data. Once data are downloaded, save the data files to the corresponding folders created in Step 3. 
  - Burkina Faso Waves 1-11: http://bit.ly/burkinafaso-phonesurvey
@@ -162,6 +87,6 @@ Download microdata Stata files from the following links. You will need to create
  - Malawi Waves 1-12: http://bit.ly/malawi-phonesurvey 
  - Nigeria Waves 1-12: http://bit.ly/nigeria-phonesurvey
  
-### Step 5
+### Step 4
 
 Run the `projectdo.do` file. Output graphs will be saved to the `output` folder. 
