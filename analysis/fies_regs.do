@@ -202,6 +202,7 @@
 		eststo  		std_fsi_2`i'_c
 	}					
 	
+
 		
 * did - sexhh
 	levelsof		country, local(levels)
