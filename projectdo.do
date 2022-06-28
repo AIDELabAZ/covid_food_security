@@ -11,6 +11,7 @@
 
 * assumes
 	* access to all data and code
+	* access to cleaned data produced by https://github.com/AIDELabAZ/wb_covid
 
 * TO DO:
 	* check packages used
@@ -21,7 +22,7 @@
 ************************************************************************
 
 * set $pack to 0 to skip package installation
-	global 			pack 	1
+	global 			pack 	0
 		
 * Specify Stata version in use
     global stataVersion 17.0    // set Stata version

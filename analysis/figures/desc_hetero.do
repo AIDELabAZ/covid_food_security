@@ -1,8 +1,8 @@
 * Project: food security
 * Created on: Nov 2021
 * Created by: jdm
-* Edited by: lirr
-* Last edited: 19 April 2022
+* Edited by: jdm
+* Last edited: 21 April 2022
 * Stata v.17.0
 
 * does
@@ -125,7 +125,10 @@
 	order			hhw_covid, after(hhw_cs)
 	drop			hhw_cs
 	
-* graph E - index sector
+* generate color pallette
+	colorpalette	economist, globals
+	
+* graph A2 - sector over time
 	sort			country wave
 	twoway 			line mean_sec nwave [aweight = hhw_covid] if country == 5 ///
 						, lcolor($edkblue) lw(*2) lpattern(solid) || ///
@@ -149,7 +152,7 @@
 				
 	graph export 	"$fig/sector.eps", as(eps) replace
 
-* graph E - index sector
+* graph A2 - sex over time
 	sort			country wave
 	twoway 			line mean_sex nwave [aweight = hhw_covid] if country == 5 ///
 						, lcolor($edkblue) lw(*2) lpattern(solid) || ///
@@ -175,4 +178,5 @@
 	
 restore					
 						
-						
+		
+/* END */				
